@@ -1,0 +1,16 @@
+<!--포트폴리오 목록 페이지-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>목록페이지</title>
+</head>
+<body>
+{% for p in portfolio_list %}
+<h2>{{ p.title }}</h2>
+<h3>{{ p.content }}</h3>
+<p>{{ p.created_at }}</p>
+<br/>
+{% endfor %}
+</body>
+</html>
