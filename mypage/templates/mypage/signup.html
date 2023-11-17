@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+{% load static %}
+{% load widget_tweaks %}
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <link href="{% static 'mypage/css/topmenu.css' %}" rel="stylesheet" type="text/css" media="screen">
+    <link href="{% static 'mypage/bootstrap/bootstrap.min.css' %}" rel="stylesheet" type="text/css" media="screen">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Racing+Sans+One&display=swap" rel="stylesheet">
+    <title>회원가입</title>
+    <style>
+        body {
+            background-color: #FFFDF0;
+        }
+        #signup_body {
+            display: flex;
+            justify-content: center; /* 수평 가운데 정렬 */
+            align-items: center; /* 수직 가운데 정렬 */
+            min-height: 80vh; /* 화면 높이 최소 100%로 설정 */
+            margin: 0;
+        }
+
+        /* 회원가입 전체 영역 */
+        .form-container {
+            text-align: center;
+        }
+
+        /* 제목 스타일 */
+        h1 {
+            text-align: center;
+            margin: 50px 0px;
+        }
+
+        /* 각 항목 간격 */
+        .form-group {
+            margin: 20px 0px;
+        }
+
+        /* input 영역 스타일 */
+        .form-input {
+            padding: 10px;
+        }
+
+        /* select 영역 스타일 */
+        /* 항목 이름 */
+        .form-label {
+            display: inline-block;
+            width: 150px; /* 레이블의 고정된 너비 */
+            text-align: left; /* 레이블을 오른쪽 정렬 */
+            margin-right: 10px; /* 레이블과 입력칸 사이의 간격 */
+            font-weight: bold;
+        }
+
+        /* select 영역 */
+        #college, #major, #number {
+            width: 350px;
+            padding: 10px;
+        }
+
+        /*  회원가입 버튼 */
+        #signup-button {
+            width: 350px;
+            background-color: #F7CF60; /* 배경색을 파란색으로 설정 */
+            color: white; /* 글씨색을 흰색으로 설정 */
+            padding: 10px 20px; /* 상하 10px, 좌우 20px 여백 */
+            border: none; /* 테두리 없음 */
+            border-radius: 5px; /* 둥근 모서리 적용 */
+            cursor: pointer;
+            margin: 50px 0px;
+        }
+
+        /* 회원가입 버튼 호버 */
+        #signup-button:hover {
+            background-color: #FBE5A3;
+        }
+    </style>
+</head>
+<body>
+{% include 'portfolio/menubar.html' %}<br>
+
+    <div id="signup_body" class="container mx-auto text-center">
+        <div class="form-container">
+            <h1>회원가입</h1>
+    <form method="POST" action="{% url 'user:signup' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label class="form-label">User name</label>
+            {{form.username|add_class:"form-input"|attr:"placeholder:Enter your user name"}}
+        </div>
+        <div class="form-group">
+            <label class="form-label">비밀번호</label>
+            <input type="password" name="password" class="form-input" placeholder="Enter your password">
+        </div>
+        <div class="form-group">
+            <label class="form-label">비밀번호 확인</label>
+            <input type="password" name="confirm" class="form-input" placeholder="Enter your password">
+        </div>
+        <div class="form-group">
+            <select name="number" id="number" required>
+                <option value="" disabled selected>학번</option>
+                {% for n in numbers %}
+                <option value="{{n.number}}">{{n.number}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <select name="college" id="college" required>
+                <option value="" disabled selected>단과 대학</option>
+                {% for c in colleges %}
+                <option value="{{c.name}}">{{c.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <select name="major" id="major">
+                <option value="" disabled selected>전공</option>
+                {% for m in majors %}
+                <option value="{{m.name}}">{{m.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <input id="signup-button" type="submit" value="회원가입">
+    </form>
+        </div>
+    </div>
+</body>
+</html>

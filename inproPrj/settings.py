@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     'portfolio',
     'recruit',
     'filter',
+    'mypage',
+    'widget_tweaks',
+
 ]
 
 MIDDLEWARE = [
@@ -72,6 +75,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'inproPrj.wsgi.application'
 
+AUTH_USER_MODEL = 'portfolio.CUser'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases

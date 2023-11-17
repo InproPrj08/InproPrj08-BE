@@ -6,10 +6,13 @@
     <title>목록페이지</title>
 </head>
 <body>
+{% include 'portfolio/menubar.html' %}
 {% for p in portfolio_list %}
 <h2>{{ p.title }}</h2>
 <h3>{{ p.content }}</h3>
 <p>{{ p.created_at }}</p>
+
+<h4><a href="{{ p.get_absolute_url }}">더보기</a></h4>
 <br/><br/><br/>
 {% endfor %}
 </body>
