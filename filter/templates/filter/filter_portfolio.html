@@ -1,0 +1,20 @@
+{% block content %}
+  <h1>Filtering Portfolio</h1>
+
+  <form method="get" action="{% url 'filter_portfolio' %}">
+    <label for="status">학적 상태:</label>
+    <select name="status" id="status">
+      <option value="" {% if not request.GET.status %}selected{% endif %}>전체</option>
+      <option value="재학생" {% if request.GET.status =='재학생' %}selected{% endif %}>재학생</option>
+      <option value="휴학생" {% if request.GET.status =='휴학생' %}selected{% endif %}>휴학생</option>
+      <option value="졸업생" {% if request.GET.status =='졸업생' %}selected{% endif %}>졸업생</option>
+    </select>
+    <button type="submit">Filter</button>
+  </form>
+
+  <ul>
+    {% for student in students %}
+      <li>{{ student.name }} - {{ student.status }}</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
