@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search</title>
+</head>
+<body>
+{% include 'portfolio/menubar.html' %}
+<h1>Search Results</h1>
+
+{% if query %}
+    <p>검색어: {{ query }}</p>
+{% endif %}
+
+<ul>
+    {% for result in results %}
+        <a href="{% url 'portfoliodetail' pk=result.pk %}"><h2>title : {{ result.title }}</h2></a>
+        <h3>content : {{ result.content }}</h3>
+    {% endfor %}
+</ul>
+
+</body>
+</html>

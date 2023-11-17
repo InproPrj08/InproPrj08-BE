@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <link href="{% static 'board/css/topmenu.css' %}" rel="stylesheet" type="text/css" media="screen">
+    <link href="{% static 'board/bootstrap/bootstrap.min.css' %}" rel="stylesheet" type="text/css" media="screen">
+    <script src="https://kit.fontawesome.com/edea15a092.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Racing+Sans+One&display=swap" rel="stylesheet">
+    <title>상세 페이지</title>
+    <style>
+        body{
+            background-color: #FFFDF0;
+        }
+        .rounded-box {
+            border: 3px solid #422700;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #ffffff;
+        }
+        /* 제목 열 너비 조절 */
+        th:first-child, td:first-child {
+            width: 55%;
+        }
+
+        /* 며칠차 열 너비 조절 */
+        th:nth-child(2), td:nth-child(2) {
+            width: 22%;
+        }
+
+        /* 좋아요 수 열 너비 조절 */
+        th:nth-child(3), td:nth-child(3) {
+            width: 23%;
+        }
+
+        td, th {
+        /* 챌린지 목록들입니다.  */
+            text-align: left;
+            padding: 10px;
+            height: 20px;
+        }
+
+        .table {
+            width: 10px;
+        }
+
+        td.my_like {
+            text-align: center;
+        }
+
+        table thead {
+        /* 제목이랑 좋아요 수 등 thead부분입니다.  */
+            height: 30px;
+            vertical-align: center;
+            border-top: 1px solid black;
+            border-bottom: 1px solid black;
+        }
+
+        td a {
+        /* 링크 색/밑줄 없애기(챌린지 목록 부분) */
+            color: black;
+            text-decoration: none;
+        }
+
+        /* 제목을 제외한 행에 커서를 올리면 해당 행의 배경색이 하늘색으로 바뀜 */
+        tbody tr:hover {
+            background-color: #F0F8FF;
+        }
+
+        .info-title {
+            display: inline-block;
+            width: 70px;
+            margin: 0px;
+            margin: 5px;
+            color: grey;
+            font-size: 20px;
+            font-weight: bold;
+
+        }
+
+        .info-info {
+            display: inline-block;
+            width: 500px;
+            margin: 0px 5px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+{% include 'portfolio/menubar.html' %}
+    <div class="container">
+        <h1>My Page</h1><br>
+        <div class="rounded-box">
+                <h3 class="info-title">ID</h3><h3 class="info-info">{{user.username}}</h3>
+                <br>
+                <h3 class="info-title">학번</h3><h3 class="info-info">{{user.number}}</h3>
+                <br>
+                <h3 class="info-title">대학</h3><h3 class="info-info">{{user.college}}</h3>
+                <br>
+                {% if user.major %}
+                <h3 class="info-title">학과</h3><h3 class="info-info">{{user.major}}</h3>
+                {% else %}
+                <h3 class="info-title">학과</h3><h3 class="info-info">-</h3>
+                {% endif %}
+        </div><br>
+        <h4 class="rounded-box" style="font-size: 20px;"><br> <b>{{user.username}} 님을 응원합니다!</b><br><br>
+        </h4>
+        </div>
+
+
+</body>
+</html>

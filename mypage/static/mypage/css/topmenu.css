@@ -1,0 +1,56 @@
+       /* 상단 메뉴바 스타일 */
+        #top-menu {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #FBE5A3; /* 배경색을 희색으로 설정 */
+            color: black;            /* 글씨색을 검은색으로 설정 */
+            font-weight: bold;         /* 볼드체 */
+            display: flex;
+            justify-content: space-between; /* 메뉴 항목 간 간격을 균등하게 배치 */
+            padding: 10px 20px;             /* 상하 10px, 좌우 20px 여백 */
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2); /* 그림자 효과 추가 */
+        }
+
+        #menubar-left {
+            padding-top: 6px;
+            font-size:22px;
+        }
+
+        #menubar-center {
+            padding-top: 12px;
+        }
+
+        /* 메뉴 항목 스타일 */
+        #top-menu a {
+            text-decoration: none; /* 밑줄 제거 */
+            margin: 0 15px;        /* 좌우 여백 설정 */
+        }
+
+        /* 각 메뉴 호버 스타일 */
+        #top-menu a:link, a:visited {
+            color: inherit; /* 상위 요소의 색상을 상속하도록 설정 */
+        }
+
+        #top-menu a:hover {
+            color: rgb(130, 130, 130);
+        }
+
+        #menubar-right {
+            padding-top: 4px;
+        }
+
+        .button-container{
+            display: inline-block;
+        }
+
+        /* 로그인 버튼 스타일 */
+        .top-login-button {
+            padding: 10px 20px; /* 상하 10px, 좌우 20px 여백 */
+            cursor: pointer; /* 커서를 포인터로 변경 */
+        }
+
+        /* 로그인 버튼 호버 스타일 */
+        .top-login-button:hover {
+            color: rgb(130, 130, 130); /* 호버 시 배경색 변경 */
+        }

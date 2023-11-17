@@ -1,0 +1,37 @@
+<script>
+    function checkMY(){
+        {% if user.is_authenticated %}
+            location.href = "http://127.0.0.1:8000/auth/{{request.user}}/";
+        {% else %}
+            var result = confirm("로그인 후 이용하실 수 있습니다. 로그인하시겠습니까?");
+                if(result) {
+                    location.href = "{% url 'user:login' %}";
+                }
+        {% endif %}
+    }
+</script>
+
+<div class="fixed-top" id="top-menu" style="background-color:#FBE5A3;">
+    <div id="menubar-left">
+        {% if user.is_authenticated %}
+        <a class="navbar-brand" href="{% url 'user:main' %}"><b style="font-family: 'Racing Sans One', cursive; font-size: 28px;">{{user.username}}'s Challenge!</b></a>
+        {% else %}
+        <a class="navbar-brand" href="{% url 'user:main' %}"><b style="font-family: 'Racing Sans One', cursive; font-size: 28px;">Challenge!</b></a>
+        {% endif %}
+    </div>
+    <div id="menubar-center">
+        <a href="#" onclick="checkMY()">MY</a>
+    </div>
+    <div id="menubar-right">
+        {% if user.is_authenticated %}
+        <a href="{% url 'user:logout' %}" class="top-login-button">로그아웃</a>
+        {% else %}
+        <a href="{% url 'user:login' %}" class="top-login-button">로그인</a>
+        {% endif %}
+    </div>
+    <form class="d-flex" role="search" method="get" action="{% url 'search_view' %}">
+        <input class="form-control me-2" name="q" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+    </form>
+</div>
+<div style="padding-top:71px"></div>

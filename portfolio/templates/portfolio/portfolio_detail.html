@@ -3,9 +3,46 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>힛</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Racing+Sans+One&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/edea15a092.js" crossorigin="anonymous"></script>
 </head>
 <body>
+{% include 'portfolio/menubar.html' %}
+<h2>{{ portfolio.title }}</h2>
+<h3>{{ portfolio.content }}</h3>
+<p>{{ portfolio.created_at }}</p>
+<a id="like-button" href="like/" type="button" style="margin-left: 20px; margin-right: 20px; border-radius: 5px;padding: 10px 20px;background-color: #FFFDF0;text-decoration: none;color: black;">
+        {% if request.user in portfolio.like_users.all %}
+            <i class="fa fa-heart fg-danger" style="color:red;font-size: 20px;"></i>
+        {% else %}
+            <i class="fa fa-heart" style="font-size: 20px;"></i>
+        {% endif %}
+        <span id="like-count" style="font-size: 20px;">{{ portfolio.like_users.count }}</span>
+     </a>
+<br/><br/><br/>
+<script>
+    const likeButton = document.getElementById('like-button');
+    const likeCount = document.getElementById('like-count');
+<<<<<<< HEAD
+likeButton.addEventListener('click', function() {
+=======
 
+    likeButton.addEventListener('click', function() {
+>>>>>>> 6195162d1fb8af512134e7f01f7ebe3e42598948
+        if (likeButton.querySelector('.fa-heart').classList.contains('fa-regular')) {
+            likeButton.querySelector('.fa-heart').classList.remove('fa-regular');
+            likeButton.querySelector('.fa-heart').classList.add('fa-solid', 'fg-danger');
+            likeCount.textContent = parseInt(likeCount.textContent) + 1;
+        } else {
+            likeButton.querySelector('.fa-heart').classList.remove('fa-solid', 'fg-danger');
+            likeButton.querySelector('.fa-heart').classList.add('fa-regular');
+            likeCount.textContent = parseInt(likeCount.textContent) - 1;
+        }
+    });
+<<<<<<< HEAD
+</script>
 </body>
 </html>
