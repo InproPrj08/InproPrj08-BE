@@ -144,14 +144,40 @@
 
 <script>
     function getText() {
-        // div에서 텍스트를 가져와 변수에 저장
-        var userInput = document.getElementById('text-input').innerText;
+         var userInput = document.getElementById('text-input').innerText;
 
-        // 가져온 텍스트를 콘솔에 출력 또는 다른 작업 수행
-        console.log(userInput);
-
-        // 여기에서 userInput 변수를 사용하여 다른 작업을 수행할 수 있습니다.
+        // 가져온 텍스트를 서버로 전송
+        fetch('/recruit/save_text/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify({ user_input: userInput }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.status);
+            alert(userInput);
+            // 여기에서 필요한 UI 업데이트 또는 다른 작업 수행
+        })
+        .catch(error => console.error('Error:', error));
     }
+    function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Check if the cookie name matches the requested name
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
 </script>
 
 
