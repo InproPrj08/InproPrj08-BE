@@ -42,6 +42,7 @@ class CUser(AbstractUser):
     major = models.ForeignKey(Major, on_delete=models.SET_NULL, null=True, blank=True)
 
 class Portfolio(models.Model):
+    head_image = models.ImageField(upload_to='portfolio/images/%Y/%m/%d/', blank=True)
     title = models.CharField(max_length=30)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -56,7 +57,7 @@ class Portfolio(models.Model):
             return f'/portfolio/{self.pk}/'
 
 class Comment(models.Model):
-    post = models.ForeignKey(Portfolio, on_delete=models.CASCADE)
+    portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE)
     user = models.ForeignKey(CUser, on_delete=models.CASCADE)
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)

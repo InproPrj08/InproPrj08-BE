@@ -1,14 +1,7 @@
 <!DOCTYPE html>
-{% load static %}
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <link href="{% static 'board/css/topmenu.css' %}" rel="stylesheet" type="text/css" media="screen">
-    <link href="{% static 'board/bootstrap/bootstrap.min.css' %}" rel="stylesheet" type="text/css" media="screen">
-    <script src="https://kit.fontawesome.com/edea15a092.js" crossorigin="anonymous"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Racing+Sans+One&display=swap" rel="stylesheet">
+
     <title>상세 페이지</title>
     <style>
         body{
@@ -109,8 +102,8 @@
         </div><br>
         <h4 class="rounded-box" style="font-size: 20px;"><br> <b>{{user.username}} 님을 응원합니다!</b><br><br>
         </h4>
-        </div>
-
+        </div><br>
+        <h4><a href="{% url 'user:user_portfolios' username=request.user.username %}">내 포트폴리오로 이동</a></h4>
 
 </body>
 </html>

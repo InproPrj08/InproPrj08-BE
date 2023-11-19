@@ -1,26 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Search</title>
+    <title>내가 작성한 글</title>
 </head>
 <body>
 {% include 'portfolio/menubar.html' %}
-<h1>Search Results</h1>
-
-{% if query %}
-    <p>검색어: {{ query }}</p>
-{% endif %}
-
-<!--<ul>
-    {% for result in results %}
-        <a href="{% url 'portfolio_detail' pk=result.pk %}"><h2>title : {{ result.title }}</h2></a>
-        <h3>content : {{ result.content }}</h3>
-    {% endfor %}
-</ul>-->
+<br/>
+<h2><b>  내가 작성한 글</b></h2>
+<br/>
 <div class="container">
         <div class="row">
-            {% for p in results %}
+            {% for p in user_portfolios %}
                 <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
                     <div class="card" style="width: 18rem;">
                         {% if p.head_image %}
@@ -38,5 +28,6 @@
             {% endfor %}
         </div>
 </div>
+<br/><br/>
 </body>
 </html>
