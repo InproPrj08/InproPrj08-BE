@@ -12,6 +12,11 @@
 <body>
 {% include 'portfolio/menubar.html' %}
 <h2>{{ portfolio.title }}</h2>
+{% if portfolio.head_image %}
+<img src="{{ portfolio.head_image.url }}" class="card-img-top" alt="...">
+{% else %}
+<img src="https://picsum.photos/seed/{{portfolio.id}}/800/200" class="card-img-top" alt="...">
+{% endif %}
 <h3>{{ portfolio.content }}</h3>
 <p>{{ portfolio.created_at }}</p>
 <a id="like-button" href="like/" type="button" style="margin-left: 20px; margin-right: 20px; border-radius: 5px;padding: 10px 20px;background-color: #FFFDF0;text-decoration: none;color: black;">
@@ -21,8 +26,20 @@
             <i class="fa fa-heart" style="font-size: 20px;"></i>
         {% endif %}
         <span id="like-count" style="font-size: 20px;">{{ portfolio.like_users.count }}</span>
-     </a>
-<br/><br/><br/>
+</a>
+<br/>
+<h2>댓글</h2>
+{% for comment in comments %}
+    <p>{{ comment.user.username }}: {{ comment.text }}  {{ comment.created_at }}</p>
+{% endfor %}
+
+<form method="post" action="{% url 'portfolio_detail' pk=portfolio.pk %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">댓글 작성</button>
+</form>
+
+<br/><br/>
 <script>
     const likeButton = document.getElementById('like-button');
     const likeCount = document.getElementById('like-count');

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django.urls import reverse
 from portfolio.models import College, Major, Number, Portfolio
 from portfolio.models import CUser as User
 from .forms import UserForm
@@ -50,7 +51,7 @@ def user_login(request):
             return redirect("user:main")  # 로그인 후 이동할 페이지 설정
         else:
             print("인증실패")
-            return render(request, 'mypage/login.html', {'error': 'username or password is incorrect.'})
+        return render(request, 'mypage/login.html', {'error': 'username or password is incorrect.'})
     return render(request, 'mypage/login.html')
 
 #로그아웃
@@ -58,11 +59,24 @@ def user_logout(request):
     logout(request)
     return redirect("user:login")
 
+# def user_detail(request, username):
+#     user = User.objects.get(username=username)
+#
+#     return render(request, 'mypage/my_detail.html',
+#                   {
+#                       'user': user
+#                   }
+#      )
 def user_detail(request, username):
     user = User.objects.get(username=username)
 
-    return render(request, 'mypage/my_detail.html',
-                  {
-                      'user':user
-                  }
-     )
+    # Reverse 사용 예시
+    detail_url = reverse('user:detail', args=[username])
+
+    return render(request, 'mypage/my_detail.html', {'user': user, 'detail_url': detail_url})
+
+#내가 작성한 글 보기
+def user_portfolios(request, username):
+    user_portfolios = Portfolio.objects.filter(author__username=username)
+    context = {'user_portfolios': user_portfolios}
+    return render(request, 'mypage/user_portfolios.html', context)
