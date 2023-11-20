@@ -23,7 +23,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('portfolio/', include('portfolio.urls')),
     path('recruit/', include('recruit.urls')),
+<<<<<<< Updated upstream
     path('filter/', include('filter.urls')),
     path('auth/', include('mypage.urls')),
+=======
+    path('filter/', include('filter.urls', namespace='filter')),
+>>>>>>> Stashed changes
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
