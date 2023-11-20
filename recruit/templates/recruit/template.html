@@ -1,6 +1,8 @@
-<!-- your_template.html -->
 <div class="container">
     {% for text in stored_text %}
-        <div id="text-input" contenteditable="false">{{ text.content }}</div>
+        <div class="text-output" style="{{ text.styles | safe }}">
+            {{ text.content | safe }}
+        </div>
     {% endfor %}
 </div>
+

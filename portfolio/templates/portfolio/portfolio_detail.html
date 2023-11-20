@@ -28,11 +28,10 @@
         <span id="like-count" style="font-size: 20px;">{{ portfolio.like_users.count }}</span>
 </a>
 <br/>
-<h2>댓글</h2>
-{% for comment in comments %}
-    <p>{{ comment.user.username }}: {{ comment.text }}  {{ comment.created_at }}</p>
-{% endfor %}
+<br/>
+<br/>
 
+<h2>댓글</h2>
 <form method="post" action="{% url 'portfolio_detail' pk=portfolio.pk %}">
     {% csrf_token %}
     {{ form.as_p }}
@@ -40,15 +39,18 @@
 </form>
 
 <br/><br/>
+
+</body>
+
 <script>
     const likeButton = document.getElementById('like-button');
     const likeCount = document.getElementById('like-count');
-<<<<<<< HEAD
+
 likeButton.addEventListener('click', function() {
-=======
+
 
     likeButton.addEventListener('click', function() {
->>>>>>> 6195162d1fb8af512134e7f01f7ebe3e42598948
+
         if (likeButton.querySelector('.fa-heart').classList.contains('fa-regular')) {
             likeButton.querySelector('.fa-heart').classList.remove('fa-regular');
             likeButton.querySelector('.fa-heart').classList.add('fa-solid', 'fg-danger');
@@ -59,7 +61,6 @@ likeButton.addEventListener('click', function() {
             likeCount.textContent = parseInt(likeCount.textContent) - 1;
         }
     });
-<<<<<<< HEAD
 </script>
-</body>
+
 </html>

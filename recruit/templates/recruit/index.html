@@ -13,58 +13,18 @@
 
 </head>
 <body>
-     <nav class="navbar navbar-expand-lg navbar-white bg-white">
-         <div class="col">
-             <div class="row-3 my-3">
-                    <div class="container">
-                        <div class="row">
-                            <div class ="col-1 e-auto">
-                                <a class="navbar-brand me-auto mb-2 mb-lg-0" href="#!">로고</a>
-                            </div>
-                            <div class ="col-3 me-auto">
-                                <div class="input-group ms-auto">
-                                    <input type="text" class="form-control" placeholder="Search for...">
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-secondary" type="button">Go!</button>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class = "col-3 ms-auto">
-                                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                                    <li class="nav-item ms-auto"><a class="nav-link" href="#!">로그인</a></li>
-                                    <li class="nav-item ms-auto"><a class="nav-link" href="#!">회원가입</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-             </div>
+ {% include 'portfolio/menubar.html' %}
 
-             <div class="row-3 my-5">
-                 <div class="container">
-                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="../portfolio">포트폴리오</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#!">비교과</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#!">모집게시판</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">졸업생 합격 수기</a></li>
-                    </ul>
-                    </div>
-                </div>
-            </div>
+<div class="row">
+    <div class="col-3">
+        <div class="container">
+
         </div>
-        </nav>
-        <div class="row">
-
-            <div class="col-3">
-                <div class = container>
-
-                </div>
-            </div>
-            <div class ="col-6" style="background-color : grey">
-            <div class="container">
-        <div class="options">
-            <button id="bold" class="option-button format">
+    </div>
+    <div class="col-6" style="background-color: grey;">
+        <div class="container">
+            <div class="options">
+                <button id="bold" class="option-button format">
                 <i class="fa-solid fa-bold"></i>
             </button>
             <button id="superscript" class="option-button script">
@@ -132,58 +92,63 @@
                 <input type="color" id="backColor" class="adv-option-button">
                 <label for="backColor">Highlight Color</label>
             </div>
-
+            </div>
+            <div class="container">
+                <div id="text-input" contenteditable="true"></div>
+                <button onclick="saveText()">Save Text</button>
+            </div>
         </div>
-        <div id="text-input" contenteditable="true"></div>
-         <button onclick="getText()">Get Text</button>
-    </div>
     </div>
 </div>
-     <!-- 결과를 표시할 버튼 -->
-
 
 <script>
-    function getText() {
-         var userInput = document.getElementById('text-input').innerText;
+    function saveText() {
+        var editableContent = document.getElementById('text-input').innerHTML;
+        var styles = window.getComputedStyle(document.getElementById('text-input'));
 
-        // 가져온 텍스트를 서버로 전송
         fetch('/recruit/save_text/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': getCookie('csrftoken'),
             },
-            body: JSON.stringify({ user_input: userInput }),
+            body: JSON.stringify({
+                content: editableContent,
+                styles: {
+                    color: styles.color,
+                    backgroundColor: styles.backgroundColor,
+                    fontSize: styles.fontSize,  // Add other style properties as needed
+                }
+            }),
         })
         .then(response => response.json())
         .then(data => {
             console.log(data.status);
-            alert(userInput);
-            // 여기에서 필요한 UI 업데이트 또는 다른 작업 수행
+            alert('Text saved successfully!');
+            console.log('Redirecting to display_text');
+            window.location.href = '/recruit/display_text/';
         })
         .catch(error => console.error('Error:', error));
     }
+
     function getCookie(name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = cookies[i].trim();
-            // Check if the cookie name matches the requested name
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
             }
         }
+        return cookieValue;
     }
-    return cookieValue;
-}
 </script>
 
 
-    <script src="{% static 'recruit/load.js' %}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-
-    HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-
+<script src="{% static 'recruit/load.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 </body>
 </html>
