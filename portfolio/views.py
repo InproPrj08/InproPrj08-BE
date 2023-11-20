@@ -1,8 +1,10 @@
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse_lazy
+
 from .models import Portfolio, Comment
-from django.views.generic import ListView, DetailView
-from .forms import CommentForm
+from django.views.generic import ListView, DetailView, UpdateView, DeleteView
+from .forms import CommentForm, PortfolioForm
 # Create your views here.
 
 # class PortfolioList(ListView):
@@ -60,3 +62,5 @@ def search_view(request):
         results = Portfolio.objects.all()
 
     return render(request, 'portfolio/search_results.html', {'results': results, 'query': query})
+
+

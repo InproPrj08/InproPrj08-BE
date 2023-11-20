@@ -28,14 +28,16 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ p.title }}</h5>
                             <p class="card-text">{{ p.content | truncatewords:10 }}</p>
-                            <a href="{{ p.get_absolute_url }}" class="btn btn-primary text-light">더보기</a>
+                            <a href="{{ p.get_absolute_url }}" class="btn btn-primary text-light">더보기</a
                         </div>
                     </div>
                 </div>
             {% endfor %}
         </div>
+    </div>
 
-        <!-- 페이지네이션 링크 표시 -->
+    <br/><br/>
+    <!-- 페이지네이션 링크 표시 -->
         <div class="pagination justify-content-center">
             <span class="step-links">
 
@@ -48,10 +50,7 @@
             {% endif %}
 
             </span>
-        </div>
-    </div>
-
-    <br/><br/><br/>
+        </div><br/>
 
 </body>
 

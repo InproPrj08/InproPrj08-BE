@@ -10,7 +10,7 @@ body{
     background-color: #338cf4;
 }
 
-.container{
+/*.container{
     background-color: #fff;
     width: 80vmin;
     padding: 50px 30px;
@@ -20,7 +20,7 @@ body{
     top: 50%;
     border-radius: 10px;
     box-shadow: 0 25px 50px rgba(7, 20, 35, 0.2);
-}
+}*/
 
 .options{
     display: flex;

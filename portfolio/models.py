@@ -13,7 +13,7 @@ class Number(models.Model):
 
 class College(models.Model):
     name = models.CharField(max_length=30)
-    slug = models.SlugField(max_length=50, unique=True, allow_unicode=True)
+    slug = models.SlugField(max_length=50, unique=False, allow_unicode=True)
 
     def __str__(self):
         return self.name
@@ -25,7 +25,7 @@ class College(models.Model):
 
 class Major(models.Model):
     name = models.CharField(max_length=30)
-    slug = models.SlugField(max_length=50, unique=True, allow_unicode=True)
+    slug = models.SlugField(max_length=50, unique=False, allow_unicode=True)
     college = models.ForeignKey(College, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -55,6 +55,16 @@ class Portfolio(models.Model):
 
     def get_absolute_url(self):
             return f'/portfolio/{self.pk}/'
+
+    def update(self, new_title, new_content):
+        self.title = new_title
+        self.content = new_content
+        # 다른 필드들도 필요에 따라 업데이트
+        self.save()
+
+    def delete(self):
+        # 필요에 따라 다른 연관된 객체들도 삭제
+        self.delete()
 
 class Comment(models.Model):
     portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE)
