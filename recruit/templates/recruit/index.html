@@ -94,41 +94,43 @@
             </div>
             </div>
             <div class="container">
-                <div id="text-input" contenteditable="true"></div>
-                <button onclick="saveText()">Save Text</button>
-            </div>
-        </div>
-    </div>
+    <div id="text-input" contenteditable="true"></div>
+    <input type="file" id="image-input" accept="image/*"> <!-- 이미지를 선택하는 파일 입력란 추가 -->
+    <button onclick="saveText()">text</button>
+</div>
+</div>
+</div>
 </div>
 
 <script>
     function saveText() {
         var editableContent = document.getElementById('text-input').innerHTML;
         var styles = window.getComputedStyle(document.getElementById('text-input'));
+        var imageInput = document.getElementById('image-input');
+        var imageFile = imageInput.files[0]; // 선택된 이미지 파일 가져오기
+
+        var formData = new FormData();
+        formData.append('content', editableContent);
+        formData.append('color', styles.color);
+        formData.append('backgroundColor', styles.backgroundColor);
+        formData.append('fontSize', styles.fontSize);
+        formData.append('image', imageFile); // 이미지 파일을 FormData에 추가
 
         fetch('/recruit/save_text/', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
                 'X-CSRFToken': getCookie('csrftoken'),
             },
-            body: JSON.stringify({
-                content: editableContent,
-                styles: {
-                    color: styles.color,
-                    backgroundColor: styles.backgroundColor,
-                    fontSize: styles.fontSize,  // Add other style properties as needed
-                }
-            }),
+            body: formData, // JSON 데이터 대신 FormData 사용
         })
         .then(response => response.json())
         .then(data => {
             console.log(data.status);
-            alert('Text saved successfully!');
-            console.log('Redirecting to display_text');
+            alert('텍스트와 이미지가 성공적으로 저장되었습니다!');
+            console.log('display_text 페이지로 이동 중');
             window.location.href = '/recruit/display_text/';
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => console.error('에러:', error));
     }
 
     function getCookie(name) {
@@ -146,6 +148,7 @@
         return cookieValue;
     }
 </script>
+
 
 
 <script src="{% static 'recruit/load.js' %}"></script>
