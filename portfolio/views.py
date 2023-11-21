@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
@@ -37,6 +38,7 @@ class PortfolioDetail(DetailView):
             comment = form.save(commit=False)
             comment.portfolio = self.object
             comment.user = self.request.user  # Assuming user is authenticated
+            comment.is_anonymous = request.POST.get('is_anonymous') == 'on'
             comment.save()
 
             # 댓글을 작성한 후에 PortfolioDetail 페이지로 리디렉션
@@ -45,13 +47,15 @@ class PortfolioDetail(DetailView):
             return self.form_invalid(form)
 
 
+@login_required
 def like(request, pk):
-    portfolio = Portfolio.objects.get(pk=pk)
-    if (portfolio.like_users.filter(pk=request.user.pk)):
+    portfolio = get_object_or_404(Portfolio, pk=pk)
+    if portfolio.like_users.filter(pk=request.user.pk):
         portfolio.like_users.remove(request.user)
     else:
         portfolio.like_users.add(request.user)
     return redirect(portfolio.get_absolute_url())
+
 
 def search_view(request):
     query = request.GET.get('q')

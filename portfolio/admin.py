@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Portfolio, CUser, College, Major, Number
+from .models import Portfolio, CUser, College, Major, Number, Interest, Status
 
 class PortfolioAdmin(admin.ModelAdmin):
     list_display = ['author', 'title', 'content']
@@ -19,3 +19,13 @@ class MajorAdmin(admin.ModelAdmin):
 admin.site.register(Major, MajorAdmin)
 
 admin.site.register(Number)
+
+class InterestAdmin(admin.ModelAdmin):
+    prepopulated_fields = {'slug':('interest',)}
+
+admin.site.register(Interest, InterestAdmin)
+
+class StatusAdmin(admin.ModelAdmin):
+    prepopulated_fields = {'slug':('status',)}
+
+admin.site.register(Status, StatusAdmin)
