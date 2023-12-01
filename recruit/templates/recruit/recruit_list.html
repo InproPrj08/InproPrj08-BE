@@ -1,0 +1,66 @@
+<!-- 포트폴리오 목록 페이지 -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>목록페이지</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+
+</head>
+
+<body>
+    {% include 'portfolio/menubar.html' %}
+    <br/><br/>
+    <div class="container">
+        <div class="row">
+            {% for p in recruit_list %}
+                <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
+                    <div class="card" style="width: 18rem;">
+                        {% if p.head_image %}
+                        <img src="{{ p.head_image.url }}" class="card-img-top" alt="...">
+                        {% else %}
+                        <img src="https://picsum.photos/seed/{{p.id}}/800/200" class="card-img-top" alt="...">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ p.author }}님</h5>
+    <p class="card-text">
+        {{ p.department }}
+    </p>
+                            <p class="card-text">
+                                모집인원 | {{p.people}}
+                            </p>
+                            <p class="card-text">
+                                {{p.content | truncatewords:5}}
+                            </p>
+
+    <a href="{{ p.get_absolute_url }}" class="btn btn-primary text-light">더보기</a>
+</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <br/><br/>
+    <!-- 페이지네이션 링크 표시 -->
+    <div class="pagination justify-content-center">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page={{page_obj.previous_page_number}}" class="btn btn-primary text-light">Prev</a>
+            {% endif %}
+            Page {{page_obj.number}} of {{page_obj.paginator.num_pages}}
+            {% if page_obj.has_next %}
+                <a href="?page={{page_obj.next_page_number}}" class="btn btn-primary text-light">Next</a>
+            {% endif %}
+        </span>
+    </div><br/>
+
+</body>
+
+</html>
+
+

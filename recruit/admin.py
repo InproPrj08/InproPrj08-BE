@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import recruit
+from .models import Recruit
 
-# Register your models here.
-admin.site.register(recruit)
+
+admin.site.register(Recruit)

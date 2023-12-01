@@ -12,12 +12,7 @@
     <p>검색어: {{ query }}</p>
 {% endif %}
 
-<!--<ul>
-    {% for result in results %}
-        <a href="{% url 'portfolio_detail' pk=result.pk %}"><h2>title : {{ result.title }}</h2></a>
-        <h3>content : {{ result.content }}</h3>
-    {% endfor %}
-</ul>-->
+
 <div class="container">
         <div class="row">
             {% for p in results %}
@@ -37,6 +32,11 @@
                 </div>
             {% endfor %}
         </div>
+
+
+
+
+
 </div>
 </body>
 </html>

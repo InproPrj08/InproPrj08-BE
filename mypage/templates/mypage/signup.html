@@ -106,24 +106,76 @@
             </select>
         </div>
         <div class="form-group">
-            <select name="college" id="college" required>
-                <option value="" disabled selected>단과 대학</option>
-                {% for c in colleges %}
-                <option value="{{c.name}}">{{c.name}}</option>
+        <label for="college">대학:</label>
+            <select id="college" name="college">
+                <option value="default">대학 선택</option>
+                {% for college in colleges %}
+                <option value="{{college.name}}">{{college.name}}</option>
                 {% endfor %}
+            </select>
+                    </div>
+                    <div class="form-group">
+            <label for="major">전공:</label>
+            <select id="major" name="major" disabled>
+                <!-- 이 부분은 JavaScript로 동적으로 업데이트됩니다 -->
             </select>
         </div>
         <div class="form-group">
-            <select name="major" id="major">
-                <option value="" disabled selected>전공</option>
-                {% for m in majors %}
-                <option value="{{m.name}}">{{m.name}}</option>
-                {% endfor %}
-            </select>
+            <label for="interests">관심 직무:</label><br>
+            {% for interest in interests %}
+                <input type="checkbox" id="interests-{{ interest.name }}-{{ interest.id }}" name="interests" value="{{ interest.id }}"> {{ interest }}
+            {% endfor %}
         </div>
+        <div class="form-group">
+<label for="public-status">학적 상태:</label><br>
+            {% for status in status %}
+        <input type="radio" id="status" name="status" value="{{ status.status }}"> {{ status.status }}
+            {% endfor %}
+
+</div>
+<br><br>
+
         <input id="signup-button" type="submit" value="회원가입">
     </form>
         </div>
     </div>
+<script>
+document.getElementById('college').addEventListener('change', function () {
+    var selectedCollege = this.value;
+    var majorDropdown = document.getElementById('major');
+
+    // 전체 전공 옵션을 비활성화
+    majorDropdown.innerHTML = '<option value="" selected disabled hidden>전공을 선택하세요</option>';
+
+    // 대학에 따른 전공 옵션을 추가
+    switch (selectedCollege) {
+        case '과기':
+            {% for major in sm %}
+                majorDropdown.innerHTML += '<option value="{{ major.name }}">{{ major.name }}</option>';
+            {% endfor %}
+            break;
+        case '약학':
+            {% for major in pm %}
+                majorDropdown.innerHTML += '<option value="{{ major.name }}">{{ major.name }}</option>';
+            {% endfor %}
+            break;
+        case '아앤디':
+            {% for major in am %}
+                majorDropdown.innerHTML += '<option value="{{ major.name }}">{{ major.name }}</option>';
+            {% endfor %}
+            break;
+        case '글융':
+            {% for major in gm %}
+                majorDropdown.innerHTML += '<option value="{{ major.name }}">{{ major.name }}</option>';
+            {% endfor %}
+            break;
+    }
+
+    // 선택된 대학에 따라 전공 드롭다운 활성화
+    majorDropdown.disabled = false;
+});
+
+
+</script>
 </body>
 </html>

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'filter',
     'mypage',
     'widget_tweaks',
+    'pass_portfolio',
 
 ]
 
