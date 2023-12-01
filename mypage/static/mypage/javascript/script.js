@@ -1,0 +1,1 @@
+ document.getElementById('image-upload-form').style.display = 'none';

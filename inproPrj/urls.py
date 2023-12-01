@@ -25,6 +25,7 @@ urlpatterns = [
     path('recruit/', include('recruit.urls')),
     path('filter/', include('filter.urls')),
     path('auth/', include('mypage.urls')),
+    path('pass_portfolio/', include('pass_portfolio.urls')),
     path('filter/', include('filter.urls', namespace='filter')),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,19 +1,45 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
+{% extends 'mypage/base.html' %}
 
-    <title>상세 페이지</title>
+{% block content %}
     <style>
-        body{
-            background-color: #FFFDF0;
+
+        .home{
+            width: 100%;
+            height: 100%;
+            color: #191919;
+            font-size: 24px;
+            font-family: Noto Sans;
+            font-weight: 600;
+
+            margin-top: -40%; /* 원하는 위치로 조정 */
         }
-        .rounded-box {
+
+        .information {
+            width: 906px;
+            height: 370px;
+            flex-shrink: 0;
+
+            border-radius: 20px;
+            border: 2px solid #02343F;
+            background: #F8F8FA;
+
+            margin-left: 320px;
+            margin-top: -320px;
+
+        }
+
+
+         .rounded-box2 {
+            width: 15vw;
+            height: 30vw;
+
             border: 3px solid #422700;
             border-radius: 5px;
             padding: 10px;
-            margin: 10px 0;
+            margin: 10px 20px;
             background-color: #ffffff;
         }
+
         /* 제목 열 너비 조절 */
         th:first-child, td:first-child {
             width: 55%;
@@ -29,12 +55,7 @@
             width: 23%;
         }
 
-        td, th {
-        /* 챌린지 목록들입니다.  */
-            text-align: left;
-            padding: 10px;
-            height: 20px;
-        }
+
 
         .table {
             width: 10px;
@@ -52,25 +73,21 @@
             border-bottom: 1px solid black;
         }
 
-        td a {
-        /* 링크 색/밑줄 없애기(챌린지 목록 부분) */
-            color: black;
-            text-decoration: none;
-        }
-
-        /* 제목을 제외한 행에 커서를 올리면 해당 행의 배경색이 하늘색으로 바뀜 */
-        tbody tr:hover {
-            background-color: #F0F8FF;
-        }
 
         .info-title {
+
+            width: 94px;
+            height: 34px;
             display: inline-block;
-            width: 70px;
-            margin: 0px;
-            margin: 5px;
-            color: grey;
-            font-size: 20px;
-            font-weight: bold;
+            margin-top: 10px;
+            padding-top:15px;
+            vertical-align: center;
+            color: #999;
+            text-align: center;
+            font-family: Noto Sans;
+            font-size: 18px;
+            font-style: normal;
+            font-weight: 500;
 
         }
 
@@ -78,16 +95,18 @@
             display: inline-block;
             width: 500px;
             margin: 0px 5px;
-            font-size: 20px;
-            font-weight: bold;
+            font-size: 18px;
+            font-weight: 600;
         }
     </style>
-</head>
-<body>
-{% include 'portfolio/menubar.html' %}
-    <div class="container">
-        <h1>My Page</h1><br>
-        <div class="rounded-box">
+
+<div class="container">
+
+        <a href="{% url 'user:update' username=user.username  %}">정보수정</a>
+
+
+        <div class="information">
+                <div style="margin-left: 30px; margin-top: 25px; width: 20%; height: 20%; color: #191919; font-size: 20px; font-family: Noto Sans; font-weight: 700; word-wrap: break-word">기본정보</div>
                 <h3 class="info-title">ID</h3><h3 class="info-info">{{user.username}}</h3>
                 <br>
                 <h3 class="info-title">학번</h3><h3 class="info-info">{{user.number}}</h3>
@@ -99,11 +118,44 @@
                 {% else %}
                 <h3 class="info-title">학과</h3><h3 class="info-info">-</h3>
                 {% endif %}
-        </div><br>
-        <h4 class="rounded-box" style="font-size: 20px;"><br> <b>{{user.username}} 님을 응원합니다!</b><br><br>
-        </h4>
-        </div><br>
-        <h4><a href="{% url 'user:user_portfolios' username=request.user.username %}">내 포트폴리오로 이동</a></h4>
+                <h3 class="info-title">학적 상태</h3><h3 class="info-info">{{user.status}}</h3>
+                                <br>
+                <h3 class="info-title">관심 직무</h3>
+                <h3 class="info-info">
+                    {% if user.interests.all %}
+                        {% for interest in user.interests.all %}
+                            <button>{{ interest.interest }}</button>
+                        {% endfor %}
+                    {% else %}
+                        <p>관심 직무가 없습니다.</p>
+                    {% endif %}
+                </h3>
 
-</body>
-</html>
+
+                <div class="home">홈</div>
+        </div><br>
+    <h4 class="rounded-box" style="font-size: 15px;">나의 모집글<br><br>
+        <div class="container">
+            <div class="row">
+                {% for p in user_portfolios %}
+                    <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
+                        <div class="card" style="width: 18rem;">
+                            {% if p.head_image %}
+                                <img src="{{ p.head_image.url }}" class="card-img-top" alt="...">
+                            {% else %}
+                                <img src="https://picsum.photos/seed/{{ p.id }}/800/200" class="card-img-top" alt="...">
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ p.title }}</h5>
+                                <p class="card-text">{{ p.content | truncatewords:10 }}</p>
+                                <a href="{{ p.get_absolute_url }}" class="btn btn-primary text-light">더보기</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </h4>
+        </div><br>
+       <h4><a href="{% url 'user:user_portfolios' username=request.user.username %}">내 포트폴리오로 이동</a></h4>-->
+{% endblock %}

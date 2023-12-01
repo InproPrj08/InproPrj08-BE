@@ -2,8 +2,10 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import Portfolio, CUser, College, Major, Number, Interest, Status
 
+
 class PortfolioAdmin(admin.ModelAdmin):
     list_display = ['author', 'title', 'content']
+
 
 admin.site.register(Portfolio, PortfolioAdmin)
 admin.site.register(CUser, UserAdmin)

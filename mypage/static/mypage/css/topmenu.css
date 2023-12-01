@@ -54,3 +54,7 @@
         .top-login-button:hover {
             color: rgb(130, 130, 130); /* 호버 시 배경색 변경 */
         }
+
+        .round {
+                border-radius: 50%;
+        }

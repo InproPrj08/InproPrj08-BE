@@ -1,42 +1,39 @@
+from portfolio.models import Major, Portfolio
 from django.shortcuts import render
-from django.http import HttpResponse
-from .models import Student
-from django.http import JsonResponse
-from .models import Department, SubDepartment
-# Create your views here.
+
+
 
 def filter_page(request):
+    majors = Major.objects.all()
+
     if request.method == 'GET':
-        status = request.GET.get('status', '') # 라디오 버튼에서 선택한 상태 값
-        interest = request.GET.get('interest', '')
+        status = request.GET.get('status', '')
+        interest = request.GET.getlist('interest')
+        college = request.GET.get('college', '')
+        major = request.GET.get('major', '')
 
-        filtered_students = Student.objects.all()
+        queryset = Portfolio.objects.all()
 
-        if status:  # 상태 값이 전달되었을 때만 필터링
-            filtered_students = filtered_students.filter(status=status)
+        if status:
+            queryset = queryset.filter(status=status)
+
         if interest:
-            filtered_students = filtered_students.filter(interest=interest)
+            # Update the filter for many-to-many relationship
+            queryset = queryset.filter(interest_field__interest__in=interest)
 
+        if college:
+            queryset = queryset.filter(department__college=college)
+
+        if major:
+            queryset = queryset.filter(department=major)
 
         context = {
             'status': status,
             'interest': interest,
-            'filtered_students': filtered_students,
+            'college': college,
+            'major': major,
+            'majors': majors,
+            'results': queryset,
         }
 
-        return render(request, 'filter/filter_portfolio.html', context)
-
-    return HttpResponse('Invalid request method')
-
-def populate_database(request):
-    data = {}
-
-    # 대학 및 전공 정보 가져오기
-    departments = Department.objects.all()
-    sub_departments = SubDepartment.objects.all()
-
-    # JSON 데이터 구성
-    data['departments'] = [{'id': dep.id, 'name': dep.name} for dep in departments]
-    data['sub_departments'] = [{'id': sub.id, 'name': sub.name, 'department_id': sub.department.id} for sub in sub_departments]
-
-    return JsonResponse(data)
+        return render(request, 'portfolio/portfolio_list.html', context)

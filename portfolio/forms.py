@@ -1,6 +1,7 @@
 # forms.py
 from django import forms
-from .models import Comment, Portfolio
+from .models import Comment, Portfolio, Interest
+
 
 class CommentForm(forms.ModelForm):
     text = forms.CharField(
@@ -11,7 +12,15 @@ class CommentForm(forms.ModelForm):
         model = Comment
         fields = ['text', 'is_anonymous']
 
+
 class PortfolioForm(forms.ModelForm):
+    interest_field = forms.ModelMultipleChoiceField(
+        queryset=Interest.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+    )
+    hashtags = forms.CharField(label='Hashtags', required=False)
     class Meta:
         model = Portfolio
-        fields = ['title', 'content']
+        fields = ['title', 'styles', 'hashtags','image','content','interest_field','department','status','anonymous']
+

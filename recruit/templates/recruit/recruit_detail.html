@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+{% load static %}
+{% load tz %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>힛</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Racing+Sans+One&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/edea15a092.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'portfolio/bootstrap/bootstrap.min.css' %}" media="screen">
+    <script src="https://kit.fontawesome.com/726bbd6862.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <!-- Responsive navbar-->
+    {% include 'portfolio/menubar.html' %}
+    <!-- Page content-->
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Post content-->
+                <article>
+                    <!-- Post header-->
+                    <header class="mb-4">
+                        {% if text_data %}
+                        <div style="display: flex; align-items: flex-start;">
+                            <div>
+                                <p>Status: 졸업생</p>
+                                <p>Interest Field:
+                                    {% for interest in text_data.interest_field %}
+                                    <button onclick="handleHashtagClick('{{ interest }}')">{{ interest }}</button>
+                                    {% endfor %}
+                                </p>
+                                <p>Department: {{ text_data.department }}</p>
+                                <p>모집인원 : {{ text_data.people }}</p>
+
+{% now "Y년 m월 d일 H시 i분 s초" as now %}
+
+<p>마감일: {{ recruit.deadline|date:"Y년 m월 d일 H시 i분 s초" }}</p>
+<p>현재 날짜: {{ now }}</p>
+
+{% with d_day=recruit.calculate_d_day|add:"1" %}
+    {% if d_day > 0 %}
+        <p>마감기한: {{ recruit.deadline|date:"Y년 m월 d일" }} (D-{{ d_day }})</p>
+    {% else %}
+        <p>마감되었습니다.</p>
+    {% endif %}
+{% endwith %}
+
+
+                            </div>
+
+                        </div>
+                        <!-- Post title-->
+                        <h1 class="fw-bolder mb-1">{{ text_data.title | safe }}</h1>
+                        <!-- Post meta content-->
+                        <div class="text-muted fst-italic mb-2">Posted on {{recruit.created_at}}</div>
+
+                    </header>
+
+
+                    <!-- Post content-->
+                    <section class="mb-5">
+                        <p class="fs-5 mb-4" style="{{ text_data.styles }}">{{ text_data.content | safe }}</p>
+
+                    </section>
+                    {% else %}
+                    <p>No texts available.</p>
+                    {% endif %}
+                    {% if text_data.file %}
+    <p>
+        첨부 파일 : <a href="{{ text_data.file.url }}" download="{{ text_data.file_name }}">{{ text_data.file_name }}</a>
+    </p>
+{% endif %}
+
+
+                </article>
+
+                {% if user.is_authenticated and user == recruit.author %}
+                    <a href="{% url 'recruit:recruit_update' pk=recruit.pk %}" class="btn btn-primary">수정하기</a>
+                {% endif %}
+                {% if user.is_authenticated and user == recruit.author %}
+                    <a href="#" onclick="confirmDelete({{ recruit.pk }})" class="btn btn-danger">삭제하기</a>
+                {% endif %}
+                <a href="{% url 'recruit:recruit_list' %}" class="btn btn-primary">뒤로가기</a>
+                <br/><br/>
+
+                <!-- 댓글 section-->
+                <section class="mb-5">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <!-- Comment form-->
+                            <form method="post" action="{% url 'recruit:recruit_detail' pk=recruit.pk %}">
+                                {% csrf_token %}
+                                <h2>댓글</h2>
+
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label>익명</label>
+                                        {{ form.is_anonymous }}
+                                    </div>
+                                    <div class="col-md-5">
+                                        {{ form.text }}
+                                    </div>
+
+                                    <div class="col-md-5">
+                                        <button type="submit" class="btn btn-primary btn-block">댓글 작성</button>
+                                    </div>
+                                </div>
+                            </form>
+                            <hr>
+                            <!-- Comment with nested comments-->
+                            {% for comment in comments %}
+                                <div class="d-flex mb-4">
+                                    <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..."></div>
+                                    <div class="ms-3">
+                                        <div class="fw-bold">
+                                            {% if not comment.is_anonymous %}
+                                                {% if comment.user == recruit.author %}
+                                                    <span class="text-muted">글쓴이</span>
+                                                {% else %}
+                                                    {{ comment.user.username }}
+                                                {% endif %}
+                                            {% else %}
+                                                익명
+                                            {% endif %}
+                                            <span class="text-muted">|</span>
+                                            <span class="text-muted" style="font-size: 12px;">{{ comment.created_at }}</span>
+                                        </div>
+                                        <div class="d-flex">
+                                            {% if comment.user == request.user %}
+                                                <form method="post" action="{% url 'recruit:delete_comment' pk=recruit.pk comment_id=comment.id %}">
+                                                    {% csrf_token %}
+                                                    <button class="delete-button" type="submit">삭제</button>
+                                                </form>
+                                            {% endif %}
+                                            <a class="clike-button {% if request.user in comment.likes.all %}liked{% endif %}" data-comment-id="{{ comment.id }}" href="" style="text-decoration: none;">
+                                                {% if request.user in comment.likes.all %}
+                                                    <i class="fa fa-heart fg-danger" style="color:red;font-size: 20px;"></i>
+                                                {% else %}
+                                                    <i class="fa fa-heart fa-regular" style="color:red; font-size: 20px;"></i>
+                                                {% endif %}
+                                                <span class="clike-count">{{ comment.likes.count }}</span>
+                                            </a>
+                                        </div>
+                                        <div>{{ comment.text }}</div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <!-- Side widgets-->
+            <div class="col-lg-4">
+                <!-- Search widget-->
+                <div class="card mb-4">
+                    <div class="card-header">Search</div>
+                    <div class="card-body">
+                        <div class="input-group">
+                            <input class="form-control" type="text" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
+                            <button class="btn btn-primary" id="button-search" type="button">Go!</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card my-4">
+                    <h5 class="card-header">Categories</h5>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <ul class="list-unstyled mb-0">
+                                    {% for category in categories %}
+                                    <li>
+                                        <a href="{{ category.get_absolute_url }}">{{category}}({{category.post_set.count}})</a>
+                                    </li>
+                                    {% endfor %}
+                                    <li>
+                                        <a href="/blog/category/no_category/">미분류({{no_category_post_count}})</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Side widget-->
+                <div class="card mb-4">
+                    <div class="card-header">Side Widget</div>
+                    <div class="card-body">You can put anything you want inside of these side widgets. They are easy to use, and feature the Bootstrap 5 card component!</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer-->
+    <footer class="py-5 bg-dark">
+        <div class="container">
+            <p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p>
+        </div>
+    </footer>
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="js/scripts.js"></script>
+</body>
+<script>
+    const recruitDeleteUrl = "{% url 'recruit:recruit_delete' pk=recruit.pk %}";
+</script>
+<script>
+//댓글 삭제
+    document.addEventListener('DOMContentLoaded', function () {
+        // 삭제 버튼에 대한 이벤트 리스너 등록
+        var deleteButtons = document.getElementsByClassName('delete-button');
+        for (var i = 0; i < deleteButtons.length; i++) {
+            deleteButtons[i].addEventListener('click', function (event) {
+                // 삭제 버튼 클릭 시 호출되는 함수
+                var commentId = event.currentTarget.getAttribute('data-comment-id');
+                if (!confirm('댓글을 삭제하시겠습니까?')) {
+                    event.preventDefault(); // 취소를 선택한 경우에는 삭제를 중단
+                }
+            });
+        }
+    });
+</script>
+<script>
+//댓글 좋아요
+const recruit_pk = {{ recruit.id }};
+    console.log(recruit_pk)
+
+     function confirmDelete() {
+        if (confirm("정말로 삭제하시겠습니까?")) {
+            fetch(recruitDeleteUrl, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+                credentials: 'include',
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.status === 'success') {
+                    alert('포트폴리오가 성공적으로 삭제되었습니다.');
+                    window.location.href = "{% url 'recruit:recruit_list' %}";
+                } else {
+                    alert('삭제에 실패했습니다. 다시 시도해주세요.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('삭제에 실패했습니다. 다시 시도해주세요.');
+            });
+        }
+    }
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const currentUserID = {% if request.user.is_authenticated %}"{{ request.user.id }}"{% else %}null{% endif %};
+    const authorID = "{{ recruit.author.id }}";
+    const likeButton = document.getElementById('like-button');
+    const likeCount = document.getElementById('like-count');
+    console.log('currentUserID:', currentUserID);
+    console.log('authorID:', authorID);
+
+
+    //댓글 좋아요
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('click', function (event) {
+        if (event.target && event.target.classList.contains('clike-button')) {
+            event.preventDefault();
+            const likeButton = event.target;
+            const commentId = likeButton.dataset.commentId;
+            const portfolioId = '{{ portfolio.id }}'; // 포트폴리오 ID를 여기에 추가
+            handleCommentLike(portfolioId, commentId, likeButton, event);
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+        const likeButtons = document.querySelectorAll('.clike-button');
+
+        likeButtons.forEach(likeButton => {
+            likeButton.addEventListener('click', function (event) {
+                event.preventDefault();
+
+                const commentId = likeButton.dataset.commentId;
+
+                // AJAX 요청
+                fetch(`/recruit/${recruit_pk}/toggle_comment_like/${commentId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken'),
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // 좋아요 상태 갱신
+                    if (data.liked) {
+                        likeButton.querySelector('.fa-heart').classList.remove('fa-regular');
+                        likeButton.querySelector('.fa-heart').classList.add('fa-solid', 'fg-danger');
+                    } else {
+                        likeButton.querySelector('.fa-heart').classList.remove('fa-solid', 'fg-danger');
+                        likeButton.querySelector('.fa-heart').classList.add('fa-regular');
+                    }
+
+                    // 좋아요 수 갱신
+                    likeButton.querySelector('.clike-count').textContent = data.like_count;
+                })
+                .catch(error => {
+                    console.error('에러:', error);
+                });
+            });
+        });
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    });
+</script>
+
+</html>

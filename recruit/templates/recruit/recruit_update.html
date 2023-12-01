@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>모집글 수정하기</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'portfolio/writec.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+</head>
+<body>
+
+{% include 'portfolio/menubar.html' %}
+
+<div class="row">
+    <div class="container">
+        <form method="post" enctype="multipart/form-data" id="recruit-form">
+            {% csrf_token %}
+
+            <br><br>
+            <!-- 학적 상태 선택 라디오 버튼 -->
+            <label for="public-status">학적 상태:</label><br>
+            <input type="radio" id="public-status-public" name="status" value="public" {% if recruit.status == True %}checked{% endif %}> 공개
+            <input type="radio" id="public-status-private" name="status" value="private" {% if recruit.status == False %}checked{% endif %}> 비공개
+            <br><br>
+
+            <!-- 관심 직무 선택 체크 박스 -->
+            <label for="interest-field">모집 분야 :</label><br>
+            {% for interest in interests.all %}
+                <input type="checkbox" id="interest-field-{{ interest.id }}" name="interestField" value="{{ interest.id }}" {% if interest in recruit.interest_field.all %}checked{% endif %}> {{ interest.interest }}
+            {% endfor %}
+            <br><br>
+
+            <label for="people">모집인원:</label>
+<input type="number" id="people" name="people" placeholder="{{ recruit.people }}" value="{{ recruit.people }}" required>
+<br><br>
+            <label for="deadline">마감기한: </label>
+            <input type="date" id="deadline" name="deadline" value="{{ recruit.deadline|date:'Y-m-d' }}" required>
+            <br><br>
+
+
+
+            <!-- 대학 선택 드롭다운 -->
+            <label for="college">대학:</label>
+            <select id="college" name="college">
+                <option value="default">대학 선택</option>
+                {% for college in colleges %}
+                    <option value="{{ college.name }}" {% if college.name == selected_college %}selected{% endif %}>{{ college.name }}</option>
+                {% endfor %}
+            </select>
+
+            <!-- 전공 선택 드롭다운 -->
+            <label for="major">전공:</label>
+            <select id="major" name="major" {% if selected_college == 'default' %}disabled{% endif %}>
+                <!-- 이 부분은 JavaScript로 동적으로 업데이트됩니다 -->
+            </select>
+
+            <br><br>
+
+            <!-- 제목 입력란 추가 -->
+            <input type="text" id="title-input" name="title" value="{{ recruit.title }}" placeholder="제목" style="margin-top: 10px;">
+            <div class="container">
+            <div class="options">
+                <button type="button" id="bold" class="option-button format">
+                <i class="fa-solid fa-bold"></i>
+            </button>
+            <button type="button" id="superscript" class="option-button script">
+                <i class="fa-solid fa-superscript"></i>
+            </button>
+            <button type="button" id="subscript" class="option-button script">
+                <i class="fa-solid fa-subscript"></i>
+            </button>
+
+            <button type="button" id="insertOrderedList" class="option-button">
+                <div class="fa-solid fa-list-ol"></div>
+            </button>
+            <button type="button" id="insertUnorderedList" class="option-button">
+                <i class="fa-solid fa-list"></i>
+            </button>
+
+            <button type="button" id="undo" class="option-button">
+                <i class="fa-solid fa-rotate-left"></i>
+            </button>
+            <button type="button" id="redo" class="option-button">
+                <i class="fa-solid fa-rotate-right"></i>
+            </button>
+
+            <button type="button" id="createLink" class="adv-option-button">
+                <i class="fa fa-link"></i>
+            </button>
+            <button type="button" id="unlink" class="option-button">
+                <i class="fa fa-unlink"></i>
+            </button>
+
+            <button type="button" id="justifyLeft" class="option-button align">
+                <i class="fa-solid fa-align-left"></i>
+            </button>
+            <button type="button" id="justifyCenter" class="option-button align">
+                <i class="fa-solid fa-align-center"></i>
+            </button>
+            <button type="button" id="justifyRight" class="option-button align">
+                <i class="fa-solid fa-align-right"></i>
+            </button>
+            <button type="button" id="justifyFull" class="option-button align">
+                <i class="fa-solid fa-align-justify"></i>
+            </button>
+            <button type="button" id="indent" class="option-button spacing">
+                <i class="fa-solid fa-indent"></i>
+            </button>
+            <button type="button" id="outdent" class="option-button spacing">
+                <i class="fa-solid fa-outdent"></i>
+            </button>
+            <select id="formatBlock" class="adv-option-button">
+                <option value="H1">H1</option>
+                <option value="H2">H2</option>
+                <option value="H3">H3</option>
+                <option value="H4">H4</option>
+                <option value="H5">H5</option>
+                <option value="H6">H6</option>
+            </select>
+            <select id="fontName" class="adv-option-button"></select>
+            <select id="fontSize" class="adv-option-button"></select>
+
+            <div class="input-wrapper">
+                <input type="color" id="foreColor" class="adv-option-button">
+                <label for="foreColor">Font Color</label>
+            </div>
+            <div class="input-wrapper">
+                <input type="color" id="backColor" class="adv-option-button">
+                <label for="backColor">Highlight Color</label>
+            </div>
+                <button id="btn-image">
+                IMG
+            </button>
+            <input id="img-selector" type="file" accept="image/*" />
+<label for="file">파일 업로드:</label>
+<input type="file" id="file" name="file" value="{{ recruit.file }}" accept=".pdf, .doc, .docx, .txt, .hwp" />
+            </div>
+        </div>
+            <!-- 마크다운 에디터 추가 -->
+            <div id="text-input" contenteditable="true" style="overflow-y: auto; max-height: 400px;">
+                {{ recruit.content|safe }} <!-- 기존 내용을 표시 -->
+            </div>
+
+
+            <!-- 수정 완료 및 취소 버튼 -->
+            <button type="button" onclick="submitRecruitForm()">수정 완료</button>
+            <br><br><br><br>
+            <a href="{% url 'recruit:recruit_detail' pk=recruit.pk %}">취소</a>
+        </form>
+    </div>
+</div>
+
+<script>
+const recruitUpdateUrl = "{% url 'recruit:recruit_update' pk=recruit.pk %}";
+
+// 전역 스코프에 selectedMajor 변수 추가
+var selectedCollege = '{{ selected_college }}';
+var selectedMajor = '{{ selected_major }}';
+
+document.addEventListener('DOMContentLoaded', function () {
+    var collegeDropdown = document.getElementById('college');
+    var majorDropdown = document.getElementById('major');
+
+    // Function to update major options based on the selected college
+    function updateMajorOptions(college) {
+        majorDropdown.innerHTML = ''; // Clear existing options
+
+        switch (college) {
+            case '과기':
+                {% for major in sm %}
+                    majorDropdown.innerHTML += '<option value="{{ major.id }}" {% if major.id == selectedMajor %}selected{% endif %}>{{ major.name }}</option>';
+                {% endfor %}
+                break;
+            case '약학':
+                {% for major in pm %}
+                    majorDropdown.innerHTML += '<option value="{{ major.id }}" {% if major.id == selectedMajor %}selected{% endif %}>{{ major.name }}</option>';
+                {% endfor %}
+                break;
+            case '아앤디':
+                {% for major in am %}
+                    majorDropdown.innerHTML += '<option value="{{ major.id }}" {% if major.id == selectedMajor %}selected{% endif %}>{{ major.name }}</option>';
+                {% endfor %}
+                break;
+            case '글융':
+                {% for major in gm %}
+                    majorDropdown.innerHTML += '<option value="{{ major.id }}" {% if major.id == selectedMajor %}selected{% endif %}>{{ major.name }}</option>';
+                {% endfor %}
+                break;
+        }
+    }
+
+    // Event listener for the college dropdown
+    collegeDropdown.addEventListener('change', function () {
+        selectedCollege = this.value;
+        majorDropdown.disabled = false; // Enable major dropdown
+        updateMajorOptions(selectedCollege); // Update major options based on the selected college
+    });
+
+    // Initialize the major dropdown based on the selected college
+    if (selectedCollege !== 'default') {
+        collegeDropdown.value = selectedCollege;
+        updateMajorOptions(selectedCollege);
+    }
+
+    // Set the selected major if it's not the default value
+    if (selectedMajor !== '') {
+        majorDropdown.value = selectedMajor;
+    }
+});
+
+// Event listener for the major dropdown
+document.getElementById('major').addEventListener('change', function () {
+    selectedMajor = this.value;
+    console.log(selectedMajor);
+});
+
+function submitRecruitForm() {
+    var title = document.getElementById('title-input').value;
+    console.log('Title:', title);
+
+    var editableContent = document.getElementById('text-input').innerHTML;
+    var styles = window.getComputedStyle(document.getElementById('text-input'));
+    var statusElements = document.getElementsByName('status');
+    var selectedStatus = "";
+    for (var i = 0; i < statusElements.length; i++) {
+        if (statusElements[i].checked) {
+            selectedStatus = statusElements[i].value;
+            break;
+        }
+    }
+    var selectedPeople = document.getElementById('people').value;
+    var selectedDeadline = document.getElementById('deadline').value;
+    // 'public'이면 true, 아니면 false로 변환
+    selectedStatus = (selectedStatus === 'public');
+    console.log('selectedStatus:', selectedStatus);
+    var selectedFile = document.getElementById('file').files[0];
+    var interestFieldElements = document.getElementsByName('interestField');
+    var selectedFields = Array.from(interestFieldElements)
+        .filter(field => field.checked)
+        .map(field => field.value);
+
+    console.log('selectedFields:', selectedFields);
+
+    var selectedDepartment;
+    var selectedDropdowns = document.querySelectorAll('select[name="department"]');
+    for (var i = 0; i < selectedDropdowns.length; i++) {
+        if (selectedDropdowns[i].value) {
+            selectedDepartment = selectedDropdowns[i].value;
+            break;
+        }
+    }
+
+    console.log('Saved Major:', selectedMajor);  // 이 부분을 이동
+    var formData = new FormData();
+    formData.append('title', title);
+    formData.append('content', editableContent);
+    formData.append('styles', JSON.stringify({
+        color: styles.color,
+        backgroundColor: styles.backgroundColor,
+        fontSize: styles.fontSize,
+    }));
+    if (selectedFile) {
+        formData.append('file', selectedFile);
+    }
+    formData.append('status', selectedStatus);
+    formData.append('people', selectedPeople);
+    formData.append('deadline', selectedDeadline);
+    // selectedFields 배열의 각 값을 개별적으로 추가
+    selectedFields.forEach(field => {
+        formData.append('interest_field', field);
+    });
+
+    formData.append('department', selectedMajor);
+
+    console.log('Title:', title);
+    console.log('Editable Content:', editableContent);
+    console.log('Selected Status:', selectedStatus);
+    console.log('Selected Fields:', selectedFields);
+    console.log('Selected Major:', selectedMajor);
+    var csrfToken = getCookie('csrftoken');
+
+    if (window.confirm('정말로 저장하시겠습니까?')) {
+        fetch(recruitUpdateUrl, {
+    method: 'POST',
+    headers: {
+        'X-CSRFToken': csrfToken,
+        'X-Requested-With': 'XMLHttpRequest', // AJAX 요청임을 나타내는 헤더
+    },
+    credentials: 'include',
+    body: formData,
+    redirect: 'follow',
+})
+.then(response => {
+    console.log('Raw Server Response:', response);
+
+    if (!response.ok) {
+        console.error('Non-JSON Response:', response);
+        throw new Error('Network response was not ok');
+    }
+
+    return response.json();
+})
+.then(data => {
+    console.log('Server Response:', data);
+
+    if (data && data.status === 'success') {
+        console.log('Text saved successfully!');
+        alert('Text saved successfully!');
+
+        if (data.is_ajax) {
+            console.log('Redirecting to recruit detail page');
+            console.log('모집 상세 페이지로 이동 중');
+            window.location.href = '/recruit/' + data.pk + '/';
+        }
+    } else {
+        console.error('Error:', data);
+        alert('Text save failed. Please try again.');
+        console.log('Detailed error data:', data);
+    }
+})
+.catch(error => {
+    console.error('Error:', error);
+    alert('Text save failed. Please try again.');
+
+    console.log('Error Response:', error.response);
+});
+}
+}
+
+</script>
+
+<script src="{% static 'portfolio/load.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+</body>
+</html>
