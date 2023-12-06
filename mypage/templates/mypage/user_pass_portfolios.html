@@ -173,119 +173,124 @@
 
          }
 
+
     </style>
 </head>
 <body style="background-color: #F1F1F5;">
 
-    {% include 'portfolio/menubar.html' %}<br>
+{% include 'portfolio/menubar.html' %}<br>
 
-     <div style="width: 100%; height: 100%; color: #191919; font-size: 28px; font-family: Noto Sans; font-weight: 600; margin-left: 150px;margin-bottom: -67px; margin-top: 50px ">{{ request.user.username }}님의 마이페이지</div>
-        <div class="rounded-basebox">
-                  <div class="row">
-                    <div class="content-section">
-                      <div class="media">
-                        {% if user.profile.image.url %}
-                            <img class="rounded-circle article-img" src="{{ user.profile.image.url }}">
-                        {% else %}
-                            <img class="rounded-circle article-img" src="{% static 'portfolio/image/duksaeheart.png' %}">
-                        {% endif %}
-                      </div>
-                      <!-- FORM HERE -->
+<div style="width: 100%; height: 100%; color: #191919; font-size: 28px; font-family: Noto Sans; font-weight: 600; margin-left: 150px;margin-bottom: -67px; margin-top: 50px ">{{ request.user.username }}님의 마이페이지
+</div>
+<div class="rounded-basebox">
+    <div class="row">
+        <div class="content-section">
+            <div class="media">
+                {% if user.profile.image.url %}
+                <img class="rounded-circle article-img" src="{{ user.profile.image.url }}">
+                {% else %}
+                <img class="rounded-circle article-img" src="{% static 'portfolio/image/duksaeheart.png' %}">
+                {% endif %}
             </div>
-            <br>
-            <a href="{% url 'user:update' username=user.username %}" class="base-title">내 프로필 수정</a>
-            <br>
-            <a href="{% url 'user:detail' username=user.username %}" class="base-title">홈</a>
-            <br>
-            <a href="{% url 'user:user_pass_portfolios' username=user.username %}" class="base-title">나의 합격 수기</a>
+            <!-- FORM HERE -->
         </div>
         <br>
+        <a href="{% url 'user:update' username=user.username %}" class="base-title">내 프로필 수정</a>
+        <br>
+        <a href="{% url 'user:detail' username=user.username %}" class="base-title">홈</a>
+        <br>
+        <a href="{% url 'user:user_pass_portfolios' username=user.username %}" class="base-title">나의 합격 수기</a>
     </div>
+    <br>
+</div>
 
-    <div class="name">나의 합격수기</div>
-    {% if text_data %}
-        <a href="{% url 'pass_portfolio:pass_portfolio_update' pk=text_data.pk %}" class="button" style="border-radius: 10px; margin-left: 1103px; text-decoration: none; display: flex; justify-content: center; align-items: center;">수정하기</a>
-    {% else %}
-        <a href="{% url 'pass_portfolio:your_combined_view' %}" class="button" style="border-radius: 10px; margin-left: 1103px; text-decoration: none; display: flex; justify-content: center; align-items: center;">작성하기</a>
-    {% endif %}
-    <div class="container mb-4" style="border-radius: 20px;height: 200px; margin-left:420px; margin-top: -320px; width: 55%;  background: white; border-radius: 20px; border: 5px solid rgba(165.33, 203.56, 162, 0.32);">
-        <div class="col-lg-8">
+<div class="name">나의 합격수기</div>
+{% if text_data %}
+<a href="{% url 'pass_portfolio:pass_portfolio_update' pk=text_data.pk %}" class="button"
+   style="border-radius: 10px; margin-left: 1103px; text-decoration: none; display: flex; justify-content: center; align-items: center;">수정하기</a>
+{% else %}
+<a href="{% url 'pass_portfolio:your_combined_view' %}" class="button"
+   style="border-radius: 10px; margin-left: 1103px; text-decoration: none; display: flex; justify-content: center; align-items: center;">작성하기</a>
+{% endif %}
+<div class="container mb-4"
+     style="border-radius: 20px;height: 200px; margin-left:420px; margin-top: -320px; width: 55%;  background: white; border-radius: 20px; border: 5px solid rgba(165.33, 203.56, 162, 0.32);">
+    <div class="col-lg-8">
 
-            <div class="row">
-                    {% if text_data %}
-                    <!-- 기업정보 -->
-                        <div class="col-md-3" style="margin-left: 10px; margin-top: 10px;">
-                            <label style="padding: 10px; font-family: Noto Sans; font-weight: 600;">기업 정보</label>
+        <div class="row">
+            {% if text_data %}
+            <!-- 기업정보 -->
+            <div class="col-md-3" style="margin-left: 10px; margin-top: 10px;">
+                <label style="padding: 10px; font-family: Noto Sans; font-weight: 600;">기업 정보</label>
 
-                            <label class="form-control" >{{ text_data.company_name }}</label>
-                            </div>
-                        </div>
-
+                <label class="form-control">{{ text_data.company_name }}</label>
+            </div>
         </div>
 
-        <div class="row">
-                         <!-- 관심 직무 선택 체크 박스 -->
-                <div class="interest" style="margin-left: 330px; margin-top: -85px;">
-                    <label for="interest-field" style="font-family: Noto Sans; font-weight: 600;margin-bottom: 10px;">관심 직무</label><br>
-
-                    {% for interest1 in text_data.interests %}
-                        <div class="form-check form-check-inline" style="margin-left: 10px; margin-bottom: 10px;">
-                            <input type="checkbox" class="form-check-input" name="interest1" id="{{ interest1.slug }}"
-                                value="{{ interest1.interest }}" {% if interest1.interest in text_data.interest_field %}checked{% endif %} disabled>
-                            <label class="form-check-label" for="{{ interest1.slug }}">{{ interest1.interest }}</label>
-                        </div>
-
-                        {% if forloop.counter|divisibleby:4 and not forloop.last %}
-                            <br> <!-- 매 4번째 체크 박스마다 줄 바꿈 -->
-                        {% endif %}
-
-                    {% endfor %}
-                </div>
-                    <br><br>
-                </div>
-        <!--전공, 학번-->
-        <div class="row">
-                            <div class="num" style="margin-left: 20px; margin-top: -70px">
-                                 <label style="margin-bottom: 10px; font-family: Noto Sans; font-weight: 600;">전공 | 학번</label><br>
-                                 <h6>{{ text_data.department }} | {{user.number}}</h6>
-                            </div>
-            </div>
     </div>
 
-    <!-- Post title-->
-                       <article class="flex-column align-items-center d-flex" style="margin-left: 420px; width: 55%;">
-                        <div class="body-back-color">
-                            <div class="fw-back-color1">
-                                <p class="fw-bolder" style="margin-left: 20px; font-size: 28px;">{{ text_data.title | safe }}</p>
-                                <!-- Post meta content-->
-                                <div style="display: flex; justify-content: space-between;">
-                                    <!-- 해시태그-->
-                                    <div style="margin-left: 15px;">
-                                        <p>
-                                            {% for hashtag in text_data.hashtags %}
-                                            <button onclick="handleHashtagClick('{{ hashtag }}')" id="hashtag-style">#{{ hashtag }}</button>
-                                            {% endfor %}
-                                        </p>
-                                    </div>
-                                    <!-- 게시한 시간-->
-                                    <div class="text-muted fst-italic" style="margin-right: 20px;">{{text_data.created_at}}에 게시됨</div>
-                                </div>
-                            </div>
+    <div class="row">
+        <!-- 관심 직무 선택 체크 박스 -->
+        <div class="interest" style="margin-left: 330px; margin-top: -85px;">
+            <label for="interest-field" style="font-family: Noto Sans; font-weight: 600;margin-bottom: 10px;">관심 직무</label><br>
 
-                                    <!-- 작성 내용-->
-                        <div class="fw-back-color2">
-                            <section class="mb-5 p-5" style="overflow: auto; height: 500px; ">
-                        <p class="fs-5 mb-4" style="{{ text_data.styles }}">{{ text_data.content | safe }}</p>
+            {% for interest1 in text_data.interests %}
+            <div class="form-check form-check-inline" style="margin-left: 10px; margin-bottom: 10px;">
+                <input type="checkbox" class="form-check-input" name="interest1" id="{{ interest1.slug }}"
+                       value="{{ interest1.interest }}" {% if interest1.interest in text_data.interest_field %}checked{% endif %} disabled>
+                <label class="form-check-label" for="{{ interest1.slug }}">{{ interest1.interest }}</label>
+            </div>
 
-                    </section>
-                            {% else %}
+            {% if forloop.counter|divisibleby:4 and not forloop.last %}
+            <br> <!-- 매 4번째 체크 박스마다 줄 바꿈 -->
+            {% endif %}
 
-                                <p>작성한 포트폴리오가 없습니다.</p>
+            {% endfor %}
+        </div>
+        <br><br>
+    </div>
+    <!--전공, 학번-->
+    <div class="row">
+        <div class="num" style="margin-left: 20px; margin-top: -70px">
+            <label style="margin-bottom: 10px; font-family: Noto Sans; font-weight: 600;">전공 | 학번</label><br>
+            <h6>{{ text_data.department }} | {{user.number}}</h6>
+        </div>
+    </div>
+</div>
 
-                            {% endif %}
-                        </div>
-                    </div>
-                </article>
+<!-- Post title-->
+<article class="flex-column align-items-center d-flex" style="margin-left: 420px; width: 55%;">
+    <div class="body-back-color">
+        <div class="fw-back-color1">
+            <p class="fw-bolder" style="margin-left: 20px; font-size: 28px;">{{ text_data.title | safe }}</p>
+            <!-- Post meta content-->
+            <div style="display: flex; justify-content: space-between;">
+                <!-- 해시태그-->
+                <div style="margin-left: 15px;">
+                    <p>
+                        {% for hashtag in text_data.hashtags %}
+                        <button onclick="handleHashtagClick('{{ hashtag }}')" id="hashtag-style">#{{ hashtag }}</button>
+                        {% endfor %}
+                    </p>
+                </div>
+                <!-- 게시한 시간-->
+                <div class="text-muted fst-italic" style="margin-right: 20px;">{{text_data.created_at}}에 게시됨</div>
+            </div>
+        </div>
+
+        <!-- 작성 내용-->
+        <div class="fw-back-color2">
+            <section class="mb-5 p-5" style="overflow: auto; height: 500px; ">
+                <p class="fs-5 mb-4" style="{{ text_data.styles }}">{{ text_data.content | safe }}</p>
+
+            </section>
+            {% else %}
+
+            <p>작성한 포트폴리오가 없습니다.</p>
+
+            {% endif %}
+        </div>
+    </div>
+</article>
 
 
 <br>

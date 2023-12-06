@@ -4,6 +4,7 @@ from portfolio.models import Portfolio
 from pass_portfolio.models import PassPortfolio
 from recruit.models import Recruit
 
+
 # Create your views here.
 def landing(request):
     # 최근에 작성된 3개의 포트폴리오만 가져오기

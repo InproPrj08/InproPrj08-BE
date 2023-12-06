@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 from .views import PassPortfolioUpdate, PassPortfolioDeleteView, DeleteCommentView
 
-app_name='pass_portfolio'
+app_name = 'pass_portfolio'
 
 urlpatterns = [
     path('', views.PassPortfolioList.as_view(), name='pass_portfolio_list'),

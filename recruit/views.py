@@ -43,13 +43,13 @@ class RecruitList(ListView):
         status = Status.objects.all()
 
         # 기존의 학과와 전공 정보
-        sc = College.objects.get(name='과기')
+        sc = College.objects.get(name='과학기술대학')
         sm = Major.objects.filter(college=sc)
-        pc = College.objects.get(name='약학')
+        pc = College.objects.get(name='약학대학')
         pm = Major.objects.filter(college=pc)
-        ac = College.objects.get(name='아앤디')
+        ac = College.objects.get(name='아트앤디자인대학')
         am = Major.objects.filter(college=ac)
-        gc = College.objects.get(name='글융')
+        gc = College.objects.get(name='글로벌융합대학')
         gm = Major.objects.filter(college=gc)
 
         context.update({
@@ -88,7 +88,8 @@ class RecruitDetail(DetailView):
         if download_file_type == 'file':
             # 포트폴리오의 파일 내용 다운로드
             file_content = recruit.file.read()
-            return self.download_file(f"{recruit.title}.{recruit.file.name.split('.')[-1]}", file_content, 'application/octet-stream')
+            return self.download_file(f"{recruit.title}.{recruit.file.name.split('.')[-1]}", file_content,
+                                      'application/octet-stream')
 
         return super().get(request, *args, **kwargs)
 
@@ -122,8 +123,8 @@ class RecruitDetail(DetailView):
                 'people': recruit.people,
                 'deadline': recruit.deadline,
                 'file': recruit.file,
-                'file_name':file_name,
-                'author':recruit.author,
+                'file_name': file_name,
+                'author': recruit.author,
                 'interest_all': interest_all,
                 'status_all': status_all,
             }
@@ -154,7 +155,6 @@ class RecruitDetail(DetailView):
             return self.form_invalid(form)
 
 
-
 def search_view(request):
     query = request.GET.get('q')
 
@@ -164,7 +164,6 @@ def search_view(request):
         results = Recruit.objects.all()
 
     return render(request, 'recruit/search_results.html', {'results': results, 'query': query})
-
 
 
 def your_combined_view(request):
@@ -179,18 +178,18 @@ def your_combined_view(request):
     interests = Interest.objects.all()
     status = Status.objects.all()
     college = College.objects.all()
-    sc = College.objects.get(name='과기')  # 선택한 학과 객체 가져오기
+    sc = College.objects.get(name='과학기술대학')  # 선택한 학과 객체 가져오기
     sm = Major.objects.filter(college=sc)  # 해당 학과의 전공들 가져오기
-    pc = College.objects.get(name='약학')  # 선택한 학과 객체 가져오기
+    pc = College.objects.get(name='약학대학')  # 선택한 학과 객체 가져오기
     pm = Major.objects.filter(college=pc)  # 해당 학과의 전공들 가져오기
-    ac = College.objects.get(name='아앤디')  # 선택한 학과 객체 가져오기
+    ac = College.objects.get(name='아트앤디자인대학')  # 선택한 학과 객체 가져오기
     am = Major.objects.filter(college=ac)  # 해당 학과의 전공들 가져오기
-    gc = College.objects.get(name='글융')  # 선택한 학과 객체 가져오기
+    gc = College.objects.get(name='글로벌융합대학')  # 선택한 학과 객체 가져오기
     gm = Major.objects.filter(college=gc)  # 해당 학과의 전공들 가져오기
 
     context = {
-        'sm':sm,
-        'pm':pm,
+        'sm': sm,
+        'pm': pm,
         'am': am,
         'gm': gm,
         'form': form,
@@ -266,10 +265,10 @@ class RecruitUpdate(UpdateView):
         context['selected_major'] = self.object.department.id if self.object.department else ''
         context['colleges'] = College.objects.all()
         context['interests'] = Interest.objects.all()
-        context['sm'] = Major.objects.filter(college__name='과기')
-        context['pm'] = Major.objects.filter(college__name='약학')
-        context['am'] = Major.objects.filter(college__name='아앤디')
-        context['gm'] = Major.objects.filter(college__name='글융')
+        context['sm'] = Major.objects.filter(college__name='과학기술대학')
+        context['pm'] = Major.objects.filter(college__name='약학대학')
+        context['am'] = Major.objects.filter(college__name='아트앤디자인대학')
+        context['gm'] = Major.objects.filter(college__name='글로벌융합대학')
         return context
 
     def form_valid(self, form):
@@ -283,6 +282,7 @@ class RecruitUpdate(UpdateView):
             # 에러가 발생한 경우 로그에 출력
             traceback.print_exc()
             return JsonResponse({'status': 'error', 'message': 'Internal Server Error'})
+
 
 class RecruitDeleteView(View):
     def post(self, request, pk):

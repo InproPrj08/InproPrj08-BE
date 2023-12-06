@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <title>목록페이지</title>
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -148,121 +148,126 @@
         }
         }
 
-  </style>
+
+    </style>
 
 </head>
 
 <body>
-    {% include 'portfolio/menubar.html' %}
+{% include 'portfolio/menubar.html' %}
+<br>
+<div class="container" style="padding-top: 20px;">
+    <h3><strong>모집 게시판</strong></h3>
+    <h7>내가 함께 참여하고 싶은 활동을 찾을 수 있어요!</h7>
     <br>
-     <div class="container" style="padding-top: 20px;">
-        <h3><strong>모집 게시판</strong></h3>
-        <h7>내가 함께 참여하고 싶은 활동을 찾을 수 있어요!</h7><br>
 
-    </div>
+</div>
 
-    <div class="container mt-5 " style="background-color: rgba(222, 232, 247, 42%); border-radius: 20px; padding:30px; border: 3px solid #C4DCFF; max-width: 1153px; max-height:250px">
-        <form method="get" action="{% url 'recruit:filtersearch_view' %}">
-            <div class="row">
+<div class="container mt-5 " style="background-color: rgba(222, 232, 247, 42%); border-radius: 20px; padding:30px; border: 3px solid #C4DCFF; max-width: 1153px; max-height:250px">
+    <form method="get" action="{% url 'recruit:filtersearch_view' %}">
+        <div class="row">
+            <!-- 상태 선택 -->
+            <div class="col-md-4">
+                <h6 style="font-weight: bold;">학적상태</h6>
+                {% for status in status %}
+                <div class="form-check form-check-inline">
+                    <input type="radio" class="form-check-input" name="status" id="{{status.id}}" value="{{status.status}}" {% if status == '{{status.status}}' %}checked{% endif %}>
+                    <label class="form-check-label" for="{{status.id}}">{{status.status}}</label>
+                </div>
+                {% endfor %}
+            </div>
 
-                <!-- 상태 선택 -->
-                <div class="col-md-4">
-                    <h6 style="font-weight: bold;">학적상태</h6>
-                    {% for status in status %}
-                    <div class="form-check form-check-inline">
-                        <input type="radio" class="form-check-input" name="status" id="{{status.id}}" value="{{status.status}}" {% if status == '{{status.status}}' %}checked{% endif %}>
-                        <label class="form-check-label" for="{{status.id}}">{{status.status}}</label>
+
+            <!-- 관심 직무 선택 -->
+            <div class="col-md-5">
+                <h6 style="font-weight: bold;">관심 직무</h6>
+                <div class="row">
+                    {% for interest in interests %}
+                    <div class="col-md-3"> <!-- 4개의 컬럼 중 1개 -->
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" class="form-check-input" name="interest" id="{{ interest.slug }}" value="{{ interest.interest }}" {% if interest.interest in interest_name %}checked{% endif %}>
+                            <label class="form-check-label" for="{{ interest.slug }}">{{ interest.interest }}</label>
+                        </div>
                     </div>
                     {% endfor %}
                 </div>
+            </div>
 
 
-
-                <!-- 관심 직무 선택 -->
-<div class="col-md-5" >
-    <h6 style="font-weight: bold;">관심 직무</h6>
-    <div class="row">
-        {% for interest in interests %}
-            <div class="col-md-3"> <!-- 4개의 컬럼 중 1개 -->
+            <!--공감, 최신순-->
+            <div class="col-md-3">
+                <h6 style="font-weight: bold;">정렬</h6>
                 <div class="form-check form-check-inline">
-                    <input type="checkbox" class="form-check-input" name="interest" id="{{ interest.slug }}" value="{{ interest.interest }}" {% if interest.interest in interest_name %}checked{% endif %}>
-                    <label class="form-check-label" for="{{ interest.slug }}">{{ interest.interest }}</label>
+                    <input type="radio" class="form-check-input" name="sorting" id="sorting_latest" value="latest" checked>
+                    <label class="form-check-label" for="sorting_latest">최신순</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input type="radio" class="form-check-input" name="sorting" id="sorting_likes" value="likes">
+                    <label class="form-check-label" for="sorting_likes">공감순</label>
                 </div>
             </div>
-        {% endfor %}
-    </div>
-</div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <h6 style="font-weight: bold;">단과대 및 전공</h6>
+                <label for="college">대학:</label>
+                <select id="college" name="college" style="background-color: white; color: #333; border: 1px solid #ccc; border-radius: 20px; margin: 5px;">
+                    <option value="default">대학 선택</option>
+                    {% for college in colleges %}
+                        <option value="{{ college.name }}" {% if college.name == college %}selected{% endif %}>{{ college.name }}
+                        </option>
+                    {% endfor %}
+                </select>
 
-
-
-                <!--공감, 최신순-->
-                <div class="col-md-3">
-                    <h6 style="font-weight: bold;">정렬</h6>
-                    <div class="form-check form-check-inline">
-                        <input type="radio" class="form-check-input" name="sorting" id="sorting_latest" value="latest" checked>
-                        <label class="form-check-label" for="sorting_latest">최신순</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input type="radio" class="form-check-input" name="sorting" id="sorting_likes" value="likes">
-                        <label class="form-check-label" for="sorting_likes">공감순</label>
-                    </div>
-                </div>
+                <!-- 단과대 및 전공 선택 -->
+                <!-- 전공 선택 드롭다운 -->
+                <label for="major">전공:</label>
+                <select style="background-color: white; color: #333; border: 1px solid #ccc; border-radius: 13px; margin: 0px;" id="major" name="major" {% if selected_college == 'default' %}disabled{% endif %}>
+                <!-- 이 부분은 JavaScript로 동적으로 업데이트됩니다 -->
+                </select>
             </div>
-<div class="row">
-    <div class="col-md-4">
-        <h6 style="font-weight: bold;">단과대 및 전공</h6>
-        <label for="college">대학:</label>
-        <select id="college" name="college" style="background-color: white; color: #333; border: 1px solid #ccc; border-radius: 20px; margin: 5px;">
-            <option value="default">대학 선택</option>
-            {% for college in colleges %}
-                <option value="{{ college.name }}" {% if college.name == college %}selected{% endif %}>{{ college.name }}</option>
-            {% endfor %}
-        </select>
 
-        <!-- 단과대 및 전공 선택 -->
-        <!-- 전공 선택 드롭다운 -->
-        <label for="major">전공:</label>
-        <select style="background-color: white; color: #333; border: 1px solid #ccc; border-radius: 13px; margin: 0px;" id="major" name="major" {% if selected_college == 'default' %}disabled{% endif %}>
-            <!-- 이 부분은 JavaScript로 동적으로 업데이트됩니다 -->
-        </select>
-    </div>
+            <div class="col-md-8 d-flex justify-content-end align-items-end">
+                <button type="submit" class="btn btn-success mt-3 d-inline">검색</button>
+            </div>
+        </div>
 
-    <div class="col-md-8 d-flex justify-content-end align-items-end">
-        <button type="submit" class="btn btn-success mt-3 d-inline">검색</button>
-    </div>
+
+        <!-- 검색 버튼 -->
+
+    </form>
 </div>
-
-
-            <!-- 검색 버튼 -->
-
-        </form>
-    </div>
 
 <br>
 
 <br>
-   <div class="container mx-auto" style="max-width: 1200px;">
+<div class="container mx-auto" style="max-width: 1200px;">
     <div class="row justify-content-center">
         {% for p in recruit %}
         <div class="col-sm-4 mb-4">
-                <div class="card d-flex" style="position: relative; border: 2px solid #C4DCFF; border-radius: 20px; height: 220px; width: 350px; margin:10px" onclick="redirectToDetailPage({{p.pk}}, 'recruit')">
-                <p class="card-text position-absolute top-0 end-0 translate-middle-y" style="margin-right: 10px; margin-top:30px;">
-                            {% now "Y년 m월 d일 H시 i분 s초" as now %}
-                            {% with d_day=p.calculate_d_day|add:"1" %}
-                            {% if d_day >= 0 %}
-                            {% if d_day == 0 %}
-                            <button class="d-num btn btn-danger" id="d-day" style="background-color: #DC6E6E; border:0;">D-day!</button>
-                            {% else %}
-                            <button class="d-num btn btn-primary" id="d-num" style="background-color: #8A9AEB; border:0;"><b>D-{{ d_day }}</b></button>
-                            {% endif %}
-                            {% else %}
-                            <button class="d-num btn btn-secondary" id="d-end">모집종료</button>
-                            {% endif %}
-                            {% endwith %}
-                            </p>
+            <div class="card d-flex"
+                 style="position: relative; border: 2px solid #C4DCFF; border-radius: 20px; height: 220px; width: 350px; margin:10px"
+                 onclick="redirectToDetailPage({{p.pk}}, 'recruit')">
+                <p class="card-text position-absolute top-0 end-0 translate-middle-y"
+                   style="margin-right: 10px; margin-top:30px;">
+                    {% now "Y년 m월 d일 H시 i분 s초" as now %}
+                    {% with d_day=p.calculate_d_day|add:"1" %}
+                    {% if d_day >= 0 %}
+                    {% if d_day == 0 %}
+                    <button class="d-num btn btn-danger" id="d-day" style="background-color: #DC6E6E; border:0;">
+                        D-day!
+                    </button>
+                    {% else %}
+                    <button class="d-num btn btn-primary" id="d-num" style="background-color: #8A9AEB; border:0;"><b>D-{{ d_day }}</b></button>
+                    {% endif %}
+                    {% else %}
+                    <button class="d-num btn btn-secondary" id="d-end">모집종료</button>
+                    {% endif %}
+                    {% endwith %}
+                </p>
 
 
-                    <div class="card-body">
+                <div class="card-body">
                     <div class="d-flex">
                         <img src="{{ p.author.profile.image.url }}" class="card-img-rounded rounded-pill ml-2" alt="...">
                         <div class="user d-flex flex-column" style="margin-left: 30px; margin-top: 20px;">
@@ -282,9 +287,9 @@
     </div>
 </div>
 
-    <br/>
-    <!-- 페이지네이션 링크 표시 -->
-    <div class="pagination justify-content-center">
+<br/>
+<!-- 페이지네이션 링크 표시 -->
+<div class="pagination justify-content-center">
         <span class="step-links">
             {% if page_obj.has_previous %}
                 <a href="?page={{page_obj.previous_page_number}}" class="btn btn-primary text-light">Prev</a>
@@ -294,7 +299,8 @@
                 <a href="?page={{page_obj.next_page_number}}" class="btn btn-primary text-light">Next</a>
             {% endif %}
         </span>
-    </div><br/>
+</div>
+<br><br><br>
 <script>
 
 // 전역 스코프에 selectedMajor 변수 추가
@@ -310,22 +316,22 @@ document.addEventListener('DOMContentLoaded', function () {
         majorDropdown.innerHTML = ''; // Clear existing options
 
         switch (college) {
-            case '과기':
+            case '과학기술대학':
                 {% for major in sm %}
                     majorDropdown.innerHTML += '<option value="{{ major.id }}" {% if major.id == selectedMajor %}selected{% endif %}>{{ major.name }}</option>';
                 {% endfor %}
                 break;
-            case '약학':
+            case '약학대학':
                 {% for major in pm %}
                     majorDropdown.innerHTML += '<option value="{{ major.id }}" {% if major.id == selectedMajor %}selected{% endif %}>{{ major.name }}</option>';
                 {% endfor %}
                 break;
-            case '아앤디':
+            case '아트앤디자인대학':
                 {% for major in am %}
                     majorDropdown.innerHTML += '<option value="{{ major.id }}" {% if major.id == selectedMajor %}selected{% endif %}>{{ major.name }}</option>';
                 {% endfor %}
                 break;
-            case '글융':
+            case '글로벌융합대학':
                 {% for major in gm %}
                     majorDropdown.innerHTML += '<option value="{{ major.id }}" {% if major.id == selectedMajor %}selected{% endif %}>{{ major.name }}</option>';
                 {% endfor %}
@@ -368,10 +374,11 @@ document.getElementById('major').addEventListener('change', function () {
         var detailPageUrl = urlPattern.replace("0", pk);
         window.location.href = detailPageUrl;
     }
+
 </script>
 
 </body>
-
+{% include 'single_page/footer.html' %}
 </html>
 
 

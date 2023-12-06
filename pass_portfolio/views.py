@@ -14,7 +14,6 @@ from .models import PassPortfolio, PassComment
 from django.views.generic import ListView, DetailView, UpdateView, DeleteView
 
 
-
 # Create your views here.
 class PassPortfolioList(ListView):
     model = PassPortfolio
@@ -22,6 +21,7 @@ class PassPortfolioList(ListView):
     context_object_name = 'pass_portfolio'
     paginate_by = 6  # 페이지당 보여질 아이템 수
     page_kwarg = "page"
+
     def get_queryset(self):
         return PassPortfolio.objects.all().order_by('-created_at')
 
@@ -38,13 +38,13 @@ class PassPortfolioList(ListView):
         colleges = College.objects.all()
 
         # 기존의 학과와 전공 정보
-        sc = College.objects.get(name='과기')
+        sc = College.objects.get(name='과학기술대학')
         sm = Major.objects.filter(college=sc)
-        pc = College.objects.get(name='약학')
+        pc = College.objects.get(name='약학대학')
         pm = Major.objects.filter(college=pc)
-        ac = College.objects.get(name='아앤디')
+        ac = College.objects.get(name='아트앤디자인대학')
         am = Major.objects.filter(college=ac)
-        gc = College.objects.get(name='글융')
+        gc = College.objects.get(name='글로벌융합대학')
         gm = Major.objects.filter(college=gc)
 
         context.update({
@@ -61,6 +61,7 @@ class PassPortfolioList(ListView):
         })
 
         return context
+
 
 class PassPortfolioDetail(DetailView):
     model = PassPortfolio
@@ -90,7 +91,7 @@ class PassPortfolioDetail(DetailView):
                 'department': pass_portfolio.department.name if pass_portfolio.department else None,
                 'company_name': pass_portfolio.company_name,
                 'status1': pass_portfolio.anonymous,
-                'interest_all':interest_all,
+                'interest_all': interest_all,
             }
             print(pass_portfolio.interest_field)
         else:
@@ -141,18 +142,18 @@ def your_combined_view(request):
     interests = Interest.objects.all()
     status = Status.objects.all()
     college = College.objects.all()
-    sc = College.objects.get(name='과기')  # 선택한 학과 객체 가져오기
+    sc = College.objects.get(name='과학기술대학')  # 선택한 학과 객체 가져오기
     sm = Major.objects.filter(college=sc)  # 해당 학과의 전공들 가져오기
-    pc = College.objects.get(name='약학')  # 선택한 학과 객체 가져오기
+    pc = College.objects.get(name='약학대학')  # 선택한 학과 객체 가져오기
     pm = Major.objects.filter(college=pc)  # 해당 학과의 전공들 가져오기
-    ac = College.objects.get(name='아앤디')  # 선택한 학과 객체 가져오기
+    ac = College.objects.get(name='아트앤디자인대학')  # 선택한 학과 객체 가져오기
     am = Major.objects.filter(college=ac)  # 해당 학과의 전공들 가져오기
-    gc = College.objects.get(name='글융')  # 선택한 학과 객체 가져오기
+    gc = College.objects.get(name='글로벌융합대학')  # 선택한 학과 객체 가져오기
     gm = Major.objects.filter(college=gc)  # 해당 학과의 전공들 가져오기
 
     context = {
-        'sm':sm,
-        'pm':pm,
+        'sm': sm,
+        'pm': pm,
         'am': am,
         'gm': gm,
         'form': form,
@@ -198,7 +199,7 @@ def save_text(request):
             if interest_instances:
                 pass_portfolio_instance.interest_field.set(interest_instances)
 
-            return JsonResponse({'status': 'success','pk': pass_portfolio_instance.pk})
+            return JsonResponse({'status': 'success', 'pk': pass_portfolio_instance.pk})
         else:
             print(form.errors)
             return JsonResponse({'status': 'error', 'message': '폼이 유효하지 않습니다.', 'errors': form.errors})
@@ -221,10 +222,10 @@ class PassPortfolioUpdate(UpdateView):
         context['selected_major'] = self.object.department.id if self.object.department else ''
         context['colleges'] = College.objects.all()
         context['interests'] = Interest.objects.all()
-        context['sm'] = Major.objects.filter(college__name='과기')
-        context['pm'] = Major.objects.filter(college__name='약학')
-        context['am'] = Major.objects.filter(college__name='아앤디')
-        context['gm'] = Major.objects.filter(college__name='글융')
+        context['sm'] = Major.objects.filter(college__name='과학기술대학')
+        context['pm'] = Major.objects.filter(college__name='약학대학')
+        context['am'] = Major.objects.filter(college__name='아트앤디자인대학')
+        context['gm'] = Major.objects.filter(college__name='글로벌융합대학')
         return context
 
     def form_valid(self, form):
@@ -280,7 +281,6 @@ def toggle_comment_like(request, pk, comment_id):
         liked = True
 
     return JsonResponse({'liked': liked, 'like_count': comment.likes.count()})
-
 
 
 def filter_portfolio_by_interest(interest_name):

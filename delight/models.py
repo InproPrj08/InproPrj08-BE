@@ -8,4 +8,3 @@ class Program(models.Model):
     time_content = models.CharField(max_length=255, null=True, blank=True)
     hit_content = models.IntegerField(null=True, blank=True)
     link_content = models.CharField(max_length=255, null=True, blank=True)
-

@@ -11,9 +11,11 @@ class PassCommentForm(forms.ModelForm):
                    'id': 'my-text-input'}),
     )
     is_anonymous = forms.BooleanField(required=False)
+
     class Meta:
         model = PassComment
         fields = ['text', 'is_anonymous']
+
 
 class PassPortfolioForm(forms.ModelForm):
     interest_field = forms.ModelMultipleChoiceField(
@@ -21,6 +23,8 @@ class PassPortfolioForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple,
         required=False,
     )
+
     class Meta:
         model = PassPortfolio
-        fields = ['title', 'styles', 'hashtags','image','content','interest_field','department','company_name', 'anonymous']
+        fields = ['title', 'styles', 'hashtags', 'image', 'content', 'interest_field', 'department', 'company_name',
+                  'anonymous']

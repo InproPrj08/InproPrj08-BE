@@ -98,6 +98,7 @@
          cursor: pointer; /* 마우스 커서를 포인터로 변경합니다. */
          }
 
+
     </style>
 </head>
 <body>
@@ -107,33 +108,37 @@
 <form method="POST" action="{% url 'user:signup' %}">
     <div id="signup_body" class="container mx-auto text-center">
         <div class="form-container">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label class="form-label">*아이디(이메일)</label></div>
-                <div>
-                   {{ form.username|add_class:"form-input"|attr:"style:border: none; border-bottom: 1px solid #02343F; border-radius: 0px;"|attr:"placeholder: 아이디 또는 이메일을 입력해주세요"}}
-                </div>
-                <div class="form-group">
-                    <label class="form-label">*비밀번호</label></div>
-                <div>
-                    <input type="password" class="form-input " id="password-input" name="password" aria-describedby="passwordHelp" placeholder="비밀번호를 입력해주세요(문자,숫자,특수문자 포함 8~20자)">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">*비밀번호 확인</label></div>
-                <div>
-                    <input type="password"  class="form-input" id="confirm" name="confirm" aria-describedby="passwordHelp" placeholder="비밀번호를 재입력해주세요">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">*단과대/전공</label>
-                </div>
-                <script>
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="form-label">*아이디(이메일)</label></div>
+            <div>
+                {{ form.username|add_class:"form-input"|attr:"style:border: none; border-bottom: 1px solid #02343F; border-radius: 0px;"|attr:"placeholder: 아이디 또는 이메일을 입력해주세요"}}
+            </div>
+            <div class="form-group">
+                <label class="form-label">*비밀번호</label></div>
+            <div>
+                <input type="password" class="form-input " id="password-input" name="password"
+                       aria-describedby="passwordHelp" placeholder="비밀번호를 입력해주세요(문자,숫자,특수문자 포함 8~20자)">
+            </div>
+            <div class="form-group">
+                <label class="form-label">*비밀번호 확인</label></div>
+            <div>
+                <input type="password" class="form-input" id="confirm" name="confirm" aria-describedby="passwordHelp"
+                       placeholder="비밀번호를 재입력해주세요">
+            </div>
+            <div class="form-group">
+                <label class="form-label">*단과대/전공</label>
+            </div>
+            <script>
                 function updateSelectedValue(value) {
                 // 선택한 값을 버튼 텍스트로 설정
                 document.getElementById('selectedValue').innerText = value;
-                }</script>
+                }
+            </script>
             <div class="d-flex ">
                 <div class="form-group">
-                    <select id="college" name="college" style="border: none; border-bottom: 1px solid #02343F; border-radius: 0px; width:250px; margin-left:20px;">
+                    <select id="college" name="college"
+                            style="border: none; border-bottom: 1px solid #02343F; border-radius: 0px; width:250px; margin-left:20px;">
                         <option value="default">대학 선택</option>
                         {% for college in colleges %}
                         <option value="{{college.name}}">{{college.name}}</option>
@@ -141,28 +146,31 @@
                     </select>
                 </div>
                 <div class="form-group ms-4">
-                    <select id="major" name="major" disabled style="border: none; border-bottom: 1px solid #02343F; border-radius: 0px; width:250px;">
+                    <select id="major" name="major" disabled
+                            style="border: none; border-bottom: 1px solid #02343F; border-radius: 0px; width:250px;">
                         <!-- 이 부분은 JavaScript로 동적으로 업데이트됩니다 -->
                     </select>
                 </div>
             </div>
+            <div class="form-group">
+                <label class="form-label">*학번</label>
                 <div class="form-group">
-                    <label class="form-label">*학번</label>
-                    <div class="form-group">
-                        <select name="number" id="number" required style="border: none; border-bottom: 1px solid #02343F; border-radius: 0px; width:250px;">
-                            <option value="" disabled selected>학번을 선택해 주세요</option>
-                            {% for n in numbers %}
-                            <option value="{{n.number}}">{{n.number}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
+                    <select name="number" id="number" required
+                            style="border: none; border-bottom: 1px solid #02343F; border-radius: 0px; width:250px;">
+                        <option value="" disabled selected>학번을 선택해 주세요</option>
+                        {% for n in numbers %}
+                        <option value="{{n.number}}">{{n.number}}</option>
+                        {% endfor %}
+                    </select>
                 </div>
+            </div>
             <div class="form-group">
                 <label class="form-label">*관심분야</label>
             </div>
             <div class="form-group">
                 {% for interest in interests %}
-                <input type="checkbox" id="interests-{{ interest.name }}-{{ interest.id }}" name="interests" value="{{ interest.id }}"> {{ interest }}
+                <input type="checkbox" id="interests-{{ interest.name }}-{{ interest.id }}" name="interests"
+                       value="{{ interest.id }}"> {{ interest }}
                 {% endfor %}
             </div>
             <div class="form-group">
@@ -177,9 +185,9 @@
             </div>
         </div>
     </div>
-    <button id="signup-button" type="submit" >가입하기</button>
+    <button id="signup-button" type="submit">가입하기</button>
 </form>
-
+<br><br><br>
 <script>
 document.getElementById('college').addEventListener('change', function () {
     var selectedCollege = this.value;
@@ -190,22 +198,22 @@ document.getElementById('college').addEventListener('change', function () {
 
     // 대학에 따른 전공 옵션을 추가
     switch (selectedCollege) {
-        case '과기':
+        case '과학기술대학':
             {% for major in sm %}
                 majorDropdown.innerHTML += '<option value="{{ major.name }}">{{ major.name }}</option>';
             {% endfor %}
             break;
-        case '약학':
+        case '약학대학':
             {% for major in pm %}
                 majorDropdown.innerHTML += '<option value="{{ major.name }}">{{ major.name }}</option>';
             {% endfor %}
             break;
-        case '아앤디':
+        case '아트앤디자인대학':
             {% for major in am %}
                 majorDropdown.innerHTML += '<option value="{{ major.name }}">{{ major.name }}</option>';
             {% endfor %}
             break;
-        case '글융':
+        case '글로벌융합대학':
             {% for major in gm %}
                 majorDropdown.innerHTML += '<option value="{{ major.name }}">{{ major.name }}</option>';
             {% endfor %}
@@ -217,6 +225,8 @@ document.getElementById('college').addEventListener('change', function () {
 });
 
 
+
 </script>
 </body>
+{% include 'single_page/footer.html' %}
 </html>

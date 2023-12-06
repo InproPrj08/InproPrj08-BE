@@ -12,13 +12,6 @@
     <script src="https://kit.fontawesome.com/edea15a092.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{% static 'portfolio/bootstrap/bootstrap.min.css' %}" media="screen">
     <script src="https://kit.fontawesome.com/726bbd6862.js" crossorigin="anonymous"></script>
-    <script>
-        function handleHashtagClick(hashtag) {
-            // 클릭한 해시태그에 대한 동작을 수행하는 JavaScript 함수
-            console.log('Clicked hashtag:', hashtag);
-            // 원하는 동작을 여기에 추가
-        }
-    </script>
 </head>
 
 <style>
@@ -170,105 +163,108 @@
 
 
 
+
+
 </style>
 
 <body>
-    <!-- Responsive navbar-->
-    {% include 'portfolio/menubar.html' %}
-    <!-- Page content-->
-    <div class="container mt-5">
-        <div class="main flex-column align-items-center d-flex">
-                <!-- Post content-->
-                <article>
-                    <!-- Post header-->
-                    <header class="top flex-column align-items-center d-flex">
-                        {% if text_data %}
-                         <h1 style="margin-bottom: 20px; margin-right:110px;">
-                             <b>{% if text_data.status1 %} {{ pass_portfolio.author }}님의 합격수기 {% else %} 익명의 덕우의 합격수기 {% endif %}</b>
-                         </h1>
-                        <div style="display: flex; justify-content: center; align-items: center;">
-                            {% if text_data.image %}
-                            <img src="{{ text_data.image }}" alt="Image" style="width: 170px; height: 200px; margin-right: 20px; margin-left: 560px; border-radius: 20px;">
-                            {% else %}
-                            <img id="image-preview-placeholder" onclick="openImageInput()" src="{% static 'portfolio/image/duksaeheart.png' %}" style="width: 170px; height: 200px; margin-right: 20px; margin-left: 560px; border-radius: 20px;">
-                            {% endif %}
-                            <!--필터링 박스-->
-                                <div class="container" >
-                        <div class="" style="margin-top: 40px; font-family: 'Noto Sans KR', sans-serif;">
-                            <form action="{% url 'portfolio:save_text' %}" method="post" enctype="multipart/form-data">
-                                {% csrf_token %}
-                                <div class="filter-box container" style=" width: 880px; height: 200px;">
-                                    <!-- 학적 상태 선택 라디오 버튼 -->
-                                    <div class="row mt-1">
-                                        <div class="col-md-5">
-                                            <label  class="form-label" style="margin-top: 20px; margin-left: 25px; font-weight: bold; font-size: 17px;">기업정보</label>
-                                            <div class="d-flex ">
-                                                <div class="py-0" style=" margin-left:40px; margin-bottom:10px;">
-                                                    {% if text_data.company_name %}
-                                                    <a>기업 이름: {{ text_data.company_name }}</a>
-                                                    {% endif %}
-                                                    <br>
+<!-- Responsive navbar-->
+{% include 'portfolio/menubar.html' %}
+<!-- Page content-->
+<div class="container mt-5">
+    <div class="main flex-column align-items-center d-flex">
+        <!-- Post content-->
+        <article>
+            <!-- Post header-->
+            <header class="top flex-column align-items-center d-flex">
+                {% if text_data %}
+                    <h1 style="margin-bottom: 20px; margin-right:110px;">
+                        <b>{% if text_data.status1 %} {{ pass_portfolio.author }}님의 합격수기 {% else %} 익명의 덕우의 합격수기 {% endif %}</b>
+                    </h1>
+                    <div style="display: flex; justify-content: center; align-items: center;">
+                        {% if text_data.image %}
+                        <img src="{{ text_data.image }}" alt="Image" style="width: 170px; height: 200px; margin-right: 20px; margin-left: 560px; border-radius: 20px;">
+                        {% else %}
+                        <img id="image-preview-placeholder" onclick="openImageInput()" src="{% static 'portfolio/image/duksaeheart.png' %}" style="width: 170px; height: 200px; margin-right: 20px; margin-left: 560px; border-radius: 20px;">
+                        {% endif %}
+                        <!--필터링 박스-->
+                        <div class="container">
+                            <div class="" style="margin-top: 40px; font-family: 'Noto Sans KR', sans-serif;">
+                                <form action="{% url 'portfolio:save_text' %}" method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="filter-box container" style=" width: 880px; height: 200px;">
+                                        <!-- 학적 상태 선택 라디오 버튼 -->
+                                        <div class="row mt-1">
+                                            <div class="col-md-5">
+                                                <label class="form-label" style="margin-top: 20px; margin-left: 25px; font-weight: bold; font-size: 17px;">기업정보</label>
+                                                <div class="d-flex ">
+                                                    <div class="py-0" style=" margin-left:40px; margin-bottom:10px;">
+                                                        {% if text_data.company_name %}
+                                                        <a>기업 이름: {{ text_data.company_name }}</a>
+                                                        {% endif %}
+                                                        <br>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div class="container mb-5">
+                                                        <label class="form-label" style="margin-left: 13px; font-weight: bold; font-size: 17px;">전공</label>
+                                                        <div class="department " style="margin-left: 30px;">{{ text_data.department }}
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div>
-                                                <div class="container mb-5"  >
-                                                <label class="form-label" style="margin-left: 13px; font-weight: bold; font-size: 17px;">전공</label>
-                                                <div class="department " style="margin-left: 30px;">{{ text_data.department }}</div>
+
+                                            <div class="col-md-7">
+                                                <label style="margin-top: 20px; margin-left: 20px; font-weight: bold; font-size: 17px;">관심 직무</label>
+                                                <div class="d-flex flex-wrap" style="padding: 10px; margin-left: 10px;">
+                                                    {% for interests in text_data.interest_all %}
+                                                    <div class="form-check" style="margin-right: 15px; margin-bottom: 15px;">
+                                                        <input class="form-check-input" type="checkbox" value="" id="{{ interests.interest }}" {% if interests.interest in text_data.interest_field %}checked {% endif %} disabled>
+                                                        <label class="form-check-label" for="{{ interests.interest }}">{{ interests.interest }}</label>
+                                                    </div>
+                                                    {% endfor %}
+                                                </div>
                                             </div>
                                         </div>
-                                        </div>
-
-                                         <div class="col-md-7">
-                                          <label style="margin-top: 20px; margin-left: 20px; font-weight: bold; font-size: 17px;">관심 직무</label>
-                                          <div class="d-flex flex-wrap" style="padding: 10px; margin-left: 10px;">
-                                            {% for interests in text_data.interest_all %}
-                                            <div class="form-check" style="margin-right: 15px; margin-bottom: 15px;">
-                                              <input class="form-check-input" type="checkbox" value="" id="{{ interests.interest }}" {% if interests.interest in text_data.interest_field %}checked{% endif %} disabled>
-                                              <label class="form-check-label" for="{{ interests.interest }}">{{ interests.interest }}</label>
-                                            </div>
-                                            {% endfor %}
-                                          </div>
-                                        </div>
                                     </div>
-                                </div>
-                            </form>
-                        </div>
-                                </div>
-                        </div>
-                        </header>
-                        <!-- Post title-->
-                    <div class="flex-column align-items-center d-flex">
-                        <div class="body-back-color" >
-                            <div class="fw-back-color1">
-                                <div class="fw-bolder" style="margin-left: 20px; padding-top: 10px; font-size: 30px;">{{ text_data.title | safe }}</div>
-                                <!-- Post meta content-->
-                                <div style="display: flex; justify-content: space-between;">
-                                    <div style="margin-left: 15px;">
-                                        <p>
-                                            {% for hashtag in text_data.hashtags %}
-                                            <button onclick="handleHashtagClick('{{ hashtag }}')" id="hashtag-style">#{{ hashtag }}</button>
-                                            {% endfor %}
-                                        </p>
-                                    </div>
-                                    <div class="text-muted fst-italic mb-2 pe-4" >Posted on {{pass_portfolio.created_at}}</div>
-                                </div>
-                            </div>
-                    <!-- Post content-->
-                            <div class="fw-back-color2">
-                    <section class="mb-5 p-5" style="overflow: auto; height: 500px; ">
-                        <p class="fs-5 mb-4" style="{{ text_data.styles }}">{{ text_data.content | safe }}</p>
-
-                    </section>
-                    {% else %}
-                    <p>No texts available.</p>
-                    {% endif %}
+                                </form>
                             </div>
                         </div>
+                    </div>
+                </header>
+                <!-- Post title-->
+                <div class="flex-column align-items-center d-flex">
+                    <div class="body-back-color">
+                        <div class="fw-back-color1">
+                            <div class="fw-bolder" style="margin-left: 20px; padding-top: 10px; font-size: 30px;">{{ text_data.title | safe }}
+                            </div>
+                            <!-- Post meta content-->
+                            <div style="display: flex; justify-content: space-between;">
+                                <div style="margin-left: 15px;">
+                                    <p>
+                                        {% for hashtag in text_data.hashtags %}
+                                        <button onclick="handleHashtagClick('{{ hashtag }}')" id="hashtag-style">#{{ hashtag }}</button>
+                                        {% endfor %}
+                                    </p>
+                                </div>
+                                <div class="text-muted fst-italic mb-2 pe-4">Posted on {{pass_portfolio.created_at}}</div>
+                            </div>
                         </div>
-                </article>
-            <div style="position: relative; padding-bottom: 80px; padding-top: 10px;">
-                <!--좋아요 버튼-->
-                <div style="position: absolute; left: -540px; top: 10px;">
+                        <!-- Post content-->
+                        <div class="fw-back-color2">
+                            <section class="mb-5 p-5" style="overflow: auto; height: 600px; ">
+                                <p class="fs-5 mb-4" style="{{ text_data.styles }}">{{ text_data.content | safe }}</p>
+                            </section>
+                        {% else %}
+                            <p>No texts available.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </article>
+        <div style="position: relative; padding-bottom: 80px; padding-top: 10px;">
+            <!--좋아요 버튼-->
+            <div style="position: absolute; left: -540px; top: 10px;">
                 <a id="like-button" href="like/" type="button" class="d-flex">
                     {% if request.user in pass_portfolio.like_users.all %}
                     <i class="fa fa-heart fg-danger" style="color:#DC6E6E; font-size: 30px; margin-top:10px;"></i>
@@ -277,113 +273,114 @@
                     {% endif %}
                     <span id="like-count" style="font-size: 30px; margin-left: 15px; color:#000000; margin-left:15px;">{{ pass_portfolio.like_users.count }}</span>
                 </a>
-                </div>
-                <div class="text-muted " style="position: absolute; right: -540px; top: 10px;">
-                    {% if user.is_authenticated and user == pass_portfolio.author %}
-                    <a href="{% url 'pass_portfolio:pass_portfolio_update' pk=pass_portfolio.pk %}" class="btn btn-primary" id="edit">수정하기</a>
+            </div>
+            <div class="text-muted " style="position: absolute; right: -540px; top: 10px;">
+                {% if user.is_authenticated and user == pass_portfolio.author %}
+                <a href="{% url 'pass_portfolio:pass_portfolio_update' pk=pass_portfolio.pk %}" class="btn btn-primary" id="edit">수정하기</a>
                 {% endif %}
                 {% if user.is_authenticated and user == pass_portfolio.author %}
-                    <a href="#" onclick="confirmDelete({{ pass_portfolio.pk }})" class="btn btn-danger" id="delet">삭제하기</a>
+                <a href="#" onclick="confirmDelete({{ pass_portfolio.pk }})" class="btn btn-danger" id="delet">삭제하기</a>
                 {% endif %}
                 <a href="{% url 'pass_portfolio:pass_portfolio_list' %}" class="btn btn-primary" id="back">뒤로가기</a>
-                </div>
-                </div>
-                <br/><br/> <br/>
+            </div>
+        </div>
+        <br/><br/> <br/>
 
-                <!-- 댓글 section-->
-            <div class="comments">
-                <section class="mb-5">
-                    <div class="card bg-light">
-                        <div class="card-body">
-                            <!-- Comment form-->
-                            <h2>댓글</h2>
-                            <hr>
-                            <!-- Comment with nested comments-->
-                            {% for comment in comments reversed %}
-                                <div class="d-flex ms-2 mb-4" id="comments">
-                                    <div class="flex-shrink-0">
+        <!-- 댓글 section-->
+        <div class="comments">
+            <section class="mb-5">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <!-- Comment form-->
+                        <h2>댓글</h2>
+                        <hr>
+                        <!-- Comment with nested comments-->
+                        {% for comment in comments reversed %}
+                        <div class="d-flex ms-2 mb-4" id="comments">
+                            <div class="flex-shrink-0">
+                                {% if text_data.author == request.user %}
+                                {% if text_data.status1 %}
+                                {% if comment.is_anonymous %}
+                                <img class="rounded-circle" src="{% static 'portfolio/image/duksaeheart.png' %}" alt="..." style="width: 50px; height: 50px;">
+                                {% else %}
+                                <img class="rounded-circle" src="{{ comment.user.profile.image.url }}" alt="..." style="width: 50px; height: 50px;">
+                                {% endif %}
+                                {% else %}
+                                {% if comment.user == text_data.author %}
+                                <img class="rounded-circle" src="{% static 'portfolio/image/duksaeheart.png' %}" alt="..." style="width: 50px; height: 50px;">
+                                {% else %}
+                                {% if comment.is_anonymous %}
+                                <img class="rounded-circle" src="{% static 'portfolio/image/duksaeheart.png' %}" alt="..." style="width: 50px; height: 50px;">
+                                {% else %}
+                                <img class="rounded-circle" src="{{ text_data.author.profile.image.url }}" alt="..." style="width: 50px; height: 50px;">
+                                {% endif %}
+                                {% endif %}
+                                {% endif %}
+                                {% else %}
+                                {% if comment.is_anonymous %}
+                                <img class="rounded-circle" src="{% static 'portfolio/image/duksaeheart.png' %}" alt="..." style="width: 50px; height: 50px;">
+                                {% else %}
+                                {% if comment.user == text_data.author %}
+                                {% if text_data.status1 %}
+                                <img class="rounded-circle" src="{{ text_data.author.profile.image.url }}" alt="..." style="width: 50px; height: 50px;">
+                                {% else %}
+                                <img class="rounded-circle" src="{% static 'portfolio/image/duksaeheart.png' %}" alt="..." style="width: 50px; height: 50px;">
+                                {% endif %}
+                                {% else %}
+                                <img class="rounded-circle" src="{{ comment.user.profile.image.url }}" alt="..." style="width: 50px; height: 50px;">
+                                {% endif %}
+                                {% endif %}
+                                {% endif %}
+                            </div>
+                            <div class="ms-3">
+                                <div class="fw-bold">
+                                    {% if not comment.is_anonymous %}
+                                    {% if comment.user == pass_portfolio.author %}
+                                    <span class="text-muted">글쓴이</span>
+                                    {% else %}
+                                    {{ comment.user.username }}
+                                    {% endif %}
+                                    {% else %}
+                                    <span class="text-muted">익명</span>
+                                    {% endif %}
+                                    <span class="text-muted">|</span>
+                                    <span class="text-muted" style="font-size: 12px;">{{ comment.created_at }}</span>
+                                    <a class="clike-button {% if request.user in comment.likes.all %}liked{% endif %}" data-comment-id="{{ comment.id }}" href="" style="text-decoration: none; margin-left: 5px;">
+                                        {% if request.user in comment.likes.all %}
+                                        <i class="fa fa-heart fg-danger" style="color:#DC6E6E; font-size: 15px;"></i>
+                                        {% else %}
+                                        <i class="fa fa-heart fa-regular" style="color:#DC6E6E; font-size: 15px;"></i>
+                                        {% endif %}
+                                        <span class="clike-count">{{ comment.likes.count }}</span>
+                                    </a>
+                                </div>
+                                <div class="d-flex">{{ comment.text }}</div>
+                                <div class="flex-container-delete" style="margin-left: 900px;">
+                                    {% if comment.user == request.user %}
+                                    <form method="post" action="{% url 'pass_portfolio:delete_comment' pk=pass_portfolio.pk comment_id=comment.id %}">
+                                        {% csrf_token %}
+                                        <button class="delete-button" type="submit">삭제</button>
+                                    </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        <br>
+                        <hr>
+                        <form method="post" action="{% url 'pass_portfolio:pass_portfolio_detail' pk=pass_portfolio.pk %}">
+                            {% csrf_token %}
+                            <div class="container d-flex">
+                                <div class="d-flex">
+                                    <div class=" flex-shrink-0" style="margin-right: 10px;">
                                         {% if text_data.author == request.user %}
                                         {% if text_data.status1 %}
-                                                {% if comment.is_anonymous %}
-                                                    <img class="rounded-circle" src="{% static 'portfolio/image/duksaeheart.png' %}" alt="..." style="width: 50px; height: 50px;">
-                                                {% else %}
-                                                    <img class="rounded-circle" src="{{ comment.user.profile.image.url }}" alt="..." style="width: 50px; height: 50px;">
-                                                {% endif %}
+                                        <img class="rounded-circle" src="{{ user.profile.image.url }}" alt="..." style="width: 50px; height: 50px;">
                                         {% else %}
-                                                {% if comment.user == text_data.author %}
-                                                <img class="rounded-circle" src="{% static 'portfolio/image/duksaeheart.png' %}" alt="..." style="width: 50px; height: 50px;">
-                                                {% else %}
-                                                    {% if comment.is_anonymous %}
-                                                        <img class="rounded-circle" src="{% static 'portfolio/image/duksaeheart.png' %}" alt="..." style="width: 50px; height: 50px;">
-                                                    {% else %}
-                                                        <img class="rounded-circle" src="{{ text_data.author.profile.image.url }}" alt="..." style="width: 50px; height: 50px;">
-                                                    {% endif %}
-                                                {% endif %}
+                                        <img class="rounded-circle" src="{% static 'portfolio/image/duksaeheart.png' %}" alt="..." style="width: 50px; height: 50px;">
                                         {% endif %}
-                                {% else %}
-                                    {% if comment.is_anonymous %}
-                                                <img class="rounded-circle" src="{% static 'portfolio/image/duksaeheart.png' %}" alt="..." style="width: 50px; height: 50px;">
-                                    {% else %}
-                                                {% if comment.user == text_data.author %}
-                                                    {% if text_data.status1 %}
-                                                        <img class="rounded-circle" src="{{ text_data.author.profile.image.url }}" alt="..." style="width: 50px; height: 50px;">
-                                                    {% else %}
-                                                        <img class="rounded-circle" src="{% static 'portfolio/image/duksaeheart.png' %}" alt="..." style="width: 50px; height: 50px;">
-                                                    {% endif %}
-                                                {% else %}
-                                                    <img class="rounded-circle" src="{{ comment.user.profile.image.url }}" alt="..." style="width: 50px; height: 50px;">
-                                                {% endif %}
-                                    {% endif %}
-                                {% endif %}
-                                    </div>
-                                    <div class="ms-3">
-                                        <div class="fw-bold">
-                                            {% if not comment.is_anonymous %}
-                                            {% if comment.user == pass_portfolio.author %}
-                                            <span class="text-muted">글쓴이</span>
-                                            {% else %}
-                                            {{ comment.user.username }}
-                                            {% endif %}
-                                            {% else %}
-                                            <span class="text-muted">익명</span>
-                                            {% endif %}
-                                            <span class="text-muted">|</span>
-                                            <span class="text-muted" style="font-size: 12px;">{{ comment.created_at }}</span>
-                                       <a class="clike-button {% if request.user in comment.likes.all %}liked{% endif %}" data-comment-id="{{ comment.id }}" href="" style="text-decoration: none; margin-left: 5px;">
-                                                {% if request.user in comment.likes.all %}
-                                                    <i class="fa fa-heart fg-danger" style="color:#DC6E6E; font-size: 15px;"></i>
-                                                {% else %}
-                                                    <i class="fa fa-heart fa-regular" style="color:#DC6E6E; font-size: 15px;"></i>
-                                                {% endif %}
-                                                <span class="clike-count">{{ comment.likes.count }}</span>
-                                            </a>
-                                        </div>
-                                         <div class="d-flex">{{ comment.text }}</div>
-                                        <div class="flex-container-delete" style="margin-left: 900px;">
-                                            {% if comment.user == request.user %}
-                                                <form method="post" action="{% url 'pass_portfolio:delete_comment' pk=pass_portfolio.pk comment_id=comment.id %}">
-                                                    {% csrf_token %}
-                                                    <button class="delete-button" type="submit">삭제</button>
-                                                </form>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                            <br><hr>
-                            <form method="post" action="{% url 'pass_portfolio:pass_portfolio_detail' pk=pass_portfolio.pk %}">
-                                {% csrf_token %}
-                                <div class="container d-flex">
-                                    <div class="d-flex">
-                                        <div class=" flex-shrink-0" style="margin-right: 10px;">
-                                        {% if text_data.author == request.user %}
-                                            {% if text_data.status1 %}
-                                            <img class="rounded-circle" src="{{ user.profile.image.url }}" alt="..." style="width: 50px; height: 50px;">
-                                            {% else %}
-                                            <img class="rounded-circle" src="{% static 'portfolio/image/duksaeheart.png' %}" alt="..." style="width: 50px; height: 50px;">
-                                            {% endif %}
                                         {% else %}
-                                            <img class="rounded-circle" src="{{ user.profile.image.url }}" alt="..." style="width: 50px; height: 50px;">
+                                        <img class="rounded-circle" src="{{ user.profile.image.url }}" alt="..." style="width: 50px; height: 50px;">
                                         {% endif %}
                                     </div>
                                     <div class="anonymous">
@@ -391,35 +388,31 @@
                                         {{ form.is_anonymous }}
                                     </div>
 
-                                    <div class="input-comments" style="margin-right: 10px; margin-bottom: 5px;" >
-                                        {{ form.text }}
+                                    <div class="input-comments" style="margin-right: 10px; margin-bottom: 5px;">{{ form.text }}
                                     </div>
-                                        <div class="text-end">
-                                            <button type="submit" class="btn btn-primary btn-block"  id="comments-button" style=" margin-top: 5px;">등록하기</button>
-                                        </div>
+                                    <div class="text-end">
+                                        <button type="submit" class="btn btn-primary btn-block" id="comments-button" style=" margin-top: 5px;">등록하기
+                                        </button>
                                     </div>
                                 </div>
-                            </form>
-                        </div>
+                            </div>
+                        </form>
                     </div>
-                </section>
-            </div>
-            </div>
+                </div>
+            </section>
         </div>
-
-    <!-- Footer-->
-    <footer class="py-5 mt-5" style="background-color: #EDEDED; ">
-        <div class="container">
-            <p class="m-0 text-center text-dark" style="font-size: 25px; font-weight: bold;">Portfolio For DukSung!</p>
-        </div>
-    </footer>
-    <!-- Bootstrap core JS-->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Core theme JS-->
-    <script src="js/scripts.js"></script>
+    </div>
+</div>
+<br><br>
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS-->
+<script src="js/scripts.js"></script>
 </body>
 <script>
     const pass_portfolioDeleteUrl = "{% url 'pass_portfolio:pass_portfolio_delete' pk=pass_portfolio.pk %}";
+
+
 </script>
 <script>
 //댓글 삭제
@@ -436,6 +429,8 @@
             });
         }
     });
+
+
 </script>
 <script>
 //댓글용
@@ -585,6 +580,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-</script>
 
+
+</script>
+{% include 'single_page/footer.html' %}
 </html>

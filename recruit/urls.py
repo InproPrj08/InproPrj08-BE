@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 from .views import DeleteCommentView
 
-app_name='recruit'
+app_name = 'recruit'
 
 urlpatterns = [
     path('', views.RecruitList.as_view(), name='recruit_list'),
