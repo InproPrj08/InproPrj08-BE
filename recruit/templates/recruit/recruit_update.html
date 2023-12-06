@@ -6,149 +6,222 @@
     <title>모집글 수정하기</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
     <link rel="stylesheet" href="{% static 'portfolio/writec.css' %}">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <style>
+         #image-preview-placeholder {
+            width: 150px;
+            height: 200px;
+            margin-top: 10px;
+            background-color: lightgray;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        #people {
+
+        width: 270px;
+        height: 33px;
+        border-radius: 10px;
+        border: 2px #02343F solid;
+
+}
+    </style>
+
 </head>
 <body>
 
 {% include 'portfolio/menubar.html' %}
 
-<div class="row">
-    <div class="container">
-        <form method="post" enctype="multipart/form-data" id="recruit-form">
-            {% csrf_token %}
 
-            <br><br>
-            <!-- 학적 상태 선택 라디오 버튼 -->
-            <label for="public-status">학적 상태:</label><br>
-            <input type="radio" id="public-status-public" name="status" value="public" {% if recruit.status == True %}checked{% endif %}> 공개
-            <input type="radio" id="public-status-private" name="status" value="private" {% if recruit.status == False %}checked{% endif %}> 비공개
-            <br><br>
+<div class="container">
+        <div class="row" style="margin-top: 40px; font-family: 'Noto Sans KR', sans-serif;">
+             <div style="width: 100%; height: 100%; color: #191919; font-size: 28px; font-family: Noto Sans; font-weight: 600; margin-left: 100px; margin-bottom: 10px;word-wrap: break-word">모집글 작성</div>
+                <div style="color: #767676; font-size: 20px; font-family: Noto Sans; font-weight: 500; margin-left: 100px;">내가 참여하고 싶은 활동의 모집글을 작성할 수 있어요!</div>
+        <form action="{% url 'recruit:save_text' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+<!-- 모집글 작성 -->
+<div class="container mb-4 rounded p-2" style="margin-top: 130px; height: 200px; width: 70%; background-color: #DEE8F76B">
 
-            <!-- 관심 직무 선택 체크 박스 -->
-            <label for="interest-field">모집 분야 :</label><br>
-            {% for interest in interests.all %}
-                <input type="checkbox" id="interest-field-{{ interest.id }}" name="interestField" value="{{ interest.id }}" {% if interest in recruit.interest_field.all %}checked{% endif %}> {{ interest.interest }}
-            {% endfor %}
-            <br><br>
+    <!-- 학적 상태 선택 라디오 버튼 -->
+    <div class="status-radio-buttons" style="padding: 10px;">
+        <label for="public-status" class="form-label">학적 상태</label>
+        <br>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" id="public-status-public" name="status" value="public" {% if recruit.status == True %}checked{% endif %}>
+            <label class="form-check-label" for="public-status-public">공개</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" id="public-status-private" name="status" value="private" {% if recruit.status == False %}checked{% endif %}>
+            <label class="form-check-label" for="public-status-private">비공개</label>
+        </div>
+        <br><br>
 
-            <label for="people">모집인원:</label>
-<input type="number" id="people" name="people" placeholder="{{ recruit.people }}" value="{{ recruit.people }}" required>
-<br><br>
-            <label for="deadline">마감기한: </label>
-            <input type="date" id="deadline" name="deadline" value="{{ recruit.deadline|date:'Y-m-d' }}" required>
-            <br><br>
+        <br><br>
+    </div>
 
 
+<!--대학와 전공선택-->
 
-            <!-- 대학 선택 드롭다운 -->
-            <label for="college">대학:</label>
-            <select id="college" name="college">
-                <option value="default">대학 선택</option>
-                {% for college in colleges %}
-                    <option value="{{ college.name }}" {% if college.name == selected_college %}selected{% endif %}>{{ college.name }}</option>
-                {% endfor %}
-            </select>
+        <div class="container mt-4" style="margin-left: 195px;">
+            <div class="row mt-4">
+                <div class="col-md-6" style="margin-top: -168px;">
+                    <div class="dropdown">
+                        <label class="form-label" for="college">대학</label>
+                        <select class="form-select form-select-sm" id="college" name="college" style="width: 100px; border-radius: 10px; border: 2px #02343F solid;">
+                            <option value="default">대학 선택</option>
+                            {% for college in colleges %}
+                                <option value="{{ college.name }}" {% if college.name == selected_college %}selected{% endif %}>{{ college.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
 
-            <!-- 전공 선택 드롭다운 -->
-            <label for="major">전공:</label>
-            <select id="major" name="major" {% if selected_college == 'default' %}disabled{% endif %}>
-                <!-- 이 부분은 JavaScript로 동적으로 업데이트됩니다 -->
-            </select>
-
-            <br><br>
-
-            <!-- 제목 입력란 추가 -->
-            <input type="text" id="title-input" name="title" value="{{ recruit.title }}" placeholder="제목" style="margin-top: 10px;">
-            <div class="container">
-            <div class="options">
-                <button type="button" id="bold" class="option-button format">
-                <i class="fa-solid fa-bold"></i>
-            </button>
-            <button type="button" id="superscript" class="option-button script">
-                <i class="fa-solid fa-superscript"></i>
-            </button>
-            <button type="button" id="subscript" class="option-button script">
-                <i class="fa-solid fa-subscript"></i>
-            </button>
-
-            <button type="button" id="insertOrderedList" class="option-button">
-                <div class="fa-solid fa-list-ol"></div>
-            </button>
-            <button type="button" id="insertUnorderedList" class="option-button">
-                <i class="fa-solid fa-list"></i>
-            </button>
-
-            <button type="button" id="undo" class="option-button">
-                <i class="fa-solid fa-rotate-left"></i>
-            </button>
-            <button type="button" id="redo" class="option-button">
-                <i class="fa-solid fa-rotate-right"></i>
-            </button>
-
-            <button type="button" id="createLink" class="adv-option-button">
-                <i class="fa fa-link"></i>
-            </button>
-            <button type="button" id="unlink" class="option-button">
-                <i class="fa fa-unlink"></i>
-            </button>
-
-            <button type="button" id="justifyLeft" class="option-button align">
-                <i class="fa-solid fa-align-left"></i>
-            </button>
-            <button type="button" id="justifyCenter" class="option-button align">
-                <i class="fa-solid fa-align-center"></i>
-            </button>
-            <button type="button" id="justifyRight" class="option-button align">
-                <i class="fa-solid fa-align-right"></i>
-            </button>
-            <button type="button" id="justifyFull" class="option-button align">
-                <i class="fa-solid fa-align-justify"></i>
-            </button>
-            <button type="button" id="indent" class="option-button spacing">
-                <i class="fa-solid fa-indent"></i>
-            </button>
-            <button type="button" id="outdent" class="option-button spacing">
-                <i class="fa-solid fa-outdent"></i>
-            </button>
-            <select id="formatBlock" class="adv-option-button">
-                <option value="H1">H1</option>
-                <option value="H2">H2</option>
-                <option value="H3">H3</option>
-                <option value="H4">H4</option>
-                <option value="H5">H5</option>
-                <option value="H6">H6</option>
-            </select>
-            <select id="fontName" class="adv-option-button"></select>
-            <select id="fontSize" class="adv-option-button"></select>
-
-            <div class="input-wrapper">
-                <input type="color" id="foreColor" class="adv-option-button">
-                <label for="foreColor">Font Color</label>
-            </div>
-            <div class="input-wrapper">
-                <input type="color" id="backColor" class="adv-option-button">
-                <label for="backColor">Highlight Color</label>
-            </div>
-                <button id="btn-image">
-                IMG
-            </button>
-            <input id="img-selector" type="file" accept="image/*" />
-<label for="file">파일 업로드:</label>
-<input type="file" id="file" name="file" value="{{ recruit.file }}" accept=".pdf, .doc, .docx, .txt, .hwp" />
+                <div class="col-md-6">
+                    <div class="dropdown" style="margin-left: -289px; margin-top: -168px;">
+                        <label class="form-label" for="major">전공</label>
+                        <select class="form-select form-select-sm" id="major" name="major" style="width: 160px; border-radius: 10px; border: 2px #02343F solid;">
+                            <option>전공 선택</option>
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
-            <!-- 마크다운 에디터 추가 -->
-            <div id="text-input" contenteditable="true" style="overflow-y: auto; max-height: 400px;">
-                {{ recruit.content|safe }} <!-- 기존 내용을 표시 -->
+
+
+     <!-- 관심 직무 선택 체크 박스 -->
+     <div class="interest" style="margin-top: -55px; padding-left:10px;">
+        <label for="interest-field" style="margin-bottom: 10px;" >관심 직무:</label><br>
+        {% for interest in interests.all %}
+            <input type="checkbox" id="interest-field-{{ interest.id }}" name="interestField" value="{{ interest.id }}" {% if interest in recruit.interest_field.all %}checked{% endif %}> {{ interest.interest }}
+        {% endfor %}
+        <br><br>
+     </div>
+
+
+    <!-- 모집인원과 마감기한 -->
+    <div class="container" >
+    <div class="row">
+
+    <div class="row justify-content-end mt-4">
+    <div class="col" style="margin-left: 584px; margin-top: -220px;">
+        <label for="people" style="margin-bottom: 9px; font-family: Noto Sans; font-weight: 400;">모집인원</label>
+        <input type="number" id="people" name="people" class="form-control" placeholder="{{ recruit.people }}" value="{{ recruit.people }}" style="border-radius: 10px; border: 2px #02343F solid;" required>
+    </div>
+</div>
+<div class="col-md-4" style="margin-left: 573px; margin-top: -112px;">
+    <label for="deadline" style="margin-bottom: 5px; font-family: Noto Sans; font-weight: 400;">마감기한</label>
+    <div class="input-group date">
+        <input type="date" style="height: 37px; border-radius: 10px; border: 2px #02343F solid;" class="form-control" id="deadline" name="deadline" value="{{ recruit.deadline|date:'Y-m-d' }}" required>
+    </div>
+</div>
+
+<!-- 제목 입력란 추가 -->
+<div class="container mb-4 rounded p-3" style="width: 100%; background-color: #DEE8F76B">
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <input type="text" class="form-control" id="title-input" name="title" value="{{ recruit.title }}" placeholder="제목을 입력하세요!" style="border-radius: 10px; border: 2px #02343F solid; padding: 8px;">
+        </div>
+    </div>
+</div>
+
+           <!--텍스트 입력 전체-->
+        <div class="col-6 mx-auto"  style="width: 100%; height: 100%;" >
+                <div class="container" style="background-color: #F8F8FA; border-radius: 10px; padding-top: 30px;border: 6px #DEE8F76B solid">
+                    <div class="card me-auto" style="padding: 15px; border-radius: 10px; width: 97%; height: 60%; margin-left: 15px; margin-top: 40px;">
+                    <div class="options">
+                        <button type="button" id="bold" class="option-button format">
+                        <i class="fa-solid fa-bold"></i>
+                    </button>
+                    <button type="button" id="superscript" class="option-button script">
+                        <i class="fa-solid fa-superscript"></i>
+                    </button>
+                    <button type="button" id="subscript" class="option-button script">
+                        <i class="fa-solid fa-subscript"></i>
+                    </button>
+
+                    <button type="button" id="insertOrderedList" class="option-button">
+                        <div class="fa-solid fa-list-ol"></div>
+                    </button>
+                    <button type="button" id="insertUnorderedList" class="option-button">
+                        <i class="fa-solid fa-list"></i>
+                    </button>
+
+                    <button type="button" id="undo" class="option-button">
+                        <i class="fa-solid fa-rotate-left"></i>
+                    </button>
+                    <button type="button" id="redo" class="option-button">
+                        <i class="fa-solid fa-rotate-right"></i>
+                    </button>
+
+                    <button type="button" id="createLink" class="adv-option-button">
+                        <i class="fa fa-link"></i>
+                    </button>
+                    <button type="button" id="unlink" class="option-button">
+                        <i class="fa fa-unlink"></i>
+                    </button>
+
+                    <button type="button" id="justifyLeft" class="option-button align">
+                        <i class="fa-solid fa-align-left"></i>
+                    </button>
+                    <button type="button" id="justifyCenter" class="option-button align">
+                        <i class="fa-solid fa-align-center"></i>
+                    </button>
+                    <button type="button" id="justifyRight" class="option-button align">
+                        <i class="fa-solid fa-align-right"></i>
+                    </button>
+                    <button type="button" id="justifyFull" class="option-button align">
+                        <i class="fa-solid fa-align-justify"></i>
+                    </button>
+                    <button type="button" id="indent" class="option-button spacing">
+                        <i class="fa-solid fa-indent"></i>
+                    </button>
+                    <button type="button" id="outdent" class="option-button spacing">
+                        <i class="fa-solid fa-outdent"></i>
+                    </button>
+                    <select id="formatBlock" class="adv-option-button">
+                        <option value="H1">H1</option>
+                        <option value="H2">H2</option>
+                        <option value="H3">H3</option>
+                        <option value="H4">H4</option>
+                        <option value="H5">H5</option>
+                        <option value="H6">H6</option>
+                    </select>
+                    <select id="fontName" class="adv-option-button"></select>
+                    <select id="fontSize" class="adv-option-button"></select>
+
+                    <div class="input-wrapper">
+                        <input type="color" id="foreColor" class="adv-option-button">
+                        <label for="foreColor">Font Color</label>
+                    </div>
+                    <div class="input-wrapper">
+                        <input type="color" id="backColor" class="adv-option-button">
+                        <label for="backColor">Highlight Color</label>
+                    </div>
+                        <button id="btn-image">
+                        IMG
+                    </button>
+                    <input id="img-selector" type="file" accept="image/*"/>
+                    <label for="file">파일 업로드:</label>
+                    <input type="file" id="file" name="file" accept=".pdf, .doc, .docx, .txt, .hwp">
+                    </div>
+                </div>
+                <div class="container" style="padding-bottom: 90px; margin-bottom: 30px;">
+                    <!-- 마크다운 에디터 추가 -->
+                    <div id="text-input" contenteditable="true"  style = "overflow: auto; height: 500px; margin-top: 50px; border-radius: 10px;  background: white">
+                        {{ recruit.content|safe }} <!-- 기존 내용을 표시 -->
+                    </div>
+                </div>
+                </div>
             </div>
 
 
-            <!-- 수정 완료 및 취소 버튼 -->
-            <button type="button" onclick="submitRecruitForm()">수정 완료</button>
-            <br><br><br><br>
-            <a href="{% url 'recruit:recruit_detail' pk=recruit.pk %}">취소</a>
-        </form>
-    </div>
+
+<!-- 수정 완료 및 취소 버튼 -->
+<div class="d-grid gap-2 d-md-flex" style="margin-left: 648px; margin-top: 40px;">
+    <button type="button" class="me-md-2 finish" onclick="submitRecruitForm()" style="width: 100px; height: 38px; background: #D9D9D999; border-radius: 10px; font-family: Noto Sans; font-weight: 600;">수정 완료</button>
+    <button type="button" onclick="window.location.href='{% url 'recruit:recruit_detail' pk=recruit.pk %}'" style="width: 100px; height: 38px; background: #D9D9D999; border-radius: 10px; font-family: Noto Sans; font-weight: 600; display: inline-block;">취소</button>
 </div>
 
 <script>
@@ -251,6 +324,7 @@ function submitRecruitForm() {
         }
     }
 
+
     console.log('Saved Major:', selectedMajor);  // 이 부분을 이동
     var formData = new FormData();
     formData.append('title', title);
@@ -306,7 +380,6 @@ function submitRecruitForm() {
 
     if (data && data.status === 'success') {
         console.log('Text saved successfully!');
-        alert('Text saved successfully!');
 
         if (data.is_ajax) {
             console.log('Redirecting to recruit detail page');
@@ -332,5 +405,7 @@ function submitRecruitForm() {
 
 <script src="{% static 'portfolio/load.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    </div>
+    </div>
 </body>
 </html>

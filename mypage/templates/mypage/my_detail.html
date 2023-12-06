@@ -1,38 +1,58 @@
 {% extends 'mypage/base.html' %}
-
+{% load static %}
 {% block content %}
     <style>
 
-        .home{
+        .home {
             width: 100%;
             height: 100%;
             color: #191919;
             font-size: 24px;
             font-family: Noto Sans;
             font-weight: 600;
+            position: absolute;
+            top: 350px;
+            left: 455px;
+        }
 
-            margin-top: -40%; /* 원하는 위치로 조정 */
+        .wel {
+            width: 100%;
+            height: 100%;
+            color: #191919;
+            font-size: 24px;
+            font-family: Noto Sans;
+            font-weight: 600;
+            position: absolute;
+            top: 880px;
+            left: 180px;
         }
 
         .information {
             width: 906px;
             height: 370px;
             flex-shrink: 0;
-
             border-radius: 20px;
             border: 2px solid #02343F;
             background: #F8F8FA;
-
             margin-left: 320px;
             margin-top: -320px;
-
         }
 
+        .write {
+            width: 1172px;
+            height: 390px;
+            flex-shrink: 0;
+            border-radius: 20px;
+            border: 2px solid #02343F;
+            background: #F8F8FA;
+            margin-left: 55px;
+            margin-top: 160px; /* 조절 필요 */
+            padding:24px;
+        }
 
-         .rounded-box2 {
+        .rounded-box2 {
             width: 15vw;
             height: 30vw;
-
             border: 3px solid #422700;
             border-radius: 5px;
             padding: 10px;
@@ -40,122 +60,163 @@
             background-color: #ffffff;
         }
 
-        /* 제목 열 너비 조절 */
-        th:first-child, td:first-child {
-            width: 55%;
-        }
-
-        /* 며칠차 열 너비 조절 */
-        th:nth-child(2), td:nth-child(2) {
-            width: 22%;
-        }
-
-        /* 좋아요 수 열 너비 조절 */
-        th:nth-child(3), td:nth-child(3) {
-            width: 23%;
-        }
-
-
-
-        .table {
-            width: 10px;
-        }
-
-        td.my_like {
-            text-align: center;
-        }
-
-        table thead {
-        /* 제목이랑 좋아요 수 등 thead부분입니다.  */
-            height: 30px;
-            vertical-align: center;
-            border-top: 1px solid black;
-            border-bottom: 1px solid black;
-        }
-
-
         .info-title {
-
             width: 94px;
             height: 34px;
             display: inline-block;
-            margin-top: 10px;
-            padding-top:15px;
-            vertical-align: center;
-            color: #999;
+            margin-top: 15px;
+            padding-top: 15px;
+            margin-left: 30px;
+            color:  #999999;
             text-align: center;
             font-family: Noto Sans;
             font-size: 18px;
-            font-style: normal;
             font-weight: 500;
-
         }
 
         .info-info {
             display: inline-block;
-            width: 500px;
+            width: 700px;
             margin: 0px 5px;
             font-size: 18px;
             font-weight: 600;
+            color:#02343F;
+            margin-left: 30px;
         }
+
+        .recruit-container {
+            margin-left: 430px;
+            margin-top: 20px; /* 조절 필요 */
+        }
+
+        .recruit-carousel {
+            width: 100%; /* 조절 필요 */
+        }
+
+        .recruit-card {
+            width: 18rem;
+            padding: 15px;
+            margin: 0 10px; /* 조절 필요 */
+        }
+
+        .carousel-inner {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
     </style>
 
-<div class="container">
+    <div class="container">
 
-        <a href="{% url 'user:update' username=user.username  %}">정보수정</a>
+        <div class="information" style="margin-top: -370px;">
 
-
-        <div class="information">
-                <div style="margin-left: 30px; margin-top: 25px; width: 20%; height: 20%; color: #191919; font-size: 20px; font-family: Noto Sans; font-weight: 700; word-wrap: break-word">기본정보</div>
-                <h3 class="info-title">ID</h3><h3 class="info-info">{{user.username}}</h3>
-                <br>
-                <h3 class="info-title">학번</h3><h3 class="info-info">{{user.number}}</h3>
-                <br>
-                <h3 class="info-title">대학</h3><h3 class="info-info">{{user.college}}</h3>
-                <br>
-                {% if user.major %}
-                <h3 class="info-title">학과</h3><h3 class="info-info">{{user.major}}</h3>
-                {% else %}
+            <h3 class="info-title">ID</h3><h3 class="info-info">{{ user.username }}</h3>
+            <br>
+            <h3 class="info-title">학번</h3><h3 class="info-info">{{ user.number }}</h3>
+            <br>
+            <h3 class="info-title">대학</h3><h3 class="info-info">{{ user.college }}</h3>
+            <br>
+            {% if user.major %}
+                <h3 class="info-title">학과</h3><h3 class="info-info">{{ user.major }}</h3>
+            {% else %}
                 <h3 class="info-title">학과</h3><h3 class="info-info">-</h3>
+            {% endif %}
+            <h3 class="info-title">학적 상태</h3><h3 class="info-info">{{ user.status }}</h3>
+            <br>
+            <h3 class="info-title">관심 직무</h3>
+            <h3 class="info-info">
+                {% if user.interests.all %}
+                    {% for interest in user.interests.all %}
+                        <button class="btn btn-primary" style="font-family: 'Noto Sans'; font-weight: 500;border-radius: 20px; padding-left: -15px;text-decoration: none;color: white; background-color: #0C4C0E;">{{ interest.interest }}</button>
+                    {% endfor %}
+                {% else %}
+                    <p>관심 직무가 없습니다.</p>
                 {% endif %}
-                <h3 class="info-title">학적 상태</h3><h3 class="info-info">{{user.status}}</h3>
-                                <br>
-                <h3 class="info-title">관심 직무</h3>
-                <h3 class="info-info">
-                    {% if user.interests.all %}
-                        {% for interest in user.interests.all %}
-                            <button>{{ interest.interest }}</button>
-                        {% endfor %}
-                    {% else %}
-                        <p>관심 직무가 없습니다.</p>
-                    {% endif %}
-                </h3>
-
-
-                <div class="home">홈</div>
-        </div><br>
-    <h4 class="rounded-box" style="font-size: 15px;">나의 모집글<br><br>
-        <div class="container">
-            <div class="row">
-                {% for p in user_portfolios %}
-                    <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
-                        <div class="card" style="width: 18rem;">
-                            {% if p.head_image %}
-                                <img src="{{ p.head_image.url }}" class="card-img-top" alt="...">
-                            {% else %}
-                                <img src="https://picsum.photos/seed/{{ p.id }}/800/200" class="card-img-top" alt="...">
+            </h3>
+        </div>
+        <div class="wel">나의 모집글</div>
+        <!-- 모집글 작성 카드 -->
+        <div class="write">
+            <div id="recruitCarousel" class="carousel slide recruit-carousel" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    {% if user_recruit %}
+                        {% for r in user_recruit %}
+                            {% if forloop.first or forloop.counter0|divisibleby:3 %}
+                                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                    <div class="row">
                             {% endif %}
-                            <div class="card-body">
-                                <h5 class="card-title">{{ p.title }}</h5>
-                                <p class="card-text">{{ p.content | truncatewords:10 }}</p>
-                                <a href="{{ p.get_absolute_url }}" class="btn btn-primary text-light">더보기</a>
-                            </div>
+                                            <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
+                                                <div class="card border-success position-relative recruit-card" style="border: 2px solid 0C4C0E" onclick="redirectToDetailPage({{r.pk}}, 'recruit')">
+                                                    {% if user.profile.image.url %}
+                                                        <!-- 이미지가 있으면 여백을 추가한 원형으로 보여줍니다. -->
+
+                                                            <img src="{{ user.profile.image.url }}" style="width: 70px; height: 70px;" class="img-fluid rounded-circle" alt="헤더 이미지">
+
+                                                    {% else %}
+                                                        <!-- 이미지가 없으면 기본 원형 플레이스홀더를 보여줍니다. -->
+                                                    <img src="{% static 'portfolio/image/duksaeheart.png' %}" style="width: 70px; height: 70px; border-radius:100px; border: 2px solid #D9D9D9;">
+                                                    {% endif %}
+                                                    <div class="card-body position-relative">
+                                                        <h5 class="card-title">{{ r.author }}님</h5>
+                                                        <p class="card-text"><span style="font-family: 'Noto Sans'; color: #999999;">{{ r.department }}</span></p>
+                                                        <p class="card-text"><span style="font-family: 'Noto Sans'; font-weight: 600;">모집인원 |</span> {{ r.people }}</p>
+                                                        <p class="card-text"><span style="font-family: 'Noto Sans';">{{ r.title }}</span></p>
+                                                        <p class="card-text position-absolute top-0 end-0">
+                                                            {% now "Y년 m월 d일 H시 i분 s초" as now %}
+                                                            {% with d_day=r.calculate_d_day|add:"2" %}
+                                                                {% if d_day >= 0 %}
+                                                                    {% if d_day == 0 %}
+                                                                        <button class="btn btn-danger">D-day!</button>
+                                                                    {% else %}
+                                                                        <button class="btn btn-primary" style="font-family: 'Noto Sans'; font-weight: 500;border-radius: 20px; text-decoration: none;color: white; background-color: #0C4C0E;"><b>D-{{ d_day }}</b></button>
+                                                                    {% endif %}
+                                                                {% else %}
+                                                                    <button class="btn btn-secondary " style="font-family: 'Noto Sans'; font-weight: 500;border-radius: 20px; text-decoration: none;color: white; background-color: #0C4C0E;">모집 기간 종료</button>
+                                                                {% endif %}
+                                                            {% endwith %}
+                                                        </p>
+                                                        <a href= "{{ r.get_absolute_url }}" class="btn btn-primary text-light" style="font-family: 'Noto Sans'; font-weight: 500;border-radius: 20px; text-decoration: none;color: white; background-color: #0C4C0E;">더보기</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                            {% if forloop.last or forloop.counter|divisibleby:3 %}
+                                    </div>
+                                </div>
+
+                            {% endif %}
+                        {% endfor %}
+                    <button class="carousel-control-prev" type="button" data-bs-target="#recruitCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#recruitCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+                    {% else %}
+                        <div class="col-12">
+                            <p class="text-muted" style="font-family: 'Noto Sans';font-weight: bold;">나와 활동을 함께 할 덕우를 찾아보세요!</p>
+                            <a href= "{% url 'recruit:your_combined_view' %}" class="btn btn" style="font-family:'Noto Sans'; margin-left: 10px; font-weight: 500; border-radius: 20px; text-decoration: none;color: white; background-color: #0C4C0E;">작성하기</a>
                         </div>
-                    </div>
-                {% endfor %}
+                    {% endif %}
+                </div>
             </div>
         </div>
-    </h4>
-        </div><br>
-       <h4><a href="{% url 'user:user_portfolios' username=request.user.username %}">내 포트폴리오로 이동</a></h4>-->
+
+        <div class="home">기본정보</div>
+
+    </div>
+<script>
+    function redirectToDetailPage(pk, namespace) {
+        // Django URL 패턴에 맞게 URL을 구성합니다.
+        var urlPattern = "";
+
+        if (namespace === 'recruit') {
+            urlPattern = "{% url 'recruit:recruit_detail' pk=0 %}";
+        }
+
+        var detailPageUrl = urlPattern.replace("0", pk);
+        window.location.href = detailPageUrl;
+    }
+</script>
 {% endblock %}

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+
+{% load static %}
+<html lang="ko">
+<head>
+
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <title>{% block title %}Portfolio{% endblock %}</title>
+
+    <style>
+        .rounded-basebox {
+            width: 210px;
+            height: 400px;
+            border-radius: 20px;
+            border: 2px solid #02343F;
+            background: #F8F8FA;
+            padding: 20px;
+            margin-left: 170px;
+            margin-top: 100px;
+        }
+
+        .base-title {
+            display: inline-block;
+            width: 210px;
+            margin: 5px;
+            color: #767676;
+            text-align: center;
+            font-size: 15px;
+            font-weight: bold;
+            padding: 20px;
+            font-style: normal;
+            text-decoration: none;
+            font-family: Noto Sans;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .rounded-circle.article-img {
+            width: 150px; /* 최대 너비 */
+            height: 150px; /* 최대 높이 */
+            padding-bottom: 10px;
+            padding-top: 5px;
+            margin-left: 8px;
+            margin-right: auto;
+        }
+
+        body {
+            background-color: #F1F1F5;
+        }
+
+        .page-title {
+            width: 100%;
+            height: 100%;
+            color: #191919;
+            font-size: 28px;
+            font-family: Noto Sans;
+            font-weight: 600;
+            margin-left: 166px;
+            margin-bottom: -62px;
+            margin-top: 50px;
+        }
+
+        .button {
+            width: 150px;
+            height: 40px;
+            background-color: rgba(165, 204, 162, 0.70);
+            border-radius: 10px;
+            font-family: 'Noto Sans';
+            font-weight: 600;
+            margin-left: 1103px;
+            text-decoration: none;
+            position: absolute;
+            top: 350px;
+            justify-content: center;
+            align-items: center;
+            display: flex;
+        }
+
+        .filter-box {
+            border-radius: 20px;
+            height: 200px;
+            margin-left: 420px;
+            margin-top: -320px;
+            width: 55%;
+            background: white;
+            border: 3px rgba(165, 204, 162, 0.70) solid;
+        }
+
+        .status-radio-buttons {
+            padding: 20px;
+        }
+
+        .interest {
+            padding: 20px;
+            margin-top: -50px;
+        }
+
+        .num {
+            margin-left: 400px;
+            margin-top: -220px;
+        }
+
+        .body-back-color {
+            background: rgba(165.33, 203.56, 162, 0.32);
+            height: auto;
+            max-height: 200vh;
+            width: 844px;
+            margin-left: 300px;
+            margin-right: 300px;
+            border-radius: 20px;
+        }
+
+        .top {
+            margin-right: 560px;
+        }
+
+        .fw-back-color1 {
+            background-color: #FFFFFF;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            margin-left: 30px;
+            border-radius: 20px;
+            height: 100px;
+            width: 784px;
+        }
+
+        .fw-back-color2 {
+            background-color: #FFFFFF;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            margin-left: 30px;
+            border-radius: 20px;
+            height: auto;
+            max-height: 250vh;
+            width: 784px;
+        }
+
+        #hashtag-style {
+            background-color: #FFFFFF;
+            border: 0;
+            margin-left: 5px;
+            padding: 0;
+            color: #767676;
+        }
+
+        .flex-container {
+            display: flex;
+        }
+
+        .name {
+            position: absolute;
+            top: 350px;
+            left: 430px;
+            color: #191919;
+            font-size: 30px;
+            font-family: Noto Sans;
+            font-weight: 600;
+            word-wrap: break-word
+        }
+        .form-control{
+         width: 80px;
+         height: 30px;
+         font-family:'Noto Sans';
+         font-weight: 500;
+         border-radius: 50px;
+         text-decoration: none;
+         color: black;
+         background-color: #0C4C0E;
+         text-align: center;
+         margin-left: 10px;
+
+         }
+
+    </style>
+</head>
+<body style="background-color: #F1F1F5;">
+
+    {% include 'portfolio/menubar.html' %}<br>
+
+     <div style="width: 100%; height: 100%; color: #191919; font-size: 28px; font-family: Noto Sans; font-weight: 600; margin-left: 150px;margin-bottom: -67px; margin-top: 50px ">{{ request.user.username }}님의 마이페이지</div>
+        <div class="rounded-basebox">
+                  <div class="row">
+                    <div class="content-section">
+                      <div class="media">
+                        {% if user.profile.image.url %}
+                            <img class="rounded-circle article-img" src="{{ user.profile.image.url }}">
+                        {% else %}
+                            <img class="rounded-circle article-img" src="{% static 'portfolio/image/duksaeheart.png' %}">
+                        {% endif %}
+                      </div>
+                      <!-- FORM HERE -->
+            </div>
+            <br>
+            <a href="{% url 'user:update' username=user.username %}" class="base-title">내 프로필 수정</a>
+            <br>
+            <a href="{% url 'user:detail' username=user.username %}" class="base-title">홈</a>
+            <br>
+            <a href="{% url 'user:user_pass_portfolios' username=user.username %}" class="base-title">나의 합격 수기</a>
+        </div>
+        <br>
+    </div>
+
+    <div class="name">나의 합격수기</div>
+    {% if text_data %}
+        <a href="{% url 'pass_portfolio:pass_portfolio_update' pk=text_data.pk %}" class="button" style="border-radius: 10px; margin-left: 1103px; text-decoration: none; display: flex; justify-content: center; align-items: center;">수정하기</a>
+    {% else %}
+        <a href="{% url 'pass_portfolio:your_combined_view' %}" class="button" style="border-radius: 10px; margin-left: 1103px; text-decoration: none; display: flex; justify-content: center; align-items: center;">작성하기</a>
+    {% endif %}
+    <div class="container mb-4" style="border-radius: 20px;height: 200px; margin-left:420px; margin-top: -320px; width: 55%;  background: white; border-radius: 20px; border: 5px solid rgba(165.33, 203.56, 162, 0.32);">
+        <div class="col-lg-8">
+
+            <div class="row">
+                    {% if text_data %}
+                    <!-- 기업정보 -->
+                        <div class="col-md-3" style="margin-left: 10px; margin-top: 10px;">
+                            <label style="padding: 10px; font-family: Noto Sans; font-weight: 600;">기업 정보</label>
+
+                            <label class="form-control" >{{ text_data.company_name }}</label>
+                            </div>
+                        </div>
+
+        </div>
+
+        <div class="row">
+                         <!-- 관심 직무 선택 체크 박스 -->
+                <div class="interest" style="margin-left: 330px; margin-top: -85px;">
+                    <label for="interest-field" style="font-family: Noto Sans; font-weight: 600;margin-bottom: 10px;">관심 직무</label><br>
+
+                    {% for interest1 in text_data.interests %}
+                        <div class="form-check form-check-inline" style="margin-left: 10px; margin-bottom: 10px;">
+                            <input type="checkbox" class="form-check-input" name="interest1" id="{{ interest1.slug }}"
+                                value="{{ interest1.interest }}" {% if interest1.interest in text_data.interest_field %}checked{% endif %} disabled>
+                            <label class="form-check-label" for="{{ interest1.slug }}">{{ interest1.interest }}</label>
+                        </div>
+
+                        {% if forloop.counter|divisibleby:4 and not forloop.last %}
+                            <br> <!-- 매 4번째 체크 박스마다 줄 바꿈 -->
+                        {% endif %}
+
+                    {% endfor %}
+                </div>
+                    <br><br>
+                </div>
+        <!--전공, 학번-->
+        <div class="row">
+                            <div class="num" style="margin-left: 20px; margin-top: -70px">
+                                 <label style="margin-bottom: 10px; font-family: Noto Sans; font-weight: 600;">전공 | 학번</label><br>
+                                 <h6>{{ text_data.department }} | {{user.number}}</h6>
+                            </div>
+            </div>
+    </div>
+
+    <!-- Post title-->
+                       <article class="flex-column align-items-center d-flex" style="margin-left: 420px; width: 55%;">
+                        <div class="body-back-color">
+                            <div class="fw-back-color1">
+                                <p class="fw-bolder" style="margin-left: 20px; font-size: 28px;">{{ text_data.title | safe }}</p>
+                                <!-- Post meta content-->
+                                <div style="display: flex; justify-content: space-between;">
+                                    <!-- 해시태그-->
+                                    <div style="margin-left: 15px;">
+                                        <p>
+                                            {% for hashtag in text_data.hashtags %}
+                                            <button onclick="handleHashtagClick('{{ hashtag }}')" id="hashtag-style">#{{ hashtag }}</button>
+                                            {% endfor %}
+                                        </p>
+                                    </div>
+                                    <!-- 게시한 시간-->
+                                    <div class="text-muted fst-italic" style="margin-right: 20px;">{{text_data.created_at}}에 게시됨</div>
+                                </div>
+                            </div>
+
+                                    <!-- 작성 내용-->
+                        <div class="fw-back-color2">
+                            <section class="mb-5 p-5" style="overflow: auto; height: 500px; ">
+                        <p class="fs-5 mb-4" style="{{ text_data.styles }}">{{ text_data.content | safe }}</p>
+
+                    </section>
+                            {% else %}
+
+                                <p>작성한 포트폴리오가 없습니다.</p>
+
+                            {% endif %}
+                        </div>
+                    </div>
+                </article>
+
+
+<br>
+</body>
+</html>

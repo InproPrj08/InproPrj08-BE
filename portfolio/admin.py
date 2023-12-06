@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Portfolio, CUser, College, Major, Number, Interest, Status
+from .models import Portfolio, CUser, College, Major, Number, Interest, Status, Profile
 
 
 class PortfolioAdmin(admin.ModelAdmin):
@@ -31,3 +31,5 @@ class StatusAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug':('status',)}
 
 admin.site.register(Status, StatusAdmin)
+
+admin.site.register(Profile)

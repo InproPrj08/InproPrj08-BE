@@ -114,6 +114,7 @@ function previewImage(input) {
             imagePreview.id = 'image-preview1';
             imagePreview.style.width = '150px';
             imagePreview.style.height = '200px';
+
             imageContainer.appendChild(imagePreview);
         }
 
@@ -125,6 +126,8 @@ function previewImage(input) {
                 imagePreview.src = e.target.result;
                 imagePreview.style.display = 'block';
                 imagePlaceholder.style.display = 'none';
+                imagePreview.style.borderRadius = '30px';
+
             };
 
             reader.readAsDataURL(imageInput);

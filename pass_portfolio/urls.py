@@ -14,4 +14,5 @@ urlpatterns = [
     path('<int:pk>/delete/', PassPortfolioDeleteView.as_view(), name='pass_portfolio_delete'),
     path('<int:pk>/delete-comment/<int:comment_id>/', DeleteCommentView.as_view(), name='delete_comment'),
     path('<int:pk>/toggle_comment_like/<int:comment_id>/', views.toggle_comment_like, name='toggle_comment_like'),
+    path('filterpage/', views.filtersearch_view, name='filtersearch_view'),
 ]

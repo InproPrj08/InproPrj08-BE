@@ -1,51 +1,288 @@
 <!-- 포트폴리오 목록 페이지 -->
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <title>목록페이지</title>
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      .nametag{
+      width: 600px;
+      height: 400px;
+      border: 1px solid #02343F ;
+      border-radius: 20px;
+      padding: 50px;
+      margin-left: 100px;
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-          crossorigin="anonymous">
+      }
+      .semi-title-help{
+      margin-left:200px;
+      color: #767676;
+      }
+      .semi-title{
+      margin-left:200px;
+      margin-top:30px;
+      font-weight: bold;
+      font-size: 30px;
+      }
+
+.hashtag {
+    padding-left: 90px;
+    color: #767676;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Add gap between hashtags */
+}
+
+.card-link-hashtag {
+    box-sizing: border-box;
+    width: calc(50% - 10px); /* 50% width with gap adjustment */
+    height: 30px;
+    border: 2px solid #02343F;
+    border-radius: 20px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px; /* Add bottom margin to create space between rows */
+}
+
+      .top-slide{
+      margin-left: 210px; /* 좌측 여백 */
+      margin-top: 50px;
+
+      }
+      .Top-card{
+      border: 1px solid #02343F;
+      border-radius: 20px;
+      margin-left: 70px;
+      margin-top: 45px;
+      padding-bottom: 20px;
+      padding-top: 20px;
+      }
+      .card-top-major{
+      margin-left: 10px;
+      }
+      .card-top-name{
+      font-size: 22px;
+      font-weight: bold;
+      }
+      .container1{
+      margin-top: 50px;
+      }
+      .job-hashtag{
+      border: 2px solid #02343F;
+      margin-left:90px;
+      color: #767676;
+      }
+      .card-img-rounded{
+      margin-top: 10px;
+      width: 80px;
+      height: 80px;
+      }
+      .intro{
+      font-weight: bold;
+      }
+      .back-color{
+      background-color: #F8F8FA;
+      height: 820px;
+      margin-top: 60px;
+      }
+      .bottom-background-color{
+      background-color: #D9D9D9;
+      height: 100px;
+      margin-top: 70px;
+      }
+      .card-link-name{
+      text-decoration: none;
+      color: #191919;
+      font-size: 20px;
+      font-weight: medium;
+      font-family: 'Noto Sans';
+      }
+
+
+      .card-link-major{
+      text-decoration: none;
+      color: #767676;
+      }
+      .hi{
+      padding-bottom: 63px;
+      padding-left: 20px;
+      text-decoration: none;
+      }
+      .go{
+      margin-left: 630px;
+      font-size: 30px;
+      text-decoration: none;
+      }
+      #carouselExampleAutoplaying{
+      box-shadow: 7px 0px 5px #D9D9D9, -7px 0px 5px #D9D9D9;
+      border-radius: 20px;
+      }
+      .carousel-inner{
+      border-radius: 20px;
+      }
+
+
+      /* 라벨 폰트 색상을 회색(#999999)으로 지정 */
+        .form-check-label {
+            color: #999999;
+        }
+
+         .form-check-input:checked {
+            background-color: #02343F; !important;
+            border-color: #02343F;
+        }
+
+        /* 라디오 버튼의 일반 상태 색상을 #02343F로 지정 */
+        .form-check-input {
+            background-color: #02343F;
+            border-color: #02343F;
+        }
+        }
+
+  </style>
 
 </head>
 
 <body>
     {% include 'portfolio/menubar.html' %}
-    <br/><br/>
-    <div class="container">
-        <div class="row">
-            {% for p in recruit_list %}
-                <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
-                    <div class="card" style="width: 18rem;">
-                        {% if p.head_image %}
-                        <img src="{{ p.head_image.url }}" class="card-img-top" alt="...">
-                        {% else %}
-                        <img src="https://picsum.photos/seed/{{p.id}}/800/200" class="card-img-top" alt="...">
-                        {% endif %}
-                        <div class="card-body">
-                            <h5 class="card-title">{{ p.author }}님</h5>
-    <p class="card-text">
-        {{ p.department }}
-    </p>
-                            <p class="card-text">
-                                모집인원 | {{p.people}}
-                            </p>
-                            <p class="card-text">
-                                {{p.content | truncatewords:5}}
-                            </p>
+    <br>
+     <div class="container" style="padding-top: 20px;">
+        <h3><strong>모집 게시판</strong></h3>
+        <h7>내가 함께 참여하고 싶은 활동을 찾을 수 있어요!</h7><br>
 
-    <a href="{{ p.get_absolute_url }}" class="btn btn-primary text-light">더보기</a>
-</div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
     </div>
 
-    <br/><br/>
+    <div class="container mt-5 " style="background-color: rgba(222, 232, 247, 42%); border-radius: 20px; padding:30px; border: 3px solid #C4DCFF; max-width: 1153px; max-height:250px">
+        <form method="get" action="{% url 'recruit:filtersearch_view' %}">
+            <div class="row">
+
+                <!-- 상태 선택 -->
+                <div class="col-md-4">
+                    <h6 style="font-weight: bold;">학적상태</h6>
+                    {% for status in status %}
+                    <div class="form-check form-check-inline">
+                        <input type="radio" class="form-check-input" name="status" id="{{status.id}}" value="{{status.status}}" {% if status == '{{status.status}}' %}checked{% endif %}>
+                        <label class="form-check-label" for="{{status.id}}">{{status.status}}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+
+
+
+                <!-- 관심 직무 선택 -->
+<div class="col-md-5" >
+    <h6 style="font-weight: bold;">관심 직무</h6>
+    <div class="row">
+        {% for interest in interests %}
+            <div class="col-md-3"> <!-- 4개의 컬럼 중 1개 -->
+                <div class="form-check form-check-inline">
+                    <input type="checkbox" class="form-check-input" name="interest" id="{{ interest.slug }}" value="{{ interest.interest }}" {% if interest.interest in interest_name %}checked{% endif %}>
+                    <label class="form-check-label" for="{{ interest.slug }}">{{ interest.interest }}</label>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+
+                <!--공감, 최신순-->
+                <div class="col-md-3">
+                    <h6 style="font-weight: bold;">정렬</h6>
+                    <div class="form-check form-check-inline">
+                        <input type="radio" class="form-check-input" name="sorting" id="sorting_latest" value="latest" checked>
+                        <label class="form-check-label" for="sorting_latest">최신순</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="radio" class="form-check-input" name="sorting" id="sorting_likes" value="likes">
+                        <label class="form-check-label" for="sorting_likes">공감순</label>
+                    </div>
+                </div>
+            </div>
+<div class="row">
+    <div class="col-md-4">
+        <h6 style="font-weight: bold;">단과대 및 전공</h6>
+        <label for="college">대학:</label>
+        <select id="college" name="college" style="background-color: white; color: #333; border: 1px solid #ccc; border-radius: 20px; margin: 5px;">
+            <option value="default">대학 선택</option>
+            {% for college in colleges %}
+                <option value="{{ college.name }}" {% if college.name == college %}selected{% endif %}>{{ college.name }}</option>
+            {% endfor %}
+        </select>
+
+        <!-- 단과대 및 전공 선택 -->
+        <!-- 전공 선택 드롭다운 -->
+        <label for="major">전공:</label>
+        <select style="background-color: white; color: #333; border: 1px solid #ccc; border-radius: 13px; margin: 0px;" id="major" name="major" {% if selected_college == 'default' %}disabled{% endif %}>
+            <!-- 이 부분은 JavaScript로 동적으로 업데이트됩니다 -->
+        </select>
+    </div>
+
+    <div class="col-md-8 d-flex justify-content-end align-items-end">
+        <button type="submit" class="btn btn-success mt-3 d-inline">검색</button>
+    </div>
+</div>
+
+
+            <!-- 검색 버튼 -->
+
+        </form>
+    </div>
+
+<br>
+
+<br>
+   <div class="container mx-auto" style="max-width: 1200px;">
+    <div class="row justify-content-center">
+        {% for p in recruit %}
+        <div class="col-sm-4 mb-4">
+                <div class="card d-flex" style="position: relative; border: 2px solid #C4DCFF; border-radius: 20px; height: 220px; width: 350px; margin:10px" onclick="redirectToDetailPage({{p.pk}}, 'recruit')">
+                <p class="card-text position-absolute top-0 end-0 translate-middle-y" style="margin-right: 10px; margin-top:30px;">
+                            {% now "Y년 m월 d일 H시 i분 s초" as now %}
+                            {% with d_day=p.calculate_d_day|add:"1" %}
+                            {% if d_day >= 0 %}
+                            {% if d_day == 0 %}
+                            <button class="d-num btn btn-danger" id="d-day" style="background-color: #DC6E6E; border:0;">D-day!</button>
+                            {% else %}
+                            <button class="d-num btn btn-primary" id="d-num" style="background-color: #8A9AEB; border:0;"><b>D-{{ d_day }}</b></button>
+                            {% endif %}
+                            {% else %}
+                            <button class="d-num btn btn-secondary" id="d-end">모집종료</button>
+                            {% endif %}
+                            {% endwith %}
+                            </p>
+
+
+                    <div class="card-body">
+                    <div class="d-flex">
+                        <img src="{{ p.author.profile.image.url }}" class="card-img-rounded rounded-pill ml-2" alt="...">
+                        <div class="user d-flex flex-column" style="margin-left: 30px; margin-top: 20px;">
+                            <p class="card-link-name">{{p.author}}님</p>
+                            <p class="card-link-major" style="color: #767676;">{{p.department}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="hi d-flex flex-column">
+                    <p class="intro">모집인원 | {{p.people}}명 </p>
+                    <p>{{p.title|truncatechars:60}} </p>
+                </div>
+            </div>
+        </div>
+
+        {% endfor %}
+    </div>
+</div>
+
+    <br/>
     <!-- 페이지네이션 링크 표시 -->
     <div class="pagination justify-content-center">
         <span class="step-links">
@@ -58,6 +295,80 @@
             {% endif %}
         </span>
     </div><br/>
+<script>
+
+// 전역 스코프에 selectedMajor 변수 추가
+var selectedCollege = '{{ selected_college }}';
+var selectedMajor = '{{ selected_major }}';
+
+document.addEventListener('DOMContentLoaded', function () {
+    var collegeDropdown = document.getElementById('college');
+    var majorDropdown = document.getElementById('major');
+
+    // Function to update major options based on the selected college
+    function updateMajorOptions(college) {
+        majorDropdown.innerHTML = ''; // Clear existing options
+
+        switch (college) {
+            case '과기':
+                {% for major in sm %}
+                    majorDropdown.innerHTML += '<option value="{{ major.id }}" {% if major.id == selectedMajor %}selected{% endif %}>{{ major.name }}</option>';
+                {% endfor %}
+                break;
+            case '약학':
+                {% for major in pm %}
+                    majorDropdown.innerHTML += '<option value="{{ major.id }}" {% if major.id == selectedMajor %}selected{% endif %}>{{ major.name }}</option>';
+                {% endfor %}
+                break;
+            case '아앤디':
+                {% for major in am %}
+                    majorDropdown.innerHTML += '<option value="{{ major.id }}" {% if major.id == selectedMajor %}selected{% endif %}>{{ major.name }}</option>';
+                {% endfor %}
+                break;
+            case '글융':
+                {% for major in gm %}
+                    majorDropdown.innerHTML += '<option value="{{ major.id }}" {% if major.id == selectedMajor %}selected{% endif %}>{{ major.name }}</option>';
+                {% endfor %}
+                break;
+        }
+    }
+
+    // Event listener for the college dropdown
+    collegeDropdown.addEventListener('change', function () {
+        selectedCollege = this.value;
+        majorDropdown.disabled = false; // Enable major dropdown
+        updateMajorOptions(selectedCollege); // Update major options based on the selected college
+    });
+
+    // Initialize the major dropdown based on the selected college
+    if (selectedCollege !== 'default') {
+        collegeDropdown.value = selectedCollege;
+        updateMajorOptions(selectedCollege);
+    }
+
+    // Set the selected major if it's not the default value
+    if (selectedMajor !== '') {
+        majorDropdown.value = selectedMajor;
+    }
+});
+
+// Event listener for the major dropdown
+document.getElementById('major').addEventListener('change', function () {
+    selectedMajor = this.value;
+    console.log(selectedMajor);
+});
+    function redirectToDetailPage(pk, namespace) {
+        // Django URL 패턴에 맞게 URL을 구성합니다.
+        var urlPattern = "";
+
+        if (namespace === 'recruit') {
+            urlPattern = "{% url 'recruit:recruit_detail' pk=0 %}";
+        }
+
+        var detailPageUrl = urlPattern.replace("0", pk);
+        window.location.href = detailPageUrl;
+    }
+</script>
 
 </body>
 

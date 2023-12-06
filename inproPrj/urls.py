@@ -23,9 +23,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('portfolio/', include('portfolio.urls')),
     path('recruit/', include('recruit.urls')),
-    path('filter/', include('filter.urls')),
     path('auth/', include('mypage.urls')),
     path('pass_portfolio/', include('pass_portfolio.urls')),
-    path('filter/', include('filter.urls', namespace='filter')),
+    path('delight/', include('delight.urls')),
+    path('', include('single_page.urls')),
+
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

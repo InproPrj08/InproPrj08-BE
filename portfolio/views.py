@@ -1,9 +1,11 @@
 import json
 import traceback
+import urllib
 from itertools import chain
 
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.db.models import Q, Count
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
@@ -24,26 +26,7 @@ class PortfolioList(ListView):
     page_kwarg = "page"
 
     def get_queryset(self):
-        queryset = Portfolio.objects.all().order_by('-created_at')
-
-        # 여기서부터 추가된 부분
-        status = self.request.GET.get('status', '')
-        interest = self.request.GET.get('interest', '')
-        college = self.request.GET.get('college', '')
-        major = self.request.GET.get('major', '')
-
-        if status:
-            queryset = queryset.filter(status1_id=True if status == 'True' else False)
-        if interest:
-            interest_obj = get_object_or_404(Interest, interest=interest)
-            queryset = queryset.filter(interest_id=interest_obj.id)
-        if college:
-            queryset = queryset.filter(college=college)
-        if major:
-            major_obj = get_object_or_404(Major, slug=major)
-            queryset = queryset.filter(major1_id=major_obj.id)
-
-        return queryset
+        return Portfolio.objects.all().order_by('-created_at')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -52,7 +35,7 @@ class PortfolioList(ListView):
         status = self.request.GET.get('status', '')
         interest_name = self.request.GET.get('interest', '')
         college = self.request.GET.get('college', '')
-        major_slug = self.request.GET.get('major1', '')
+        major_id = self.request.GET.get('major', '')
 
         # 관심 직무와 단과대를 불러오는 코드 추가
         interests = Interest.objects.all()
@@ -73,7 +56,7 @@ class PortfolioList(ListView):
             'status': status,
             'interest_name': interest_name,
             'college': college,
-            'major_slug': major_slug,
+            'major_id': major_id,
             'majors': Major.objects.all(),  # 모든 전공을 가져오도록 수정
             'interests': interests,
             'colleges': colleges,
@@ -101,6 +84,8 @@ class PortfolioDetail(DetailView):
 
         # 특정 포트폴리오 객체를 사용하여 추가 데이터를 가져옵니다.
         if portfolio:
+            interest_all = Interest.objects.all()
+            status_all = Status.objects.all()
             interests = portfolio.interest_field.all()
             interest_names = [interest.interest for interest in interests]
 
@@ -114,6 +99,9 @@ class PortfolioDetail(DetailView):
                 'department': portfolio.department.name if portfolio.department else None,
                 'status': portfolio.status,
                 'status1':portfolio.anonymous,
+                'author':portfolio.author,
+                'interest_all': interest_all,
+                'status_all':status_all,
             }
             print(portfolio.interest_field)
         else:
@@ -151,22 +139,37 @@ def search_view(request):
         pass_portfolio_results = PassPortfolio.objects.filter(Q(title__icontains=query) | Q(content__icontains=query))
         recruit_results = Recruit.objects.filter(Q(title__icontains=query) | Q(content__icontains=query))
 
-        # 내용도 검색 결과에 포함시키기
-        portfolio_results = portfolio_results.values('id', 'title', 'content')
-        pass_portfolio_results = pass_portfolio_results.values('id', 'title', 'content')
-        recruit_results = recruit_results.values('id', 'title', 'content')
+        # Process hashtags and convert them to a list
+        for pass_portfolio in pass_portfolio_results:
+            pass_portfolio.hashtags = json.loads(pass_portfolio.hashtags)
+            pass_portfolio.hashtags = [tag.strip('"') for tag in pass_portfolio.hashtags]  # Remove quotes
 
-        # 결과를 하나의 리스트로 합칩니다.
-        results = list(chain(portfolio_results, pass_portfolio_results, recruit_results))
+        # Process hashtags and convert them to a list
+        for portfolio in portfolio_results:
+            portfolio.hashtags = json.loads(portfolio.hashtags)
+            portfolio.hashtags = [tag.strip('"') for tag in portfolio.hashtags]  # Remove quotes
+
+
+
+
+        # 결과를 각 모델별로 따로 전달합니다.
+        context = {
+            'portfolio_results': portfolio_results,
+            'pass_portfolio_results': pass_portfolio_results,
+            'recruit_results': recruit_results,
+            'portfolio.hashtags':'portfolio.hashtags',
+            'query': query,
+        }
     else:
         # 검색어가 없는 경우 각 모델의 모든 객체를 가져옵니다.
-        results = {
-            'Portfolio': Portfolio.objects.all().values('id', 'title', 'content'),
-            'PassPortfolio': PassPortfolio.objects.all().values('id', 'title', 'content'),
-            'Recruit': Recruit.objects.all().values('id', 'title', 'content'),
+        context = {
+            'portfolio_results': Portfolio.objects.all(),
+            'pass_portfolio_results': PassPortfolio.objects.all(),
+            'recruit_results': Recruit.objects.all(),
+            'query': query,
         }
 
-    return render(request, 'portfolio/search_results.html', {'results': results, 'query': query})
+    return render(request, 'portfolio/search_results.html', context)
 
 
 
@@ -218,10 +221,8 @@ def save_text(request):
             department = form.cleaned_data['department']
             status_value = form.cleaned_data['status']
             status = status_value
-            print(status)
             status_value1 = form.cleaned_data['anonymous']
             status1 = status_value1
-            print(status1)
 
             interest_field_ids = form.cleaned_data.get('interest_field')
             interest_instances = Interest.objects.filter(id__in=interest_field_ids)
@@ -273,6 +274,17 @@ class PortfolioUpdate(UpdateView):
     def form_valid(self, form):
         try:
             response = super().form_valid(form)
+
+            # 모델 인스턴스 가져오기
+            portfolio_instance = form.save(commit=False)
+
+            # 전공 값 설정
+            department_id = form.cleaned_data['department']
+            portfolio_instance.department_id = department_id
+
+            # 나머지 필드 저장
+            portfolio_instance.save()
+
             if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 return JsonResponse({'status': 'success', 'pk': self.object.pk, 'is_ajax': True})
             else:
@@ -352,71 +364,69 @@ def filter_portfolio_by_interest(interest_name):
 def filtersearch_view(request):
     majors = Major.objects.all()
 
-    status_name = request.GET.get('status1')
+    status_name = request.GET.get('status')
     interest_names = request.GET.getlist('interest')
-    college = request.GET.get('college')
-    major = request.GET.get('major1')
+    college_slug = request.GET.get('college')
+    major_id = request.GET.get('major')
+    sorting_option = request.GET.get('sorting', 'latest')  # 기본값은 최신순
+    paginate_by = 6  # 페이지당 보여질 아이템 수
+    page_kwarg = "page"
 
     results = Portfolio.objects.all()
 
+    # Status 필터 추가
     if status_name:
-        results = results.filter(status1_id=status_name == 'True')
+        # status_name에 따라 필터링
+        if status_name == '재학생':
+            results = results.filter(author__status__status='재학생')
+        elif status_name == '휴학생':
+            results = results.filter(author__status__status='휴학생')
+        elif status_name == '졸업생':
+            results = results.filter(author__status__status='졸업생')
 
     if interest_names:
         interest_filters = Q()
         for interest in interest_names:
             interest_filters |= Q(interest_field__interest=interest)
-        results = results.filter(interest_filters)
+        results = results.filter(interest_filters).distinct()
 
-    if college:
-        results = results.filter(department__college__slug=college)
+    if college_slug and major_id:
+        # 단과대와 전공을 모두 필터링
+        results = results.filter(department__college__name=college_slug, department_id=major_id)
+        print(f"Filtering by College: {college_slug}, Major: {major_id}")
+    elif college_slug:
+        # 단과대만 필터링
+        results = results.filter(department__college__name=college_slug)
+        print(f"Filtering by College: {college_slug}")
+    elif major_id:
+        # 전공만 필터링
+        results = results.filter(department_id=major_id)
+        print(f"Filtering by Major: {major_id}")
 
-    if major:
-        results = results.filter(department__slug=major)
+        # 정렬 옵션에 따라 결과 정렬
+        if sorting_option == 'latest':
+            results = results.order_by('-created_at')
+        elif sorting_option == 'likes':
+            results = results.annotate(like_count=Count('like_users')).order_by('-like_count')
 
     # 디버깅을 위해 쿼리 출력
     print(results.query)
+
+    # Pagination
+    paginator = Paginator(results, paginate_by)
+    page = request.GET.get(page_kwarg)
+
+    try:
+        results = paginator.page(page)
+    except PageNotAnInteger:
+        # If the page parameter is not an integer, deliver the first page.
+        results = paginator.page(1)
+    except EmptyPage:
+        # If the page parameter is out of range (e.g. 9999), deliver the last page of results.
+        results = paginator.page(paginator.num_pages)
 
     context = {
         'results': results,
         'majors': majors,
     }
-
     return render(request, 'portfolio/filtersearch_major_results.html', context)
-
-def filter_page(request):
-    majors = Major.objects.all()
-
-    if request.method == 'GET':
-        status = request.GET.get('status', '')
-        interest = request.GET.getlist('interest')
-        college = request.GET.get('college', '')
-        major = request.GET.get('major', '')
-
-        queryset = Portfolio.objects.all()
-
-        if status:
-            queryset = queryset.filter(status=status)
-
-        if interest:
-            # Update the filter for many-to-many relationship
-            queryset = queryset.filter(interest_field__interest__in=interest)
-
-        if college:
-            queryset = queryset.filter(department__college=college)
-
-        if major:
-            queryset = queryset.filter(department=major)
-
-        context = {
-            'status': status,
-            'interest': interest,
-            'college': college,
-            'major': major,
-            'majors': majors,
-            'results': queryset,
-        }
-
-        return render(request, 'portfolio/portfolio_list.html', context)
-
-

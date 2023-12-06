@@ -4,6 +4,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <link href="{% static 'mypage/css/signup.css' %}" rel="stylesheet" type="text/css" media="screen">
     <link href="{% static 'mypage/css/topmenu.css' %}" rel="stylesheet" type="text/css" media="screen">
     <link href="{% static 'mypage/bootstrap/bootstrap.min.css' %}" rel="stylesheet" type="text/css" media="screen">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,7 +31,8 @@
         /* 제목 스타일 */
         h1 {
             text-align: center;
-            margin: 50px 0px;
+            padding-top: 30px;
+            font-size: 28px;
         }
 
         /* 각 항목 간격 */
@@ -41,16 +43,17 @@
         /* input 영역 스타일 */
         .form-input {
             padding: 10px;
+            width: 560px;
         }
 
         /* select 영역 스타일 */
         /* 항목 이름 */
         .form-label {
-            display: inline-block;
             width: 150px; /* 레이블의 고정된 너비 */
-            text-align: left; /* 레이블을 오른쪽 정렬 */
-            margin-right: 10px; /* 레이블과 입력칸 사이의 간격 */
+            margin: 10px; /* 레이블과 입력칸 사이의 간격 */
             font-weight: bold;
+            text-align: left;
+            margin-right: 430px;
         }
 
         /* select 영역 */
@@ -61,84 +64,122 @@
 
         /*  회원가입 버튼 */
         #signup-button {
-            width: 350px;
-            background-color: #F7CF60; /* 배경색을 파란색으로 설정 */
-            color: white; /* 글씨색을 흰색으로 설정 */
-            padding: 10px 20px; /* 상하 10px, 좌우 20px 여백 */
-            border: none; /* 테두리 없음 */
-            border-radius: 5px; /* 둥근 모서리 적용 */
-            cursor: pointer;
-            margin: 50px 0px;
+        width: 300px;
+        background-color: #02343F;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        text-align: center;
+        margin: 30px auto; /* 가로 중앙 정렬 및 위아래 여백 설정 */
+        display: block; /* 가로 중앙 정렬을 위해 필요한 속성 */
+        }
+
         }
 
         /* 회원가입 버튼 호버 */
         #signup-button:hover {
             background-color: #FBE5A3;
         }
+        /* 회원가입 전체 영역 */
+        .form-container {
+         text-align: center;
+         border-radius: 10px; /* 둥근 테두리 설정 */
+         border: 1px solid black;
+         padding: 50px;
+
+         }
+         .btn dropdown-toggle{
+         border-radius: 10px; /* 모서리를 둥글게 만듭니다. */
+         background-color: #FBE5A3; /* 배경색을 지정합니다. */
+         color: white; /* 글자색을 흰색으로 지정합니다. */
+         padding: 10px 20px; /* 내부 여백을 지정합니다. */
+         cursor: pointer; /* 마우스 커서를 포인터로 변경합니다. */
+         }
+
     </style>
 </head>
 <body>
-{% include 'portfolio/menubar.html' %}<br>
-
+{% include 'portfolio/menubar.html' %}
+<h1><b>Sign up</b></h1>
+<br>
+<form method="POST" action="{% url 'user:signup' %}">
     <div id="signup_body" class="container mx-auto text-center">
         <div class="form-container">
-            <h1>회원가입</h1>
-    <form method="POST" action="{% url 'user:signup' %}">
-        {% csrf_token %}
-        <div class="form-group">
-            <label class="form-label">User name</label>
-            {{form.username|add_class:"form-input"|attr:"placeholder:Enter your user name"}}
-        </div>
-        <div class="form-group">
-            <label class="form-label">비밀번호</label>
-            <input type="password" name="password" class="form-input" placeholder="Enter your password">
-        </div>
-        <div class="form-group">
-            <label class="form-label">비밀번호 확인</label>
-            <input type="password" name="confirm" class="form-input" placeholder="Enter your password">
-        </div>
-        <div class="form-group">
-            <select name="number" id="number" required>
-                <option value="" disabled selected>학번</option>
-                {% for n in numbers %}
-                <option value="{{n.number}}">{{n.number}}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="form-group">
-        <label for="college">대학:</label>
-            <select id="college" name="college">
-                <option value="default">대학 선택</option>
-                {% for college in colleges %}
-                <option value="{{college.name}}">{{college.name}}</option>
-                {% endfor %}
-            </select>
-                    </div>
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="form-label">*아이디(이메일)</label></div>
+                <div>
+                   {{ form.username|add_class:"form-input"|attr:"style:border: none; border-bottom: 1px solid #02343F; border-radius: 0px;"|attr:"placeholder: 아이디 또는 이메일을 입력해주세요"}}
+                </div>
+                <div class="form-group">
+                    <label class="form-label">*비밀번호</label></div>
+                <div>
+                    <input type="password" class="form-input " id="password-input" name="password" aria-describedby="passwordHelp" placeholder="비밀번호를 입력해주세요(문자,숫자,특수문자 포함 8~20자)">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">*비밀번호 확인</label></div>
+                <div>
+                    <input type="password"  class="form-input" id="confirm" name="confirm" aria-describedby="passwordHelp" placeholder="비밀번호를 재입력해주세요">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">*단과대/전공</label>
+                </div>
+                <script>
+                function updateSelectedValue(value) {
+                // 선택한 값을 버튼 텍스트로 설정
+                document.getElementById('selectedValue').innerText = value;
+                }</script>
+            <div class="d-flex ">
+                <div class="form-group">
+                    <select id="college" name="college" style="border: none; border-bottom: 1px solid #02343F; border-radius: 0px; width:250px; margin-left:20px;">
+                        <option value="default">대학 선택</option>
+                        {% for college in colleges %}
+                        <option value="{{college.name}}">{{college.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group ms-4">
+                    <select id="major" name="major" disabled style="border: none; border-bottom: 1px solid #02343F; border-radius: 0px; width:250px;">
+                        <!-- 이 부분은 JavaScript로 동적으로 업데이트됩니다 -->
+                    </select>
+                </div>
+            </div>
+                <div class="form-group">
+                    <label class="form-label">*학번</label>
                     <div class="form-group">
-            <label for="major">전공:</label>
-            <select id="major" name="major" disabled>
-                <!-- 이 부분은 JavaScript로 동적으로 업데이트됩니다 -->
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="interests">관심 직무:</label><br>
-            {% for interest in interests %}
+                        <select name="number" id="number" required style="border: none; border-bottom: 1px solid #02343F; border-radius: 0px; width:250px;">
+                            <option value="" disabled selected>학번을 선택해 주세요</option>
+                            {% for n in numbers %}
+                            <option value="{{n.number}}">{{n.number}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            <div class="form-group">
+                <label class="form-label">*관심분야</label>
+            </div>
+            <div class="form-group">
+                {% for interest in interests %}
                 <input type="checkbox" id="interests-{{ interest.name }}-{{ interest.id }}" name="interests" value="{{ interest.id }}"> {{ interest }}
-            {% endfor %}
-        </div>
-        <div class="form-group">
-<label for="public-status">학적 상태:</label><br>
-            {% for status in status %}
-        <input type="radio" id="status" name="status" value="{{ status.status }}"> {{ status.status }}
-            {% endfor %}
-
-</div>
-<br><br>
-
-        <input id="signup-button" type="submit" value="회원가입">
-    </form>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                <label class="form-label">*학적상태</label>
+            </div>
+            <div class="d-inline-block">
+                <div class="form-group">
+                    {% for status in status %}
+                    <input type="radio" id="{{ status.id }}" name="status" value="{{ status.status }}"> {{ status.status }}
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </div>
+    <button id="signup-button" type="submit" >가입하기</button>
+</form>
+
 <script>
 document.getElementById('college').addEventListener('change', function () {
     var selectedCollege = this.value;

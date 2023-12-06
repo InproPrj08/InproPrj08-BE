@@ -1,42 +1,409 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Search</title>
-</head>
-<body>
-{% include 'portfolio/menubar.html' %}
-<h1>Search Results</h1>
+    <!-- Bootstrap CSS 가져오기 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300&display=swap" rel="stylesheet">
 
-{% if query %}
-    <p>검색어: {{ query }}</p>
+      <style>
+       .card {
+        border: 2px solid #02343F;
+        border-radius: 20px;
+        height: 220px;
+        width: 350px;
+
+        padding-bottom: 30px;
+
+    }
+
+      .nametag{
+      width: 600px;
+      height: 400px;
+      border: 1px solid #02343F ;
+      border-radius: 20px;
+      padding: 50px;
+      margin-left: 100px;
+
+      }
+      .semi-title-help{
+      margin-left:200px;
+      color: #767676;
+      }
+      .semi-title{
+      margin-left:200px;
+      margin-top:30px;
+      font-weight: bold;
+      font-size: 30px;
+      }
+
+.hashtag {
+    padding-left: 90px;
+    color: #767676;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Add gap between hashtags */
+}
+
+.card-link-hashtag {
+    box-sizing: border-box;
+    width: calc(50% - 10px); /* 50% width with gap adjustment */
+    height: 30px;
+    border: 2px solid #02343F;
+    border-radius: 20px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px; /* Add bottom margin to create space between rows */
+}
+
+      .top-slide{
+      margin-left: 210px; /* 좌측 여백 */
+      margin-top: 50px;
+
+      }
+      .Top-card{
+      border: 1px solid #02343F;
+      border-radius: 20px;
+      margin-left: 70px;
+      margin-top: 45px;
+      padding-bottom: 20px;
+      padding-top: 20px;
+      }
+      .card-top-major{
+      margin-left: 10px;
+      }
+      .card-top-name{
+      font-size: 22px;
+      font-weight: bold;
+      }
+      .container1{
+      margin-top: 50px;
+      }
+      .job-hashtag{
+      border: 2px solid #02343F;
+      margin-left:90px;
+      color: #767676;
+      }
+      .card-img-rounded{
+      margin-top: 10px;
+      width: 80px;
+      height: 80px;
+      }
+      .intro{
+      font-weight: bold;
+      }
+      .back-color{
+      background-color: #F8F8FA;
+      height: 820px;
+      margin-top: 60px;
+      }
+      .bottom-background-color{
+      background-color: #D9D9D9;
+      height: 100px;
+      margin-top: 70px;
+      }
+      .card-link-name{
+      text-decoration: none;
+      color: #191919;
+      font-size: 20px;
+      font-weight: medium;
+      font-family: 'Noto Sans';
+      }
+      .card-link-major{
+      text-decoration: none;
+      color: #767676;
+      }
+      .hi{
+      padding-bottom: 63px;
+      padding-left: 20px;
+      text-decoration: none;
+      }
+      .go{
+      margin-left: 630px;
+      font-size: 30px;
+      text-decoration: none;
+      }
+      #carouselExampleAutoplaying{
+      box-shadow: 7px 0px 5px #D9D9D9, -7px 0px 5px #D9D9D9;
+      border-radius: 20px;
+      }
+      .carousel-inner{
+      border-radius: 20px;
+      }
+
+      .btn btn-primary{
+          border-radius: 20px;
+}
+
+      .communityname{
+      color: #191919;
+      font-size: 28px;
+      font-weight: 500;
+      font-family: 'Noto Sans';
+      word-wrap: break-word;
+
+
+      }
+
+       .banner {
+
+            padding: 20px; /* Adjust padding as needed */
+
+            height: 350px;
+        }
+  </style>
+</head>
+<body style="background-color: #F1F1F5;">
+
+{% include 'portfolio/menubar.html' %}
+
+<div class="banner" style="margin-left: -200px; text-align: center;">
+
+ <div class="communityname" style="font-size: 30px; text-align: left; margin-left: 400px;"><b>🔎 검색 결과</b></div>
+
+<img class="rounded-circle article-img" style="transform: scaleX(-1); margin-left: 200px; width: 200px; height: 200px;" src="{% static 'portfolio/image/duksaephoto.png' %}">
+<div style="position: relative; display: inline-block;">
+    <img class="article-img" style="width: 500px; z-index: 1;" src="{% static 'portfolio/image/talk22.png' %}">
+    {% if query %}
+        <p style="position: absolute; top: 10px; left: 50px;  padding: 10px; font-size: 18px; z-index: 2;">
+            {{request.user}}님이 찾으신 검색어: <b>{{ query }}</b></p>
+    {% endif %}
+</div>
+
+
+</div>
+
+
+
+
+<div class="container" style="padding-left:90px; background-color: #F1F1F5;">
+
+
+
+    <!-- 포트폴리오 슬라이드 -->
+    <div id="portfolioCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="communityname"><b>📜 포트폴리오 게시판</b></div>
+        <br>
+        <div class="carousel-inner">
+           {% if portfolio_results %}
+    {% for p in portfolio_results %}
+        {% if forloop.first or forloop.counter0|divisibleby:3 %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <div class="row">
+        {% endif %}
+                    <div class="col-sm-4" style="padding-right:0px; margin-right:0px;">
+                        <div class="card-form">
+                            <!-- 여기까지 -->
+                            <div class="card" style="border: 2px solid #02343F; border-radius: 20px; margin-bottom: 20px; height: 220px; width: 350px;" onclick="redirectToDetailPage({{p.pk}}, 'portfolio')">
+                                <div class="card-body">
+                                    <div class="d-flex">
+                                       {% if p.anonymous %}
+                                        <img src="{{ p.author.profile.image.url }}" class="card-img-rounded rounded-pill ml-2" alt="..." style="width:80px; height:80px">
+                                        {% else %}
+                                        <img src="{% static 'portfolio/image/duksaeheart.png' %}" class="card-img-rounded rounded-pill ml-2" alt="..." style="width:80px; height:80px">
+                                        {% endif %}
+                                        <div class="user d-flex flex-column" style="margin-left: 30px; margin-top: 20px;">
+                                            <a class="card-link-name" href="#">
+                                                {% if p.anonymous %}
+                                                    {{p.author}}님
+                                                {% else %}
+                                                    익명의 덕우
+                                                {% endif %}
+                                            </a>
+                                            <a class="card-link-major" href="#" style="color: #767676;">{{ p.department }}</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="hashtag {% if p.hashtags|length == 2 %}two-hashtags{% endif %}">
+                                    {% for hashtag in p.hashtags %}
+                                        <a class="card-link-hashtag p-1" href="#">#{{ hashtag }}</a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        {% if forloop.last or forloop.counter|divisibleby:3 %}
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% else %}
+    <p>검색 결과가 없습니다.</p>
+    <br><br><br><br><br><br>
 {% endif %}
 
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#portfolioCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#portfolioCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+    <br><br>
 
-<div class="container">
-        <div class="row">
-            {% for p in results %}
-                <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
-                    <div class="card" style="width: 18rem;">
-                        {% if p.head_image %}
-                        <img src="{{ p.head_image.url }}" class="card-img-top" alt="...">
-                        {% else %}
-                        <img src="https://picsum.photos/seed/{{p.id}}/800/200" class="card-img-top" alt="...">
-                        {% endif %}
-                        <div class="card-body">
-                            <h5 class="card-title">{{ p.title }}</h5>
-                            <p class="card-text">{{ p.content | truncatewords:10 }}</p>
-                            <a href="{{ p.get_absolute_url }}" class="btn btn-primary text-light">더보기</a>
+    <!-- 졸업생 합격자 수기 게시판 슬라이드 -->
+    <div id="passPortfolioCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="communityname"><b>🎓 졸업생 합격자 수기 게시판</b></div>
+        <br>
+        <div class="carousel-inner">
+            {% if pass_portfolio_results %}
+            {% for pp in pass_portfolio_results %}
+                {% if forloop.first or forloop.counter0|divisibleby:3 %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <div class="row">
+                {% endif %}
+                           <div class="col-sm-4">
+                        <div class="card-form" onclick="redirectToDetailPage({{pp.pk}}, 'pass_portfolio')">
+                            <!-- 이 부분이 추가된 링크 부분 -->
+                            <!-- 여기까지 -->
+                            <div class="card" style="border: 2px solid #02343F; border-radius: 20px; margin-bottom: 20px; height: 220px; width: 350px;">
+                                <div class="card-body">
+                                    <div class="d-flex">
+                                        {% if pp.anonymous %}
+                                        <img src="{{ pp.author.profile.image.url }}" class="card-img-rounded rounded-pill ml-2" alt="..." style="width:80px; height:80px">
+                                        {% else %}
+                                        <img src="{% static 'portfolio/image/duksaeheart.png' %}" class="card-img-rounded rounded-pill ml-2" alt="..." style="width:80px; height:80px">
+                                        {% endif %}
+                                        <div class="user d-flex flex-column" style="margin-left: 30px; margin-top: 20px;">
+                                            <a class="card-link-name" href="#">
+                                                {% if pp.anonymous %}
+                                                    {{pp.author}}님
+                                                {% else %}
+                                                    익명의 덕우
+                                                {% endif %}
+                                            </a>
+                                            <a class="card-link-major" href="#" style="color: #767676;">{{ pp.department }}</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="hashtag {% if pp.hashtags|length == 2 %}two-hashtags{% endif %}">
+                                    {% for hashtag in pp.hashtags %}
+                                        <a class="card-link-hashtag p-1" href="#">#{{ hashtag }}</a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% if forloop.last or forloop.counter|divisibleby:3 %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+            {% else %}
+            <p>검색 결과가 없습니다.</p>
+            <br><br><br><br><br><br>
+            {% endif %}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#passPortfolioCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#passPortfolioCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+<br><br>
+    <!-- 모집 게시판 슬라이드 -->
+    <div id="recruitCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="communityname"><b>👥 모집 게시판</b></div>
+        <br>
+        <div class="carousel-inner">
+            {% if recruit_results %}
+            {% for r in recruit_results %}
+                {% if forloop.first or forloop.counter0|divisibleby:3 %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <div class="row">
+                {% endif %}
+                            <div class="col-sm-3">
+                                <div class="card-form">
+            <div class="card d-flex" style="border: 2px solid #02343F; border-radius: 20px; height: 220px; width: 350px;" onclick="redirectToDetailPage({{r.pk}}, 'recruit')">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <img src="{% static 'single_page/image/image1.jpg' %}" class="card-img-rounded rounded-pill ml-2" alt="...">
+                        <div class="user d-flex flex-column" style="margin-left: 30px; margin-top: 20px;">
+                            <a class="card-link-name" href="#">{{r.author}}님</a>
+                            <a class="card-link-major" href="#" style="color: #767676;">{{r.department}}</a>
                         </div>
                     </div>
                 </div>
-            {% endfor %}
+                <div class="hi d-flex flex-column">
+                    <p class="intro">모집인원 | {{r.people}}명 </p>
+                    <p>{{r.title|truncatechars:60}} </p>
+
+                            <p class="card-text position-absolute top-0 end-0 translate-middle-y" style="margin-right: 10px; margin-top:30px;">
+                            {% now "Y년 m월 d일 H시 i분 s초" as now %}
+                            {% with d_day=p.calculate_d_day|add:"1" %}
+                            {% if d_day >= 0 %}
+                            {% if d_day == 0 %}
+                            <button class="d-num btn btn-danger" id="d-day" style="background-color: #DC6E6E; border:0;">D-day!</button>
+                            {% else %}
+                            <button class="d-num btn btn-primary" id="d-num" style="background-color: #8A9AEB; border:0;"><b>D-{{ d_day }}</b></button>
+                            {% endif %}
+                            {% else %}
+                            <button class="d-num btn btn-secondary" id="d-end">모집종료</button>
+                            {% endif %}
+                            {% endwith %}
+                            </p>
+                </div>
+            </div>
+            </a>
         </div>
+                {% if forloop.last or forloop.counter|divisibleby:3 %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+            {% else %}
+            <p>검색 결과가 없습니다.</p>
+            <br><br><br><br><br><br>
+            {% endif %}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#recruitCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#recruitCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
 
 
 
+</div>
+<br><br>
+<!-- Bootstrap JS 가져오기 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function redirectToDetailPage(pk, namespace) {
+        // Django URL 패턴에 맞게 URL을 구성합니다.
+        var urlPattern = "";
 
+        // 각각의 namespace에 따라 URL 패턴을 선택합니다.
+        if (namespace === 'portfolio') {
+            urlPattern = "{% url 'portfolio:portfolio_detail' pk=0 %}";
+        } else if (namespace === 'pass_portfolio') {
+            urlPattern = "{% url 'pass_portfolio:pass_portfolio_detail' pk=0 %}";
+        } else if (namespace === 'recruit') {
+            urlPattern = "{% url 'recruit:recruit_detail' pk=0 %}";
+        }
 
+        var detailPageUrl = urlPattern.replace("0", pk);
+        window.location.href = detailPageUrl;
+    }
+</script>
 </div>
 </body>
 </html>

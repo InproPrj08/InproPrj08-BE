@@ -2,6 +2,8 @@ import json
 import traceback
 
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.db.models import Q, Count
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
@@ -23,6 +25,42 @@ class PassPortfolioList(ListView):
     def get_queryset(self):
         return PassPortfolio.objects.all().order_by('-created_at')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # 기존 코드와 다르게 수정
+        interest_name = self.request.GET.get('interest', '')
+        college = self.request.GET.get('college', '')
+        major_id = self.request.GET.get('major', '')
+
+        # 관심 직무와 단과대를 불러오는 코드 추가
+        interests = Interest.objects.all()
+        colleges = College.objects.all()
+
+        # 기존의 학과와 전공 정보
+        sc = College.objects.get(name='과기')
+        sm = Major.objects.filter(college=sc)
+        pc = College.objects.get(name='약학')
+        pm = Major.objects.filter(college=pc)
+        ac = College.objects.get(name='아앤디')
+        am = Major.objects.filter(college=ac)
+        gc = College.objects.get(name='글융')
+        gm = Major.objects.filter(college=gc)
+
+        context.update({
+            'interest_name': interest_name,
+            'college': college,
+            'major_id': major_id,
+            'majors': Major.objects.all(),  # 모든 전공을 가져오도록 수정
+            'interests': interests,
+            'colleges': colleges,
+            'sm': sm,
+            'pm': pm,
+            'am': am,
+            'gm': gm,
+        })
+
+        return context
 
 class PassPortfolioDetail(DetailView):
     model = PassPortfolio
@@ -38,6 +76,7 @@ class PassPortfolioDetail(DetailView):
 
         # 특정 포트폴리오 객체를 사용하여 추가 데이터를 가져옵니다.
         if pass_portfolio:
+            interest_all = Interest.objects.all()
             interests = pass_portfolio.interest_field.all()
             interest_names = [interest.interest for interest in interests]
 
@@ -50,7 +89,8 @@ class PassPortfolioDetail(DetailView):
                 'interest_field': interest_names,
                 'department': pass_portfolio.department.name if pass_portfolio.department else None,
                 'company_name': pass_portfolio.company_name,
-                'company_info':pass_portfolio.company_info,
+                'status1': pass_portfolio.anonymous,
+                'interest_all':interest_all,
             }
             print(pass_portfolio.interest_field)
         else:
@@ -136,7 +176,8 @@ def save_text(request):
             image = form.cleaned_data['image']
             department = form.cleaned_data['department']
             company_name = form.cleaned_data['company_name']
-            company_info = form.cleaned_data['company_info']
+            status_value1 = form.cleaned_data['anonymous']
+            status1 = status_value1
 
             interest_field_ids = form.cleaned_data.get('interest_field')
             interest_instances = Interest.objects.filter(id__in=interest_field_ids)
@@ -148,9 +189,9 @@ def save_text(request):
                 hashtags=hashtags,
                 image=image,
                 department=department,
-                company_info=company_info,
                 company_name=company_name,
-                author=request.user
+                author=request.user,
+                anonymous=status1,
             )
             pass_portfolio_instance.save()
 
@@ -239,3 +280,73 @@ def toggle_comment_like(request, pk, comment_id):
         liked = True
 
     return JsonResponse({'liked': liked, 'like_count': comment.likes.count()})
+
+
+
+def filter_portfolio_by_interest(interest_name):
+    # QuerySet을 사용하여 필터링
+    filtered_portfolios = PassPortfolio.objects.filter(
+        interest_field__interest=interest_name
+    )
+
+    return filtered_portfolios
+
+
+def filtersearch_view(request):
+    majors = Major.objects.all()
+
+    interest_names = request.GET.getlist('interest')
+    college_slug = request.GET.get('college')
+    major_id = request.GET.get('major')
+    sorting_option = request.GET.get('sorting', 'latest')  # 기본값은 최신순
+    paginate_by = 6  # 페이지당 보여질 아이템 수
+    page_kwarg = "page"
+
+    results = PassPortfolio.objects.all()
+
+    if interest_names:
+        interest_filters = Q()
+        for interest in interest_names:
+            interest_filters |= Q(interest_field__interest=interest)
+        results = results.filter(interest_filters).distinct()
+
+    if college_slug and major_id:
+        # 단과대와 전공을 모두 필터링
+        results = results.filter(department__college__name=college_slug, department_id=major_id)
+        print(f"Filtering by College: {college_slug}, Major: {major_id}")
+    elif college_slug:
+        # 단과대만 필터링
+        results = results.filter(department__college__name=college_slug)
+        print(f"Filtering by College: {college_slug}")
+    elif major_id:
+        # 전공만 필터링
+        results = results.filter(department_id=major_id)
+        print(f"Filtering by Major: {major_id}")
+
+    # 정렬 옵션에 따라 결과 정렬
+    if sorting_option == 'latest':
+        results = results.order_by('-created_at')
+    elif sorting_option == 'likes':
+        results = results.annotate(like_count=Count('like_users')).order_by('-like_count')
+
+    # 디버깅을 위해 쿼리 출력
+    print(results.query)
+
+    # Pagination
+    paginator = Paginator(results, paginate_by)
+    page = request.GET.get(page_kwarg)
+
+    try:
+        results = paginator.page(page)
+    except PageNotAnInteger:
+        # If the page parameter is not an integer, deliver the first page.
+        results = paginator.page(1)
+    except EmptyPage:
+        # If the page parameter is out of range (e.g. 9999), deliver the last page of results.
+        results = paginator.page(paginator.num_pages)
+
+    context = {
+        'results': results,
+        'majors': majors,
+    }
+    return render(request, 'pass_portfolio/filtersearch_major_results.html', context)

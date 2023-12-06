@@ -9,6 +9,10 @@
     <link rel="stylesheet" href="{% static 'portfolio/writec.css' %}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-
         4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet">
     <title>recruit</title>
      <style>
          #image-preview-placeholder {
@@ -20,6 +24,23 @@
         justify-content: center;
         align-items: center;
         overflow: hidden;
+
+    }
+    #image-input {
+        display: none; /* 파일 선택 input을 숨김 */
+    }
+    .other-input-container {
+            height: 200px;
+            width: 55%;
+            background-color: #EFEFEF;
+            padding: 20px;
+            margin-left: 391px;
+            margin-top: 100px;
+    }
+
+    .status-radio-buttons,
+    .status-radio-buttons2 {
+            padding: 10px;
     }
 
     </style>
@@ -27,63 +48,135 @@
 <body>
  {% include 'portfolio/menubar.html' %}
 
-<div class="row">
-    <div class="container">
-        <form action="{% url 'pass_portfolio:save_text' %}" method="post" enctype="multipart/form-data">
+ <!--필터링박스-->
+
+<div class="container" >
+<div class="row" style="margin-top: 40px; font-family: 'Noto Sans KR', sans-serif;">
+
+    <div style="width: 100%; height: 100%; color: #191919; font-size: 28px; font-family: Noto Sans; font-weight: 600; margin-left: 100px; word-wrap: break-word">합격 수기 작성</div>
+
+        <form action="{% url 'portfolio:save_text' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
 
-<div id="image-container">
-    <div id="image-preview-placeholder" onclick="openImageInput()">
-        <span>프로필 사진 추가</span>
-    </div>
-    <input type="file" id="image-input" accept="image/*" onchange="previewImage(this)">
+            <div id="image-container" onclick="openImageInput(this)" style="margin-left: 207px; margin-top: 100px;" >
+                <div id="image-preview-placeholder" style="background: #D9D9D9; border-radius: 20px">
+                    <span>사진 선택</span>
+                </div>
+            <input type="file" id="image-input" accept="image/*" onchange="previewImage(this)">
+
+
+
+            </div>
+<!--필터링:졸업생-->
+ <div class="container mb-4 rounded p-2" style=" height: 200px; margin-left:380px; margin-top: -200px; width: 55%; background-color: #A9D6A33D">
+
+
+        <!-- 기업정보 -->
+<div class="container mt-1" style="margin-top: -5px;" >
+        <label for="public-status" class="form-label">기업 정보</label>
+        <br>
+        <div class="col-auto" style="width: 150px;">
+
+            <input id="company-name" class="form-control form-control-sm" type="text" placeholder="기업 이름" style="font-family: Noto Sans; font-weight: 400; border-radius: 10px; border: 2px #02343F solid;" aria-label=".form-control-sm example">
+
+        </div>
+        <br><br>
+
 </div>
-<br><br>
-<!-- 관심 직무 선택 체크 박스 -->
-<label for="interest-field">직무:</label><br>
-{% for interest in interests.all %}
-    <input type="checkbox" id="interest-field-{{ interest.id }}" name="interestField" value="{{ interest.id }}"> {{ interest.interest }}
-{% endfor %}
-<br><br>
+        <!-- 게시글 익명 처리 버튼 -->
+     <div class="status-radio-buttons2" style="padding:10px; margin-top: -117px; margin-left: 190px;">
+        <label for="public-status1" class="form-label">유저 이름</label>
+         <br>
+         <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" id="public-status1" name="anonymous" value="public" >
+            <label class="form-check-label" for="public-status1" style="font-family: Noto Sans; font-weight: 400;">공개</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" id="private-status1" name="anonymous" value="private">
+            <label class="form-check-label" for="private-status1" style="font-family: Noto Sans; font-weight: 400;">비공개</label>
+        </div>
+     </div>
+
+<!--대학과 전공-->
+
+     <div class="container mt-4" style="margin-left: 375px;" >
+        <div class="row mt-4">
+            <div class="col-md-6" style="margin-top: -96px; ">
+                <div class="dropdown">
+                    <label class="form-label" for="college">대학</label>
+                    <select class="form-select form-select-sm" id="college" name="college"  style=" font-family: Noto Sans; font-weight: 400;width: 100px;border-radius: 10px; border: 2px #02343F solid;">
+                        <option value="default" >단과대</option>
+                        {% for college in college %}
+                        <option value="{{college.name}}">{{college.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="dropdown" style=" margin-left: -219px; margin-top: -96px;">
+                    <label class="form-label" for="major">전공</label>
+                    <select class="form-select form-select-sm" id="major" name="major" style="width: 160px;border-radius: 10px; border: 2px #02343F solid;">
+                    전공 선택
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
-<label for="college">대학:</label>
-<select id="college" name="college">
-    <option value="default">대학 선택</option>
-    {% for college in college %}
-    <option value="{{college.name}}">{{college.name}}</option>
-    {% endfor %}
-</select>
+        <!-- 관심 직무 선택 체크 박스 -->
+     <div class="interest" style="padding-left:12px;">
+        <label for="interest-field" style="margin-bottom: 10px; " >관심 직무</label><br>
+         <div class="i" style="font-family: Noto Sans; font-weight: 400;">
+        {% for interest in interests.all %}
+            <input type="checkbox" id="interest-field-{{ interest.id }}" name="interestField" value="{{ interest.id }}" > {{ interest.interest }}
+        {% endfor %}
+         </div>
+        <br><br>
+     </div>
 
-<label for="major">전공:</label>
-<select id="major" name="major" disabled>
-    <!-- 이 부분은 JavaScript로 동적으로 업데이트됩니다 -->
-</select>
+ </div>
 
     </form>
-        <div class="container">
-            <label for="company-name">회사명:</label>
-<input type="text" id="company-name" name="company_name" placeholder="회사명" style="margin-top: 10px;">
+</div>
+    <div class="container  mb-4 rounded p-3" style="width: 70%; background-color: #A9D6A33D;">
+              <!-- 제목 입력란 추가 -->
+              <div class="mb-3">
+                <label for="title-input" class="form-label" style="color: black; font-size: 18px; font-family: 'Noto Sans KR', sans-serif; ">제목</label>
+                <input type="text" class="form-control" id="title-input" name="title" placeholder="제목" style="border-radius: 10px; border: 2px #02343F solid;">
+              </div>
 
-<label for="company-info">회사 정보:</label>
-<textarea id="company-info" name="company_info" placeholder="회사 정보를 입력하세요"></textarea>
+              <!-- 해시태그 입력란 추가 -->
+              <div id="hashtags-container" class="mb-3">
+                  <label for="title-input" class="form-label" style="color: black; font-size: 18px; font-family: 'Noto Sans KR', sans-serif;">해시태그</label>
+                  <div class="input-group mb-3">
+                    <div class="row">
+                      <div class="col">
+                        <input type="text" class="form-control hashtag-input" placeholder="해시태그" aria-label="First hashtag" style="border-radius: 20px; border: 2px #02343F solid;">
+                      </div>
+                      <div class="col">
+                        <input type="text" class="form-control hashtag-input" placeholder="해시태그" aria-label="Second hashtag" style="border-radius: 20px; border: 2px #02343F solid;">
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
+                <!-- 해시태그 추가 버튼 -->
 
-            <!-- 제목 입력란 추가 -->
-            <input type="text" id="title-input" name="title" placeholder="제목" style="margin-top: 10px;">
-            <!-- 해시태그 입력란 추가 -->
-            <div id="hashtags-container">
-                <input type="text" class="hashtag-input" placeholder="해시태그">
-                <input type="text" class="hashtag-input" placeholder="해시태그">
+                <button type="button" class="btn btn-primary btn-lg" style="background: #02343F;width: 70px; height: 34px;font-size: 14px; margin-left: 805px;" onclick="addHashtagField()">추가</button>
+
             </div>
-            <!-- 해시태그 추가 버튼 -->
-            <button onclick="addHashtagField()">추가</button>
-        </div>
+
+
+
     <div class="col-3">
 
     </div>
-    <div class="col-6" style="background-color: grey;">
-        <div class="container">
+        <!--텍스트 입력 전체-->
+    <div class="col-6 mx-auto"  style="width: 70%; height: 100%;"  >
+        <div class="container" style="border: 6px rgba(165, 204, 162, 0.25) solid; background-color: #F8F8FA; border-radius: 10px; padding-top: 30px;">
+            <div class="card me-auto" style="padding: 15px; border-radius: 10px; width: 97%; height: 60%; margin-left: 18px; margin-top: 40px;">
             <div class="options">
                 <button id="bold" class="option-button format">
                 <i class="fa-solid fa-bold"></i>
@@ -158,31 +251,49 @@
             </button>
             <input id="img-selector" type="file" accept="image/*"/>
             </div>
-            <div class="container">
-    <div id="text-input" contenteditable="true" style = "overflow-y: auto; max-height: 400px;"></div>
+            </div>
+
+            <div class="container" style="padding-bottom: 90px; margin-bottom: 30px;">
+                <!--텍스트 입력창-->
+    <div id="text-input" contenteditable="true" style = "style = "overflow: auto; height: 500px; margin-top: 50px; border-radius: 10px;  background: white"></div>
                 <!-- 이미지를 선택하는 파일 입력란 추가 <input type="file" id="image-input" accept="image/*">-->
-    <button onclick="saveText()">text</button>
-</div>
-</div>
+
 </div>
 </div>
 
+        <button onclick="saveText()" style="width: 100px;  margin-top: 25px;height: 38px;background: rgba(165, 204, 162, 0.25); color: #767676;border-radius: 10px; font-family: Noto Sans; font-weight: 600;margin-left: 803px; word-wrap: break-word;">등록하기</button>
 </div>
 <script>
 function addHashtagField() {
-        var hashtagsContainer = document.getElementById('hashtags-container');
-        var existingHashtags = document.querySelectorAll('.hashtag-input');
+  var hashtagsContainer = document.getElementById('hashtags-container');
+  var existingHashtags = document.querySelectorAll('.hashtag-input');
 
-        if (existingHashtags.length < 4) {
-            var newHashtagInput = document.createElement('input');
-            newHashtagInput.type = 'text';
-            newHashtagInput.className = 'hashtag-input';
-            newHashtagInput.placeholder = '해시태그';
-            hashtagsContainer.appendChild(newHashtagInput);
-        } else {
-            alert('태그는 최대 4개까지만 등록 가능합니다.');
-        }
-    }
+  if (existingHashtags.length < 4) {
+    // Create a new column for the input field
+    var newCol = document.createElement('div');
+    newCol.className = 'col';
+
+    // Create a new input field
+    var newHashtagInput = document.createElement('input');
+    newHashtagInput.type = 'text';
+    newHashtagInput.className = 'form-control hashtag-input';
+    newHashtagInput.placeholder = '해시태그';
+
+
+     // 추가되는 해시태그 색
+        newHashtagInput.style.borderRadius = '20px';
+        newHashtagInput.style.border = '2px solid #02343F';
+
+    // Append the input field to the column
+    newCol.appendChild(newHashtagInput);
+
+    // Append the column to the existing row
+    var existingRow = hashtagsContainer.querySelector('.row');
+    existingRow.appendChild(newCol);
+  } else {
+    alert('태그는 최대 4개까지만 등록 가능합니다.');
+  }
+}
 // 전역 스코프에 selectedMajor 변수 추가
 var selectedMajor;
 
@@ -238,7 +349,21 @@ function saveText() {
     var hashtagValues = Array.from(hashtags).map(tag => tag.value);
     var imageInput = document.getElementById('image-input').files[0];
     var company_name = document.getElementById('company-name').value;
-    var company_info = document.getElementById('company-info').value;
+
+
+    // 유저 이름
+    var statusElements1 = document.getElementsByName('anonymous');
+    var selectedStatus1 = "";
+    for (var i = 0; i < statusElements1.length; i++) {
+        if (statusElements1[i].checked) {
+            selectedStatus1 = statusElements1[i].value;
+            break;
+        }
+    }
+
+    // 'public'이면 true, 아니면 false로 변환
+    selectedStatus1 = (selectedStatus1 === 'public');
+    console.log('selectedStatus1:', selectedStatus1);
 
     var interestFieldElements = document.getElementsByName('interestField');
     var selectedFields = Array.from(interestFieldElements)
@@ -265,10 +390,12 @@ function saveText() {
         backgroundColor: styles.backgroundColor,
         fontSize: styles.fontSize,
     }));
-    formData.append('company_name', company_name);
-    formData.append('company_info', company_info);
     formData.append('hashtags', JSON.stringify(hashtagValues));
     formData.append('image', imageInput);
+    formData.append('anonymous', selectedStatus1);
+    formData.append('company_name', company_name);
+
+
     // selectedFields 배열의 각 값을 개별적으로 추가
     selectedFields.forEach(field => {
         formData.append('interest_field', field);
@@ -293,7 +420,7 @@ function saveText() {
         if (data && data.status === 'success' && data.pk) {
             console.log('Text saved successfully!');
             alert('Text saved successfully!');
-            console.log('Redirecting to pass_portfolio detail page');
+            console.log('Redirecting to portfolio detail page');
             window.location.href = '/pass_portfolio/' + data.pk + '/';
         } else {
             console.error('Error:', data);

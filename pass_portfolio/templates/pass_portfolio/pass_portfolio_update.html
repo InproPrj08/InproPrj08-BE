@@ -10,9 +10,9 @@
 
     <style>
         #delete-hashtag-btn {
-    display: inline-block;
-    margin-top: 20px;
-    margin-left: 5px; /* 여백 조절 */
+        display: inline-block;
+        margin-top: 72px;
+        margin-left: 5px; /* 여백 조절 */
     }
     .hashtag-input, #delete-hashtag-btn, button {
         white-space: nowrap;
@@ -33,6 +33,24 @@
         height: 200px;
     }
 
+     #image-input {
+        display: none; /* 파일 선택 input을 숨김 */
+    }
+    .other-input-container {
+            height: 200px;
+            width: 55%;
+            background-color: #EFEFEF;
+            padding: 20px;
+            margin-left: 391px;
+            margin-top: 100px;
+    }
+
+    .status-radio-buttons,
+    .status-radio-buttons2 {
+            padding: 10px;
+    }
+
+
 
     </style>
 </head>
@@ -40,66 +58,124 @@
 
 {% include 'portfolio/menubar.html' %}
 
-<div class="row">
+
+
+<div class="container">
+<div class="row" style="margin-top: 40px; font-family: 'Noto Sans KR', sans-serif;">
+    <div style="width: 100%; height: 100%; color: #191919; font-size: 28px; font-family: Noto Sans; font-weight: 600; margin-left: 100px; word-wrap: break-word">내 합격수기 수정</div>
     <div class="container">
         <form method="post" enctype="multipart/form-data" id="portfolio-form">
             {% csrf_token %}
 
-<div id="image-container">
-    {% if pass_portfolio.image %}
-        <!-- 이미 프로필 이미지가 설정되어 있다면 미리보기 표시 -->
-        <img id="image-preview1" src="{{ pass_portfolio.image.url }}" style="width: 150px; height: 200px;" onclick="openImageInput()">
-    <br>
-    {% else %}
-        <!-- 프로필 이미지가 설정되어 있지 않다면 추가하기 메시지 표시 -->
-        <img id="image-preview-placeholder" onclick="openImageInput()" src="{% static 'portfolio/image/duksaeheart.png' %}" style="width: 150px; height: 200px; margin-right: 20px;">
-            <span>프로필 사진 변경</span>
-                <br>
-    {% endif %}
-    <input type="file" id="image-input" accept="image/*" onchange="previewImage(this)">
-</div>
-<br><br>
+            <div id="image-container" style="margin-left: 207px; margin-top: 100px;">
+                {% if pass_portfolio.image %}
+                    <!-- 이미 프로필 이미지가 설정되어 있다면 미리보기 표시 -->
+                    <img id="image-preview1" src="{{ pass_portfolio.image.url }}" style=" border-radius: 20px; " onclick="openImageInput(this)">
 
-            <!-- 관심 직무 선택 체크 박스 -->
-            <label for="interest-field">관심 직무:</label><br>
+                {% else %}
+                    <!-- 프로필 이미지가 설정되어 있지 않다면 추가하기 메시지 표시 -->
+                    <img id="image-preview-placeholder" onclick="openImageInput()" src="{% static 'portfolio/image/duksaeheart.png' %}" style="background: #D9D9D9; border-radius: 20px">
+
+                {% endif %}
+                <input type="file" id="image-input" accept="image/*" onchange="previewImage(this)">
+            </div>
+
+<!--필터링 박스-->
+ <div class="container mb-4 rounded p-2" style=" height: 200px; margin-left:380px; margin-top: -200px; width: 55%;  border: 4px solid rgba(165.33, 203.56, 162, 0.32)">
+
+
+
+
+       <!-- 기업정보 -->
+<div class="container mt-1" style="margin-top: -5px;">
+    <label for="public-status" class="form-label">기업 정보</label>
+    <br>
+    <div class="col-auto" style="width: 150px;">
+        <input id="company-name" class="form-control form-control-sm" type="text" placeholder="기업 이름" style="font-family: Noto Sans; font-weight: 400; border-radius: 10px; border: 2px #02343F solid;" aria-label=".form-control-sm example" value="{{ pass_portfolio.company_name}}">
+    </div>
+    <br><br>
+</div>
+
+
+           <!-- 게시글 익명 처리 버튼 -->
+     <div class="status-radio-buttons2" style="padding:10px; margin-top: -115px; margin-left: 190px;">
+        <label for="public-status1" class="form-label">유저 이름</label>
+         <br>
+         <div class="form-check form-check-inline">
+            <input type="radio" id="public-status1" style="font-family: Noto Sans; font-weight: 400;margin-left: -20px;" name="anonymous" value="public" {% if pass_portfolio.anonymous == True %}checked{% endif %}> 공개
+
+        </div>
+        <div class="form-check form-check-inline">
+            <input  type="radio" id="private-status1" style="font-family: Noto Sans; font-weight: 400;margin-left: -20px;" name="anonymous" value="private" {% if pass_portfolio.anonymous == False %}checked{% endif %}>비공개
+
+        </div>
+     </div>
+
+
+
+
+
+
+           <!-- 대학과 전공 -->
+<div class="container mt-4" style="margin-left: 375px;">
+    <div class="row mt-4">
+        <div class="col-md-6" style="margin-top: -96px;">
+            <div class="dropdown">
+                <label class="form-label" for="college">대학</label>
+                <select class="form-select form-select-sm" id="college" name="college" style="font-family: Noto Sans; font-weight: 400;width: 100px;border-radius: 10px; border: 2px #02343F solid;">
+                    <option value="default">대학 선택</option>
+                    {% for college in colleges %}
+                    <option value="{{college.name}}">{% if college.name == selected_college %}{% endif %}{{ college.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+
+        <div class="col-md-6">
+            <div class="dropdown" style="margin-left: -219px; margin-top: -96px;">
+                <label class="form-label" for="major">전공</label>
+                <select class="form-select form-select-sm" id="major" name="major" style="width: 160px;border-radius: 10px; border: 2px #02343F solid;">
+                    전공 선택
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+         <!-- 관심 직무 선택 체크 박스 -->
+        <div class="interest" style="padding-left:12px;">
+            <label for="interest-field" style="margin-bottom: 10px; ">관심 직무</label><br>
             {% for interest in interests.all %}
-                <input type="checkbox" id="interest-field-{{ interest.id }}" name="interestField" value="{{ interest.id }}" {% if interest in pass_portfolio.interest_field.all %}checked{% endif %}> {{ interest.interest }}
+            <input type="checkbox" id="interest-field-{{ interest.id }}"style="font-family: Noto Sans; font-weight: 400;" name="interestField" value="{{ interest.id }}" {% if interest in pass_portfolio.interest_field.all %}checked{% endif %}> {{ interest.interest }}
             {% endfor %}
             <br><br>
+    </div>
+    </div>
 
-            <label for="company-name">회사명:</label>
-            <input type="text" id="company-name" name="company_name" value="{{ pass_portfolio.company_name}}" placeholder="회사명" style="margin-top: 10px;">
-            <br><br>
-            <label for="company-info">회사 정보:</label>
-            <textarea id="company-info" name="company_info" placeholder="회사 정보를 입력하세요">{{ pass_portfolio.company_info }}</textarea>
-            <br><br>
-            <!-- 대학 선택 드롭다운 -->
-            <label for="college">대학:</label>
-            <select id="college" name="college">
-                <option value="default">대학 선택</option>
-                {% for college in colleges %}
-                    <option value="{{ college.name }}" {% if college.name == selected_college %}selected{% endif %}>{{ college.name }}</option>
-                {% endfor %}
-            </select>
-
-            <!-- 전공 선택 드롭다운 -->
-            <label for="major">전공:</label>
-            <select id="major" name="major" {% if selected_college == 'default' %}disabled{% endif %}>
-                <!-- 이 부분은 JavaScript로 동적으로 업데이트됩니다 -->
-            </select>
-
-            <br><br>
-                        <!-- 해시태그 입력란 및 추가 버튼 -->
-            <div id="hashtags-container">
-    <label for="{{ form.hashtags.id_for_label }}">Hashtags:</label>
-</div>
-<button type="button" onclick="addHashtagField()">추가</button>
-<br><br>
+    <div class="container  mb-4 rounded p-3" style="width: 70%;  background: rgba(165, 204, 162, 0.25);">
+                   <!-- 제목 입력란 추가 -->
+        <div class="mb-3">
+            <label for="title-input" class="form-label" style="color: black; font-size: 18px; font-family: 'Noto Sans KR', sans-serif;">제목</label>
+            <input type="text" class="form-control" id="title-input" name="title" value="{{ pass_portfolio.title }}" placeholder="제목" style="border-radius: 10px; border: 2px #02343F solid;">
+        </div>
 
 
-            <!-- 제목 입력란 추가 -->
-            <input type="text" id="title-input" name="title" value="{{ pass_portfolio.title }}" placeholder="제목" style="margin-top: 10px;">
-            <div class="container">
+        <!-- 해시태그 입력란 추가 -->
+        <div id="hashtags-container" class="mb-3" style="display: flex; flex-wrap: nowrap; overflow-x: auto;">
+            <label for="title-input" class="form-label" style="color: black; font-size: 18px; font-family: 'Noto Sans KR', sans-serif;">해시태그</label>
+             <label for="{{ form.hashtags.id_for_label }}" class="form-label" style="margin-left:-60px; color: black; font-size: 18px; font-family: Noto Sans; font-weight:600;"></label>
+        </div>
+
+
+<!-- 해시태그 추가 버튼 -->
+<button type="button" class="btn btn-primary btn-lg" style="background: #02343F;width: 70px; height: 34px;font-size: 14px; margin-left: 800px; padding: 5px;" onclick="addHashtagField()">추가</button>
+    </div>
+
+<!--텍스트 입력 전체-->
+        <div class="col-6 mx-auto"  style="width: 70%; height: 100%;" >
+                <div class="container" style="background-color: #F8F8FA; border-radius: 10px; padding-top: 30px;border: 6px  rgba(165, 204, 162, 0.25) solid;">
+                    <div class="card me-auto" style="padding: 15px; border-radius: 10px; width: 97%; height: 60%; margin-left: 15px; margin-top: 40px;">
             <div class="options">
                 <button type="button" id="bold" class="option-button format">
                 <i class="fa-solid fa-bold"></i>
@@ -175,16 +251,22 @@
             <input id="img-selector" type="file" accept="image/*"/>
             </div>
         </div>
+        <div class="container" style="padding-bottom: 90px; margin-bottom: 30px;">
             <!-- 마크다운 에디터 추가 -->
-            <div id="text-input" contenteditable="true" style="overflow-y: auto; max-height: 400px;">
+            <div id="text-input" contenteditable="true" style = "margin-top: 50px; border-radius: 10px;  background: white">
                 {{ pass_portfolio.content|safe }} <!-- 기존 내용을 표시 -->
+            </div>
+        </div>
+                    </div>
+                </div>
+        <div class="container" style="margin-bottom: 30px; "></div>
+            <!-- 수정 완료 및 취소 버튼 -->
+            <div class="d-grid gap-2 d-md-flex" style="margin-left: 880px;">
+                <button type="button" class="me-md-2 finish" onclick="submitPassPortfolioForm()" style="font-family: Noto Sans; font-weight: 600; margin-right: 210px; width: 100px; height: 38px;  background: rgba(165, 204, 162, 0.25); border-radius: 10px;">수정 완료</button>
+                <a href="{% url 'pass_portfolio:pass_portfolio_detail' pk=pass_portfolio.pk %}" style="font-family: Noto Sans; font-weight: 600; width: 100px; height: 38px;  background: rgba(165, 204, 162, 0.25); border-radius: 10px; display: inline-block; text-align: center; line-height: 38px; text-decoration: none; color: #191919;">취소</a>
             </div>
 
 
-            <!-- 수정 완료 및 취소 버튼 -->
-            <button type="button" onclick="submitPassPortfolioForm()">수정 완료</button>
-            <br><br><br><br>
-            <a href="{% url 'pass_portfolio:pass_portfolio_detail' pk=pass_portfolio.pk %}">취소</a>
         </form>
     </div>
 </div>
@@ -215,8 +297,20 @@ function addHashtagInput(container, value) {
     var newHashtagInput = document.createElement('input');
     newHashtagInput.type = 'text';
     newHashtagInput.className = 'hashtag-input';
+    // 스타일 적용을 위한 클래스 추가
+    newHashtagInput.classList.add('form-control', 'hashtag-input');
     newHashtagInput.placeholder = '해시태그';
+    newHashtagInput.style.marginTop = '10px';
     newHashtagInput.value = value || '';
+
+
+    // 추가되는 해시태그 색
+
+        newHashtagInput.style.borderRadius = '20px';
+        newHashtagInput.style.border = '2px solid #02343F';
+        newHashtagInput.style.width = '180px';
+        newHashtagInput.style.marginRight='20px';
+        newHashtagInput.style.marginTop='50px';
 
     var deleteButton = document.getElementById('delete-hashtag-btn');
     if (!deleteButton) {
@@ -234,6 +328,19 @@ function addHashtagInput(container, value) {
         };
         // 삭제 버튼 추가
         container.appendChild(deleteButton);
+
+
+        // 삭제 버튼 스타일 적용
+        deleteButton.style.background = '#02343F';
+        deleteButton.style.width = '70px';
+        deleteButton.style.height = '34px';
+        deleteButton.style.fontSize = '14px';
+        deleteButton.style.marginLeft = '870px';
+        deleteButton.style.borderRadius = '8px';
+        deleteButton.style.color = 'white';
+        deleteButton.style.position = 'absolute';
+        deleteButton.style.left = '160px'; // 원하는 왼쪽 위치 조절
+        deleteButton.style.top = '755.1px';  // 원하는 위쪽 위치 조절
     }
 
     // 새로운 입력란 추가
@@ -315,14 +422,13 @@ function submitPassPortfolioForm() {
     var hashtags = document.querySelectorAll('.hashtag-input');
     var hashtagValues = Array.from(hashtags).map(tag => tag.value);
     var imageInput = document.getElementById('image-input').files[0];
-
+    var selectedMajor = document.getElementById('major').value;
 
     var interestFieldElements = document.getElementsByName('interestField');
     var selectedFields = Array.from(interestFieldElements)
         .filter(field => field.checked)
         .map(field => field.value);
 var company_name = document.getElementById('company-name').value;
-    var company_info = document.getElementById('company-info').value;
 
     console.log('selectedFields:', selectedFields);
 
@@ -335,12 +441,28 @@ var company_name = document.getElementById('company-name').value;
         }
     }
 
+
+    // 유저 이름
+    var statusElements1 = document.getElementsByName('anonymous');
+    var selectedStatus1 = "";
+    for (var i = 0; i < statusElements1.length; i++) {
+        if (statusElements1[i].checked) {
+            selectedStatus1 = statusElements1[i].value;
+            break;
+        }
+    }
+
+    // 'public'이면 true, 아니면 false로 변환
+    selectedStatus1 = (selectedStatus1 === 'public');
+    console.log('selectedStatus1:', selectedStatus1);
+
+
+
     console.log('Saved Major:', selectedMajor);  // 이 부분을 이동
     var formData = new FormData();
     formData.append('title', title);
     formData.append('content', editableContent);
-formData.append('company_name', company_name);
-    formData.append('company_info', company_info);
+    formData.append('company_name', company_name);
     formData.append('image', imageInput);
     formData.append('styles', JSON.stringify({
         color: styles.color,
@@ -354,6 +476,8 @@ formData.append('company_name', company_name);
     });
 
     formData.append('department', selectedMajor);
+    formData.append('anonymous', selectedStatus1);
+
 
     console.log('Title:', title);
     console.log('Editable Content:', editableContent);
@@ -416,5 +540,6 @@ formData.append('company_name', company_name);
 
 <script src="{% static 'portfolio/load.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+</div>
 </body>
 </html>

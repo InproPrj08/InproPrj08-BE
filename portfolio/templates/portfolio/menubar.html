@@ -33,14 +33,16 @@
 </script>
 
 
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
+<nav class="navbar navbar-expand-lg bg-body-tertiary py-0">
   <div class="container">
       {% if user.is_authenticated %}
-        <a class="navbar-brand" href="{% url 'user:main' %}">
-            <b style="font-family: 'Racing Sans One', cursive; font-size: 28px;">{{user.username}}'s Portfolio!</b>
+        <a class="navbar-brand" href="{% url 'single_page:main_page' %}">
+            <img src="{% static 'portfolio/image/logo.png' %}" style="width: 180px; height: 120px;">
         </a>
       {% else %}
-        <a class="navbar-brand" href="{% url 'user:main' %}"><b style="font-family: 'Racing Sans One', cursive; font-size: 28px;">Portfolio!</b></a>
+        <a class="navbar-brand" href="{% url 'single_page:main_page' %}">
+            <img src="{% static 'portfolio/image/logo.png' %}" style="width: 180px; height: 120px;">
+        </a>
       {% endif %}
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent1" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -48,23 +50,23 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent1">
       <ul class="navbar-nav me-auto mb-5 mb-lg-2">
           <form class="my-custom-inline-flex p-3" role="search" method="get" action="{% url 'portfolio:search_view' %}" >
-              <input class="form-control my-custom-search-input" name="q" type="search" placeholder="지금 관심있게 보고 있는 활동은 무엇인가요?" aria-label="Search">
+              <input class="form-control my-custom-search-input mt-2" name="q" type="search" placeholder="지금 관심있게 보고 있는 활동은 무엇인가요?" aria-label="Search" style="border-radius: 30px; border: 2px solid #02343F;">
               <button class="btn" type="btn" >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search mt-2" viewBox="0 0 16 16">
                       <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
                   </svg>
               </button>
           </form>
       </ul>
     </div>
-    <div id="menubar-sign-in" >
+    <div id="menubar-sign-in" style="margin-top:30px;">
         {% if user.is_authenticated %}
         <a href="{% url 'user:logout' %}" class="top-login-button">로그아웃</a>
         {% else %}
         <a href="{% url 'user:login' %}" class="top-login-button">로그인</a>
         {% endif %}
     </div>
-    <div id="menubar-sign-up"  >
+    <div id="menubar-sign-up" style="margin-top:30px;" >
         {% if user.is_authenticated %}
         <a href="{% url 'user:signup' %}" class="top-sign-up-button">회원가입</a>
         {% else %}
@@ -73,15 +75,15 @@
     </div>
   </div>
 </nav>
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
-  <div class="container">
+<nav class="navbar navbar-expand-lg bg-body-tertiary py-0">
+  <div class="container ">
     <div class="collapse navbar-collapse" id="navbarSupportedContent2">
       <ul class="navbar-nav mb-5 mb-lg-2">
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="{% url 'portfolio:portfolio_list' %}">포트폴리오</a>
         </li>
           <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">비교과</a>
+          <a class="nav-link active" aria-current="page" href="{% url 'delight:program_list' %}">비교과</a>
         </li>
           <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="{% url 'recruit:recruit_list' %}">모집게시판</a>
@@ -98,9 +100,9 @@
         </li>
       </ul>
     </div>
-    <div>
+    <div class="menubar mb-2">
         {% if user.is_authenticated %}
-      <a class="top-button1" aria-current="page" href="{% url 'recruit:your_combined_view' %}">팀원 모집 등록</a>
+      <a class="top-button1 me-2" aria-current="page" href="{% url 'recruit:your_combined_view' %}">팀원 모집 등록</a>
         {% endif %}
       {% if user.is_authenticated %}
     {% if user.status.status == '재학생' or user.status.status == '휴학생' %}

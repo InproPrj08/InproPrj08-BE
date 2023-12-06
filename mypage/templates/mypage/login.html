@@ -7,12 +7,10 @@
     <link href="{% static 'mypage/bootstrap/bootstrap.min.css' %}" rel="stylesheet" type="text/css" media="screen">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Racing+Sans+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300&display=swap" rel="stylesheet">
     <title>로그인 페이지</title>
     <style>
-        body{
-            background-color: #FFFDF0;
-        }
+
         login_body {
             display: flex;
             justify-content: center; /* 수평 가운데 정렬 */
@@ -23,12 +21,21 @@
 
         /* Log in 제목 */
         h1 {
-            margin: 20px 0px;
+           padding-top: 40px;
         }
 
         .login-box {
-            margin: 40px 0px;
+        margin-top: 40px;
+        margin-right: auto;
+        margin-bottom: 30px;
+        margin-left: auto;
+        text-align: center;
+        border-radius: 10px;
+
+        padding: 50px;
+        width: 40%; /* 원하는 크기로 조절 */
         }
+
 
         /* 입력 칸 스타일 */
         p {
@@ -38,38 +45,65 @@
         input {
             margin-bottom: 20px;
             padding: 20px 10px;
-            width: 330px;
+            width: 400px;
             height: 50px;
+            border-radius: 10px;
         }
 
         /* 로그인 버튼 스타일 */
         #login-button {
-            width: 350px;
-            background-color: #F7CF60; /* 배경색을 파란색으로 설정 */
+            width: 400px;
+            background-color: #0C4C0E;
             color: white; /* 글씨색을 흰색으로 설정 */
             padding: 10px 20px; /* 상하 10px, 좌우 20px 여백 */
             border: none; /* 테두리 없음 */
             border-radius: 10px; /* 둥근 모서리 적용 */
             cursor: pointer;
             font-size: 16px;
+            font-family: Noto Sans;
+            font-weight: 600;
+
+        }
+        @media screen and (max-width: 1600px) {
+        input, #login-button {
+        width: 100%; /* 화면 크기가 600px 이하일 때 100%로 설정 */
+        max-width: none; /* 최대 너비 제거 */
+        }
         }
 
-        /* 로그인 버튼 호버 */
-        #login-button:hover {
-            background-color: #FBE5A3;
-        }
+
 
         /* 회원가입 버튼 */
         #signup {
-            display: block;
-            text-align: center;
             text-decoration: none;
-            color: gray;
+        }
+        .box{
+        box-sizing: border-box;
+        position: absolute;
+        width: 1635px;
+        height: 150px;
+        left: 0px;
+        top: 800px;
+        background: #F1F1F5;
+        }
+
+        .search{
+        color: #767676;
+
+        text-align: center;
+        font-family: Noto Sans;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+
         }
     </style>
 </head>
-<body>
+<body style="background-color: #F1F1F5;">
+
 {% include 'portfolio/menubar.html' %}<br>
+<img src="{% static 'portfolio/image/logo.png' %}" style="width: 170px; height: 140px; margin-bottom: -100px;margin-left: 670px; margin-right: 20px;">
 
     <div class="container mx-auto text-center" id="login_body">
         {% if user.is_authenticated %}
@@ -77,19 +111,24 @@
         {{ user.username }}님 환영합니다.
         <a href="{% url 'user:logout' %}">로그아웃</a>
         {% else %}
-        <h1>Login</h1>
+        <br>
         <form class="login-box" method="POST" action="{% url 'user:login' %}">
             {% csrf_token %}
-            <p>ID</p>
-            <input type="text" name="username" placeholder="Enter your user name">
-            <br>
-            <p>Password</p>
-            <input type="password" name="password" placeholder="Enter your password">
+            <h3 style="font-family: Noto Sans; font-size: 26px;font-weight: 500;">Sign In</h3><br>
+            <input type="text" name="username" placeholder="아이디를 입력해주세요" style="text-align: center; font-family: 'Noto Sans'; ">
+            <br><br>
+            <input type="password" name="password" placeholder="비밀번호를 입력해주세요" style="text-align: center; font-family: Noto Sans; font-weight: 500;">
             <br><br>
             <input id="login-button" type="submit" value="로그인">
         </form>
-        계정이 없으신가요? <a id="signup" href="{% url 'user:signup' %}">회원가입</a>
+        <div class="search">
+
+            <div style="margin-bottom: 30px;">아이디 찾기 | 비밀번호 찾기 | <a id="signup" href="{% url 'user:signup' %}">회원가입</a></div>
+
+
+        </div>
         {% endif %}
     </div>
+<div class="box"></div>
 </body>
 </html>
