@@ -7,7 +7,7 @@ from portfolio.models import Interest, Major, CUser
 from model_utils.fields import MonitorField
 
 
-#포트폴리오
+# 모집글
 
 class Recruit(models.Model):
     title = models.CharField(max_length=30)
@@ -55,11 +55,12 @@ def update_d_day(sender, instance, **kwargs):
     if instance.deadline_changed:
         instance.d_day = instance.calculate_d_day()
 
+
 # 신호를 연결
 pre_save.connect(update_d_day, sender=Recruit)
 
 
-#댓글
+# 댓글
 class Comment(models.Model):
     recruit = models.ForeignKey(Recruit, on_delete=models.CASCADE)
     user = models.ForeignKey(CUser, on_delete=models.CASCADE, related_name='recruit_comments')

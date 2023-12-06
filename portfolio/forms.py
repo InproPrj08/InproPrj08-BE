@@ -10,6 +10,7 @@ class CommentForm(forms.ModelForm):
                    'id': 'my-text-input'}),
     )
     is_anonymous = forms.BooleanField(required=False)
+
     class Meta:
         model = Comment
         fields = ['text', 'is_anonymous']
@@ -22,7 +23,8 @@ class PortfolioForm(forms.ModelForm):
         required=False,
     )
     hashtags = forms.CharField(label='Hashtags', required=False)
+
     class Meta:
         model = Portfolio
-        fields = ['title', 'styles', 'hashtags','image','content','interest_field','department','status','anonymous']
-
+        fields = ['title', 'styles', 'hashtags', 'image', 'content', 'interest_field', 'department', 'status',
+                  'anonymous']

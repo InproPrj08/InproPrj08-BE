@@ -126,100 +126,103 @@
 
      }
 
+
     </style>
 </head>
 <body style="background-color: #F1F1F5">
 
-    {% include 'portfolio/menubar.html' %}<br>
+{% include 'portfolio/menubar.html' %}<br>
 
 
-        <div style="width: 100%; height: 100%; color: #191919; font-size: 28px; font-family: Noto Sans; font-weight: 600; margin-left: 166px;margin-bottom: -62px; margin-top: 50px ">마이페이지</div>
+<div style="width: 100%; height: 100%; color: #191919; font-size: 28px; font-family: Noto Sans; font-weight: 600; margin-left: 166px;margin-bottom: -62px; margin-top: 50px ">마이페이지</div>
 
 
-        <div class="rounded-basebox">
-                  <div class="row">
-                    <div class="content-section">
-                      <div class="media">
-                        <img class="rounded-circle article-img" src="{{ user.profile.image.url }}">
-                      </div>
-                      <!-- FORM HERE -->
+<div class="rounded-basebox">
+    <div class="row">
+        <div class="content-section">
+            <div class="media">
+                <img class="rounded-circle article-img" src="{{ user.profile.image.url }}">
+            </div>
+            <!-- FORM HERE -->
 
-                    </div>
-                <br>
-                <a href="{% url 'user:update' username=user.username %}" class="base-title">내 프로필 수정</a>
-                <br>
-                <a href="{% url 'user:detail' username=user.username %}" class="base-title">홈</a>
-                <br>
-                      <a href="{% url 'user:user_portfolios' username=user.username %}" class="base-title">나의 포트폴리오</a>
-        </div><br>
-
+        </div>
+        <br>
+        <a href="{% url 'user:update' username=user.username %}" class="base-title">내 프로필 수정</a>
+        <br>
+        <a href="{% url 'user:detail' username=user.username %}" class="base-title">홈</a>
+        <br>
+        <a href="{% url 'user:user_portfolios' username=user.username %}" class="base-title">나의 포트폴리오</a>
     </div>
+    <br>
+
+</div>
 
 
 <br/>
 
 <div class="name">나의 포트폴리오</div>
-    {% if text_data %}
-        <a href="{% url 'portfolio:portfolio_update' pk=text_data.pk %}" class="button" style="border-radius: 10px; margin-left: 1103px; text-decoration: none; display: flex; justify-content: center; align-items: center;">수정하기</a>
-    {% else %}
-        <a href="{% url 'portfolio:your_combined_view' %}" class="button" style="border-radius: 10px; margin-left: 1103px; text-decoration: none; display: flex; justify-content: center; align-items: center;">작성하기</a>
-    {% endif %}
+{% if text_data %}
+<a href="{% url 'portfolio:portfolio_update' pk=text_data.pk %}" class="button"
+   style="border-radius: 10px; margin-left: 1103px; text-decoration: none; display: flex; justify-content: center; align-items: center;">수정하기</a>
+{% else %}
+<a href="{% url 'portfolio:your_combined_view' %}" class="button"
+   style="border-radius: 10px; margin-left: 1103px; text-decoration: none; display: flex; justify-content: center; align-items: center;">작성하기</a>
+{% endif %}
 
 <!-- 필터링 박스 -->
-<div class="container mb-4" style="border-radius: 20px;height: 200px; margin-left:420px; margin-top: -320px; width: 55%;  background: white; border-radius: 20px; border: 4px solid rgba(253, 208, 208);">
+<div class="container mb-4"
+     style="border-radius: 20px;height: 200px; margin-left:420px; margin-top: -320px; width: 55%;  background: white; border-radius: 20px; border: 4px solid rgba(253, 208, 208);">
 
 
-        <div class="col-lg-8">
-            <div class="row">
-                {% if text_data %}
-                <!-- 상태 선택 -->
+    <div class="col-lg-8">
+        <div class="row">
+            {% if text_data %}
+            <!-- 상태 선택 -->
 
-              <!-- 학적 상태 선택 라디오 버튼 -->
-                <div class="status-radio-buttons" style="padding: 20px;">
-                    <label class="form-label" for="public-status" style="font-family: Noto Sans; font-weight: 600;">학적 상태</label>
-                    <br>
-                    {% for status1 in text_data.statuss %}
-                        <div class="form-check form-check-inline mb-6" style="margin-left: -20px;">
-                            <input type="radio" id="{{ status1.status.id }}" name="status" value="{{ status1.status }}" {% if status1.status == text_data.author.status.status %}checked{% endif %} disabled>
-                            <label class="form-check-label" for="{{ status1.status.id }}">{{ status1.status }}</label>
-                        </div>
-                    {% endfor %}
-                    <br><br>
+            <!-- 학적 상태 선택 라디오 버튼 -->
+            <div class="status-radio-buttons" style="padding: 20px;">
+                <label class="form-label" for="public-status" style="font-family: Noto Sans; font-weight: 600;">학적 상태</label>
+                <br>
+                {% for status1 in text_data.statuss %}
+                <div class="form-check form-check-inline mb-6" style="margin-left: -20px;">
+                    <input type="radio" id="{{ status1.status.id }}" name="status" value="{{ status1.status }}" {% if status1.status == text_data.author.status.status %}checked{% endif %} disabled>
+                    <label class="form-check-label" for="{{ status1.status.id }}">{{ status1.status }}</label>
+                </div>
+                {% endfor %}
+                <br><br>
+            </div>
+
+
+            <!-- 관심 직무 선택 체크 박스 -->
+            <div class="interest" style="padding: 20px; margin-top: -50px;">
+                <label for="interest-field" style="font-family: Noto Sans; font-weight: 600;margin-bottom: 10px;">관심
+                    직무:</label><br>
+
+                {% for interest1 in text_data.interests %}
+                <div class="form-check form-check-inline" style="margin-right: 10px; margin-bottom: 10px;">
+                    <input type="checkbox" class="form-check-input" name="interest1" id="{{ interest1.slug }}"
+                           value="{{ interest1.interest }}" {% if interest1.interest in text_data.interest_field %}checked{% endif %} disabled>
+                    <label class="form-check-label" for="{{ interest1.slug }}">{{ interest1.interest }}</label>
                 </div>
 
+                {% if forloop.counter|divisibleby:4 and not forloop.last %}
+                <br> <!-- 매 4번째 체크 박스마다 줄 바꿈 -->
+                {% endif %}
+
+                {% endfor %}
+
+                <br><br>
+            </div>
 
 
-
-                    <!-- 관심 직무 선택 체크 박스 -->
-                <div class="interest" style="padding: 20px; margin-top: -50px;">
-                    <label for="interest-field" style="font-family: Noto Sans; font-weight: 600;margin-bottom: 10px;">관심 직무:</label><br>
-
-                    {% for interest1 in text_data.interests %}
-                        <div class="form-check form-check-inline" style="margin-right: 10px; margin-bottom: 10px;">
-                            <input type="checkbox" class="form-check-input" name="interest1" id="{{ interest1.slug }}"
-                                value="{{ interest1.interest }}" {% if interest1.interest in text_data.interest_field %}checked{% endif %} disabled>
-                            <label class="form-check-label" for="{{ interest1.slug }}">{{ interest1.interest }}</label>
-                        </div>
-
-                        {% if forloop.counter|divisibleby:4 and not forloop.last %}
-                            <br> <!-- 매 4번째 체크 박스마다 줄 바꿈 -->
-                        {% endif %}
-
-                    {% endfor %}
-
-                    <br><br>
-                </div>
-
-
-                <!-- 전공, 학번 -->
-                <div class="num" style="margin-left: 400px; margin-top: -220px">
-                     <label style="margin-bottom: 10px; font-family: Noto Sans; font-weight: 600;">전공 | 학번</label><br>
-                     <h6>{{ text_data.department }} | {{user.number}}</h6>
-                </div>
+            <!-- 전공, 학번 -->
+            <div class="num" style="margin-left: 400px; margin-top: -220px">
+                <label style="margin-bottom: 10px; font-family: Noto Sans; font-weight: 600;">전공 | 학번</label><br>
+                <h6>{{ text_data.department }} | {{user.number}}</h6>
             </div>
         </div>
+    </div>
 </div>
-
 
 
 <article class="flex-column align-items-center d-flex" style="margin-left: 420px; width: 55%;">
@@ -253,8 +256,6 @@
         </div>
     </div>
 </article>
-
-
 
 
 <br/><br/>

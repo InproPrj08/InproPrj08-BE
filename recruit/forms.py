@@ -9,6 +9,7 @@ class CommentForm(forms.ModelForm):
                    'id': 'my-text-input'}),
     )
     is_anonymous = forms.BooleanField(required=False)
+
     class Meta:
         model = Comment
         fields = ['text', 'is_anonymous']
@@ -20,6 +21,7 @@ class RecruitForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple,
         required=False,
     )
+
     class Meta:
         model = Recruit
-        fields = ['title', 'styles','content','interest_field','department','status', 'people', 'deadline', 'file']
+        fields = ['title', 'styles', 'content', 'interest_field', 'department', 'status', 'people', 'deadline', 'file']

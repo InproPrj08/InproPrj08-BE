@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Results</title>
     <!-- Bootstrap CSS link (Add Bootstrap if not already added) -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <style>
     .card-img-rounded{
     margin-top: 10px;
@@ -52,60 +53,61 @@
     margin-top:20px;
     }
 
-</style>
+
+    </style>
 </head>
 <body>
-    {% include 'portfolio/menubar.html' %}
-    {% if results %}
-    <div class="container justify-content-center">
-        <div class="d-flex">
-            <p style="margin-top:50px; margin-bottom:40px; margin-left: 75px; font-size:25px; font-weight: bold; font-family: 'Noto Sans';">검색된 모집글 입니다!  {{ results.count }}</p>
-            <a href="{% url 'recruit:recruit_list' %}" class="btn btn-primary" id="back">뒤로가기</a>
-        </div>
-        <div class="container" style="width:1200px;">
-            <div class="row">
-                {% for p in results %}
-                <div class="col-sm-12 col-md-6 col-lg-4 mb-5">
-                    <div class="card" style="border: 2px solid #02343F; border-radius: 20px; height: 220px; width: 350px; padding:10px; position: relative;" onclick="redirectToDetailPage({{p.pk}}, 'recruit')">
-                        <div class="d-flex" style="margin-left: 20px; margin-top: 10px;">
-                            <img src="{{ p.author.profile.image.url }}" class="card-img-rounded rounded-pill ml-2" alt="..." style="width:80px; height:80px">
-                            <div class="user d-flex flex-column" style="margin-left: 30px; margin-top: 20px;">
-                                <h5 class="card-title">{{ p.author }}님</h5>
-                                <div style="color: #767676;">{{ p.department }}</div>
-                            </div>
+{% include 'portfolio/menubar.html' %}
+{% if results %}
+<div class="container justify-content-center">
+    <div class="d-flex">
+        <p style="margin-top:50px; margin-bottom:40px; margin-left: 75px; font-size:25px; font-weight: bold; font-family: 'Noto Sans';">검색된 모집글 입니다! {{ results.count }}</p>
+        <a href="{% url 'recruit:recruit_list' %}" class="btn btn-primary" id="back">뒤로가기</a>
+    </div>
+    <div class="container" style="width:1200px;">
+        <div class="row">
+            {% for p in results %}
+            <div class="col-sm-12 col-md-6 col-lg-4 mb-5">
+                <div class="card" style="border: 2px solid #02343F; border-radius: 20px; height: 220px; width: 350px; padding:10px; position: relative;" onclick="redirectToDetailPage({{p.pk}}, 'recruit')">
+                    <div class="d-flex" style="margin-left: 20px; margin-top: 10px;">
+                        <img src="{{ p.author.profile.image.url }}" class="card-img-rounded rounded-pill ml-2" alt="..." style="width:80px; height:80px">
+                        <div class="user d-flex flex-column" style="margin-left: 30px; margin-top: 20px;">
+                            <h5 class="card-title">{{ p.author }}님</h5>
+                            <div style="color: #767676;">{{ p.department }}</div>
                         </div>
-                        <div class="pre-text" style="">
-                            <p class="card-text" style="margin-top:20px; margin-left:10px;">
-                                모집인원 | {{p.people}}명
-                                <br>
-                            <a style="color: #767676;">{{p.title}}</a>
-                            </p>
-                        </div>
-                        <p class="card-text position-absolute top-0 end-0 translate-middle-y" style="margin-right: 10px; margin-top:30px;">
-                            {% now "Y년 m월 d일 H시 i분 s초" as now %}
-                            {% with d_day=p.calculate_d_day|add:"1" %}
-                            {% if d_day >= 0 %}
-                            {% if d_day == 0 %}
-                            <button class="d-num btn btn-danger" id="d-day" style="background-color: #DC6E6E; border:0;">D-day!</button>
-                            {% else %}
-                            <button class="d-num btn btn-primary" id="d-num" style="background-color: #8A9AEB; border:0;"><b>D-{{ d_day }}</b></button>
-                            {% endif %}
-                            {% else %}
-                            <button class="d-num btn btn-secondary" id="d-end">모집종료</button>
-                            {% endif %}
-                            {% endwith %}
-                            </p>
                     </div>
+                    <div class="pre-text" style="">
+                        <p class="card-text" style="margin-top:20px; margin-left:10px;">모집인원 | {{p.people}}명
+                            <br>
+                            <a style="color: #767676;">{{p.title}}</a>
+                        </p>
+                    </div>
+                    <p class="card-text position-absolute top-0 end-0 translate-middle-y" style="margin-right: 10px; margin-top:30px;">
+                        {% now "Y년 m월 d일 H시 i분 s초" as now %}
+                        {% with d_day=p.calculate_d_day|add:"1" %}
+                        {% if d_day >= 0 %}
+                        {% if d_day == 0 %}
+                        <button class="d-num btn btn-danger" id="d-day" style="background-color: #DC6E6E; border:0;">D-day!
+                        </button>
+                        {% else %}
+                        <button class="d-num btn btn-primary" id="d-num" style="background-color: #8A9AEB; border:0;"><b>D-{{ d_day }}</b></button>
+                        {% endif %}
+                        {% else %}
+                        <button class="d-num btn btn-secondary" id="d-end">모집종료</button>
+                        {% endif %}
+                        {% endwith %}
+                    </p>
                 </div>
-                {% endfor %}
-                {% else %}
-                <p class="d-flex justify-content-center" style="margin-top:200px; font-size: 30px; font-weight: bold; font-family: 'Noto Sans';">선택하신 조건에 맞는 모집글이이 없습니다</p>
-                <a href="{% url 'recruit:recruit_list' %}" class="btn btn-primary" id="none-back">뒤로 가기</a>
-                {% endif %}
             </div>
+            {% endfor %}
+            {% else %}
+            <p class="d-flex justify-content-center" style="margin-top:200px; font-size: 30px; font-weight: bold; font-family: 'Noto Sans';">선택하신 조건에 맞는 모집글이이 없습니다</p>
+            <a href="{% url 'recruit:recruit_list' %}" class="btn btn-primary" id="none-back">뒤로 가기</a>
+            {% endif %}
         </div>
     </div>
-         <!-- 페이지네이션 링크 표시 -->
+</div>
+<!-- 페이지네이션 링크 표시 -->
 {% if results.has_other_pages %}
 <div class="pagination justify-content-center mt-3 mb-5">
     <li class="page-item d-flex">
@@ -126,11 +128,17 @@
 </div>
 {% endif %}
 
-    <!-- Bootstrap JS and Popper.js (Add Bootstrap JS and Popper.js if needed) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js" integrity="sha512-TPh2Oxlg1zp+kz3nFA0C5vVC6leG/6mm1z9+mA81MI5eaUVqasPLO8Cuk4gMF4gUfP5etR73rgU/8PNMsSesoQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script>
+<!-- Bootstrap JS and Popper.js (Add Bootstrap JS and Popper.js if needed) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js"
+        integrity="sha512-TPh2Oxlg1zp+kz3nFA0C5vVC6leG/6mm1z9+mA81MI5eaUVqasPLO8Cuk4gMF4gUfP5etR73rgU/8PNMsSesoQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
         function redirectToDetailPage(pk, namespace) {
         // Django URL 패턴에 맞게 URL을 구성합니다.
         var urlPattern = "";
@@ -142,7 +150,9 @@
         var detailPageUrl = urlPattern.replace("0", pk);
         window.location.href = detailPageUrl;
     }
-    </script>
+
+</script>
 
 </body>
+{% include 'single_page/footer.html' %}
 </html>

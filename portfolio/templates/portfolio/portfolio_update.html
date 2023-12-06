@@ -6,11 +6,12 @@
     <title>포트폴리오 수정하기</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
     <link rel="stylesheet" href="{% static 'portfolio/writec.css' %}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <style>
     #delete-hashtag-btn {
     display: inline-block;
-    margin-top: 93px;
+    margin-top: 0px;
     margin-left: 5px; /* 여백 조절 */
     }
     .hashtag-input, #delete-hashtag-btn, button {
@@ -53,288 +54,234 @@
 
 
 
+
     </style>
 </head>
 <body>
 
 {% include 'portfolio/menubar.html' %}
 <div class="container">
-<div class="row" style="margin-top: 40px; font-family: 'Noto Sans KR', sans-serif;">
-    <div style="width: 100%; height: 100%; color: #191919; font-size: 28px; font-family: Noto Sans; font-weight: 600; margin-left: 100px; word-wrap: break-word">내 포트폴리오 수정</div>
-    <div class="container">
-        <form method="post" enctype="multipart/form-data" id="portfolio-form">
-            {% csrf_token %}
-            <div id="image-container" style="margin-left: 207px; margin-top: 100px;">
-    {% if portfolio.image %}
-        <!-- 이미 프로필 이미지가 설정되어 있다면 미리보기 표시 -->
-        <img id="image-preview1" src="{{ portfolio.image.url }}" style=" border-radius: 20px; " onclick="openImageInput(this)">
-
-    {% else %}
-        <!-- 프로필 이미지가 설정되어 있지 않다면 추가하기 메시지 표시 -->
-                <img id="image-preview-placeholder" onclick="openImageInput()" src="{% static 'portfolio/image/duksaeheart.png' %}" style="background: #D9D9D9; border-radius: 20px">
-
-
-    {% endif %}
-    <input type="file" id="image-input" accept="image/*" onchange="previewImage(this)">
-</div>
-
- <div class="container mb-4 rounded p-2" style=" height: 200px; margin-left:380px; margin-top: -200px; width: 55%; background-color:#FFEAEA8C">
-
-
-        <!-- 학적 상태 선택 라디오 버튼 -->
-         <div class="status-radio-buttons" style="padding:10px;">
-        <label for="public-status" class="form-label">학적 상태</label>
-        <br>
-        <div class="form-check form-check-inline">
-            <input type="radio" id="public-status-public" name="status" value="public" {% if portfolio.status == True %}checked{% endif %}> 공개
+    <div class="row" style="margin-top: 40px; font-family: 'Noto Sans KR', sans-serif;">
+        <div style="width: 100%; height: 100%; color: #191919; font-size: 28px; font-family: Noto Sans; font-weight: 600; margin-left: 100px; word-wrap: break-word">내 포트폴리오 수정
         </div>
-        <div class="form-check form-check-inline">
-            <input type="radio" id="public-status-private" name="status" value="private" {% if portfolio.status == False %}checked{% endif %}> 비공개
-        </div>
-        <br><br>
-    </div>
+        <div class="container">
+            <form method="post" enctype="multipart/form-data" id="portfolio-form">
+                {% csrf_token %}
+                <div id="image-container" style="margin-left: 207px; margin-top: 100px;">
+                    {% if portfolio.image %}
+                    <!-- 이미 프로필 이미지가 설정되어 있다면 미리보기 표시 -->
+                    <img id="image-preview1" src="{{ portfolio.image.url }}" style=" border-radius: 20px; " onclick="openImageInput(this)">
 
-        <!-- 게시글 익명 처리 버튼 -->
-     <div class="status-radio-buttons2" style="padding:10px; margin-top: -100px; margin-left: 190px;">
-        <label for="public-status1" class="form-label">유저 이름</label>
-         <br>
-         <div class="form-check form-check-inline">
-            <input type="radio" id="public-status1" name="anonymous" value="public" {% if portfolio.anonymous == True %}checked{% endif %}> 공개
-        </div>
-        <div class="form-check form-check-inline">
-             <input type="radio" id="private-status1" name="anonymous" value="private" {% if portfolio.anonymous == False %}checked{% endif %}> 비공개
-        </div>
-     </div>
+                    {% else %}
+                    <!-- 프로필 이미지가 설정되어 있지 않다면 추가하기 메시지 표시 -->
+                    <img id="image-preview-placeholder" onclick="openImageInput()" src="{% static 'portfolio/image/duksaeheart.png' %}" style="background: #D9D9D9; border-radius: 20px">
 
-<!--대학과 전공-->
 
-     <div class="container mt-4" style="margin-left: 375px;" >
-        <div class="row mt-4">
-            <div class="col-md-6" style="margin-top: -96px; ">
-                <div class="dropdown">
-                    <label class="form-label" for="college">대학</label>
-                    <select class="form-select form-select-sm" id="college" name="college"  style="width: 100px;border-radius: 10px; border: 2px #02343F solid;">
-                        <option value="default">대학 선택</option>
-                          {% for college in colleges %}
-                    <option value="{{ college.name }}" {% if college.name == selected_college %}selected{% endif %}>{{ college.name }}</option>
+                    {% endif %}
+                    <input type="file" id="image-input" accept="image/*" onchange="previewImage(this)">
+                </div>
+
+                <div class="container mb-4 rounded p-2" style=" height: 200px; margin-left:380px; margin-top: -200px; width: 55%; background-color:#FFEAEA8C">
+
+
+                    <!-- 학적 상태 선택 라디오 버튼 -->
+                    <div class="status-radio-buttons" style="padding:10px;">
+                        <label for="public-status" class="form-label">학적 상태</label>
+                        <br>
+                        <div class="form-check form-check-inline">
+                            <input type="radio" id="public-status-public" name="status" value="public" {% if portfolio.status == True %}checked{% endif %}> 공개
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="radio" id="public-status-private" name="status" value="private" {% if portfolio.status == False %}checked{% endif %}> 비공개
+                        </div>
+                        <br><br>
+                    </div>
+
+                    <!-- 게시글 익명 처리 버튼 -->
+                    <div class="status-radio-buttons2" style="padding:10px; margin-top: -100px; margin-left: 190px;">
+                        <label for="public-status1" class="form-label">유저 이름</label>
+                        <br>
+                        <div class="form-check form-check-inline">
+                            <input type="radio" id="public-status1" name="anonymous" value="public" {% if portfolio.anonymous == True %}checked{% endif %}> 공개
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="radio" id="private-status1" name="anonymous" value="private" {% if portfolio.anonymous == False %}checked{% endif %}> 비공개
+                        </div>
+                    </div>
+
+                    <!--대학과 전공-->
+
+                    <div class="container mt-4" style="margin-left: 375px;">
+                        <div class="row mt-4">
+                            <div class="col-md-6" style="margin-top: -96px; ">
+                                <div class="dropdown">
+                                    <label class="form-label" for="college">대학</label>
+                                    <select class="form-select form-select-sm" id="college" name="college"
+                                            style="width: 100px;border-radius: 10px; border: 2px #02343F solid;">
+                                        <option value="default">대학 선택</option>
+                                        {% for college in colleges %}
+                                        <option value="{{ college.name }}" {% if college.name == selected_college %}selected{% endif %}>{{ college.name }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="dropdown" style="margin-left: -219px; margin-top: -96px;">
+                                    <label class="form-label" for="major">전공</label>
+                                    <select class="form-select form-select-sm" id="major" name="major" style="width: 160px;border-radius: 10px; border: 2px #02343F solid;">전공 선택
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- 관심 직무 선택 체크 박스 -->
+                    <div class="interest" style="padding-left:10px;">
+                        <label for="interest-field" style="margin-bottom: 10px;">관심 직무:</label><br>
+                        {% for interest in interests.all %}
+                        <input type="checkbox" id="interest-field-{{ interest.id }}" name="interestField" value="{{ interest.id }}" {% if interest in portfolio.interest_field.all %}checked{% endif %}> {{ interest.interest }}
                         {% endfor %}
-                    </select>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="dropdown" style="margin-left: -219px; margin-top: -96px;">
-                    <label class="form-label" for="major">전공</label>
-                    <select class="form-select form-select-sm" id="major" name="major" style="width: 160px;border-radius: 10px; border: 2px #02343F solid;">
-                    전공 선택
-                    </select>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-        <!-- 관심 직무 선택 체크 박스 -->
-     <div class="interest" style="padding-left:10px;">
-        <label for="interest-field" style="margin-bottom: 10px;" >관심 직무:</label><br>
-        {% for interest in interests.all %}
-            <input type="checkbox" id="interest-field-{{ interest.id }}" name="interestField" value="{{ interest.id }}" {% if interest in portfolio.interest_field.all %}checked{% endif %}> {{ interest.interest }}
-        {% endfor %}
-        <br><br>
-     </div>
-
- </div>
-
-<!--<div class="row" style="margin-top: 40px;">-->
-
-<!--    <div class="container mb-4 rounded p-2" style="height: 200px; margin-left: 100px; margin-top: 20px; width: 55%; background-color: #EFEFEF">-->
-
-<!--        &lt;!&ndash; 학적 상태 선택 라디오 버튼 &ndash;&gt;-->
-<!--        <div class="status-radio-buttons" style="padding:10px;">-->
-<!--            <label for="public-status" class="form-label">학적 상태:</label><br>-->
-<!--            <input type="radio" id="public-status-public" name="status" value="public" {% if portfolio.status == True %}checked{% endif %}> 공개-->
-<!--            <input type="radio" id="public-status-private" name="status" value="private" {% if portfolio.status == False %}checked{% endif %}> 비공개-->
-<!--            <br><br>-->
-<!--        </div>-->
-
-<!--        &lt;!&ndash; 게시글 익명 처리 버튼 &ndash;&gt;-->
-<!--        <div class="status-radio-buttons2" style="padding:10px; margin-top: -100px; margin-left: 190px;">-->
-<!--            <label for="public-status1" class="form-label">유저 이름:</label><br>-->
-<!--            <input type="radio" id="public-status1" name="anonymous" value="public" {% if portfolio.anonymous == True %}checked{% endif %}> 공개-->
-<!--            <input type="radio" id="private-status1" name="anonymous" value="private" {% if portfolio.anonymous == False %}checked{% endif %}> 비공개-->
-<!--            <br><br>-->
-<!--        </div>-->
-
-<!--        &lt;!&ndash; 대학과 전공 &ndash;&gt;-->
-<!--        <div class="container mt-4">-->
-<!--            <div class="row mt-4">-->
-<!--                <div class="col-md-6">-->
-<!--                    <div class="dropdown">-->
-<!--                        <label class="form-label" for="college">대학:</label>-->
-<!--                        <select class="form-select form-select-sm" id="college" name="college" style="width: 100px; border-radius: 10px; border: 2px #02343F solid;">-->
-<!--                            <option value="default">대학 선택</option>-->
-<!--                            {% for college in college %}-->
-<!--                            <option value="{{college.name}}">{{college.name}}</option>-->
-<!--                            {% endfor %}-->
-<!--                        </select>-->
-<!--                    </div>-->
-<!--                </div>-->
-
-<!--                <div class="col-md-6">-->
-<!--                    <div class="dropdown" style="margin-left: -219px;">-->
-<!--                        <label class="form-label" for="major">전공:</label>-->
-<!--                        <select class="form-select form-select-sm" id="major" name="major" style="width: 160px; border-radius: 10px; border: 2px #02343F solid;">-->
-<!--                            <option value="default">전공 선택</option>-->
-<!--                        </select>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-
-<!--        &lt;!&ndash; 관심 직무 선택 체크 박스 &ndash;&gt;-->
-<!--        <div class="interest" style="padding-left:10px;">-->
-<!--            <label for="interest-field" style="margin-bottom: 10px;">관심 직무:</label><br>-->
-<!--            {% for interest in interests.all %}-->
-<!--                <input type="checkbox" id="interest-field-{{ interest.id }}" name="interestField" value="{{ interest.id }}"> {{ interest.interest }}-->
-<!--            {% endfor %}-->
-<!--            <br><br>-->
-<!--        </div>-->
-
-<!--    </div>-->
-<!--</div>-->
-            <div class="container mb-4 rounded p-3" style="width: 70%; background-color: #FFEAEA8C">
-    <!-- 제목 입력란 추가 -->
-                <div class="mb-3">
-                    <label for="title-input" class="form-label" style="color: black; font-size: 18px; font-family: 'Noto Sans KR', sans-serif;">제목</label>
-                    <input type="text" class="form-control" id="title-input" name="title" value="{{ portfolio.title }}" placeholder="제목" style="border-radius: 10px; border: 2px #02343F solid;">
-                </div>
-
-                <!-- 해시태그 입력란 추가 -->
-                <div id="hashtags-container" class="mb-3" style="display: flex; flex-wrap: nowrap; overflow-x: auto;">
-                    <!-- 해시태그 필드들이 추가될 부분 -->
-                    <label for="title-input" class="form-label" style="color: black; font-size: 18px; font-family: 'Noto Sans KR', sans-serif;">해시태그</label>
-                    <label for="{{ form.hashtags.id_for_label }}" class="form-label" style="margin-left:-60px; color: black; font-size: 18px; font-family: Noto Sans; font-weight:600;"></label>
-                </div>
-
-                <!-- 해시태그 추가 버튼 -->
-                <button type="button" class="btn btn-primary btn-lg" style="background: #02343F;width: 70px; height: 34px;font-size: 14px; margin-left: 800px;" onclick="addHashtagField()">추가</button>
-            </div>
-
-
-
-
-<!--            &lt;!&ndash; 제목 입력란 추가 &ndash;&gt;-->
-<!--            <input type="text" id="title-input" name="title" value="{{ portfolio.title }}" placeholder="제목" style="margin-top: 10px;">-->
-<!--            &lt;!&ndash; 해시태그 입력란 및 추가 버튼 &ndash;&gt;-->
-<!--           <div id="hashtags-container">-->
-<!--                <label for="{{ form.hashtags.id_for_label }}">Hashtags:</label>-->
-<!--           </div>-->
-<!--            <button type="button" onclick="addHashtagField()">추가</button>-->
-<!--            <br><br>-->
-
-
-            <!--텍스트 입력 전체-->
-            <div class="col-6 mx-auto"  style="width: 70%; height: 100%;" >
-                <div class="container" style="background-color: #F8F8FA; border-radius: 10px; padding-top: 30px;border: 6px #FFEAEA solid">
-                    <div class="card me-auto" style="padding: 15px; border-radius: 10px; width: 97%; height: 60%; margin-left: 15px; margin-top: 40px;">
-                    <div class="options">
-                        <button type="button" id="bold" class="option-button format">
-                        <i class="fa-solid fa-bold"></i>
-                    </button>
-                    <button type="button" id="superscript" class="option-button script">
-                        <i class="fa-solid fa-superscript"></i>
-                    </button>
-                    <button type="button" id="subscript" class="option-button script">
-                        <i class="fa-solid fa-subscript"></i>
-                    </button>
-
-                    <button type="button" id="insertOrderedList" class="option-button">
-                        <div class="fa-solid fa-list-ol"></div>
-                    </button>
-                    <button type="button" id="insertUnorderedList" class="option-button">
-                        <i class="fa-solid fa-list"></i>
-                    </button>
-
-                    <button type="button" id="undo" class="option-button">
-                        <i class="fa-solid fa-rotate-left"></i>
-                    </button>
-                    <button type="button" id="redo" class="option-button">
-                        <i class="fa-solid fa-rotate-right"></i>
-                    </button>
-
-                    <button type="button" id="createLink" class="adv-option-button">
-                        <i class="fa fa-link"></i>
-                    </button>
-                    <button type="button" id="unlink" class="option-button">
-                        <i class="fa fa-unlink"></i>
-                    </button>
-
-                    <button type="button" id="justifyLeft" class="option-button align">
-                        <i class="fa-solid fa-align-left"></i>
-                    </button>
-                    <button type="button" id="justifyCenter" class="option-button align">
-                        <i class="fa-solid fa-align-center"></i>
-                    </button>
-                    <button type="button" id="justifyRight" class="option-button align">
-                        <i class="fa-solid fa-align-right"></i>
-                    </button>
-                    <button type="button" id="justifyFull" class="option-button align">
-                        <i class="fa-solid fa-align-justify"></i>
-                    </button>
-                    <button type="button" id="indent" class="option-button spacing">
-                        <i class="fa-solid fa-indent"></i>
-                    </button>
-                    <button type="button" id="outdent" class="option-button spacing">
-                        <i class="fa-solid fa-outdent"></i>
-                    </button>
-                    <select id="formatBlock" class="adv-option-button">
-                        <option value="H1">H1</option>
-                        <option value="H2">H2</option>
-                        <option value="H3">H3</option>
-                        <option value="H4">H4</option>
-                        <option value="H5">H5</option>
-                        <option value="H6">H6</option>
-                    </select>
-                    <select id="fontName" class="adv-option-button"></select>
-                    <select id="fontSize" class="adv-option-button"></select>
-
-                    <div class="input-wrapper">
-                        <input type="color" id="foreColor" class="adv-option-button">
-                        <label for="foreColor">Font Color</label>
+                        <br><br>
                     </div>
-                    <div class="input-wrapper">
-                        <input type="color" id="backColor" class="adv-option-button">
-                        <label for="backColor">Highlight Color</label>
+
+                </div>
+
+                <div class="container mb-4 rounded p-3" style="width: 70%; background-color: #FFEAEA8C">
+                    <!-- 제목 입력란 추가 -->
+                    <div class="mb-3">
+                        <label for="title-input" class="form-label"
+                               style="color: black; font-size: 18px; font-family: 'Noto Sans KR', sans-serif;">제목</label>
+                        <input type="text" class="form-control" id="title-input" name="title"
+                               value="{{ portfolio.title }}" placeholder="제목"
+                               style="border-radius: 10px; border: 2px #02343F solid;">
                     </div>
-                        <button id="btn-image">
-                        IMG
+
+                    <!-- 해시태그 입력란 추가 -->
+                    <div id="hashtags-container" class="mb-3"
+                         style="display: flex; flex-wrap: nowrap; overflow-x: auto;">
+                        <!-- 해시태그 필드들이 추가될 부분 -->
+                        <label for="title-input" class="form-label"
+                               style="color: black; font-size: 18px; font-family: 'Noto Sans KR', sans-serif;">해시태그</label>
+                        <label for="{{ form.hashtags.id_for_label }}" class="form-label"
+                               style="margin-left:-60px; color: black; font-size: 18px; font-family: Noto Sans; font-weight:600;"></label>
+                    </div>
+
+                    <!-- 해시태그 추가 버튼 -->
+                    <button type="button" class="btn btn-primary btn-lg"
+                            style="background: #02343F;width: 70px; height: 34px;font-size: 14px; margin-left: 800px;"
+                            onclick="addHashtagField()">추가
                     </button>
-                    <input id="img-selector" type="file" accept="image/*"/>
+                </div>
+
+
+                <!--텍스트 입력 전체-->
+                <div class="col-6 mx-auto" style="width: 70%; height: 100%;">
+                    <div class="container"
+                         style="background-color: #F8F8FA; border-radius: 10px; padding-top: 30px;border: 6px #FFEAEA solid">
+                        <div class="card me-auto"
+                             style="padding: 15px; border-radius: 10px; width: 97%; height: 60%; margin-left: 15px; margin-top: 40px;">
+                            <div class="options">
+                                <button type="button" id="bold" class="option-button format">
+                                    <i class="fa-solid fa-bold"></i>
+                                </button>
+                                <button type="button" id="superscript" class="option-button script">
+                                    <i class="fa-solid fa-superscript"></i>
+                                </button>
+                                <button type="button" id="subscript" class="option-button script">
+                                    <i class="fa-solid fa-subscript"></i>
+                                </button>
+
+                                <button type="button" id="insertOrderedList" class="option-button">
+                                    <div class="fa-solid fa-list-ol"></div>
+                                </button>
+                                <button type="button" id="insertUnorderedList" class="option-button">
+                                    <i class="fa-solid fa-list"></i>
+                                </button>
+
+                                <button type="button" id="undo" class="option-button">
+                                    <i class="fa-solid fa-rotate-left"></i>
+                                </button>
+                                <button type="button" id="redo" class="option-button">
+                                    <i class="fa-solid fa-rotate-right"></i>
+                                </button>
+
+                                <button type="button" id="createLink" class="adv-option-button">
+                                    <i class="fa fa-link"></i>
+                                </button>
+                                <button type="button" id="unlink" class="option-button">
+                                    <i class="fa fa-unlink"></i>
+                                </button>
+
+                                <button type="button" id="justifyLeft" class="option-button align">
+                                    <i class="fa-solid fa-align-left"></i>
+                                </button>
+                                <button type="button" id="justifyCenter" class="option-button align">
+                                    <i class="fa-solid fa-align-center"></i>
+                                </button>
+                                <button type="button" id="justifyRight" class="option-button align">
+                                    <i class="fa-solid fa-align-right"></i>
+                                </button>
+                                <button type="button" id="justifyFull" class="option-button align">
+                                    <i class="fa-solid fa-align-justify"></i>
+                                </button>
+                                <button type="button" id="indent" class="option-button spacing">
+                                    <i class="fa-solid fa-indent"></i>
+                                </button>
+                                <button type="button" id="outdent" class="option-button spacing">
+                                    <i class="fa-solid fa-outdent"></i>
+                                </button>
+                                <select id="formatBlock" class="adv-option-button">
+                                    <option value="H1">H1</option>
+                                    <option value="H2">H2</option>
+                                    <option value="H3">H3</option>
+                                    <option value="H4">H4</option>
+                                    <option value="H5">H5</option>
+                                    <option value="H6">H6</option>
+                                </select>
+                                <select id="fontName" class="adv-option-button"></select>
+                                <select id="fontSize" class="adv-option-button"></select>
+
+                                <div class="input-wrapper">
+                                    <input type="color" id="foreColor" class="adv-option-button">
+                                    <label for="foreColor">Font Color</label>
+                                </div>
+                                <div class="input-wrapper">
+                                    <input type="color" id="backColor" class="adv-option-button">
+                                    <label for="backColor">Highlight Color</label>
+                                </div>
+                                <button id="btn-image">
+                                    IMG
+                                </button>
+                                <input id="img-selector" type="file" accept="image/*"/>
+                            </div>
+                        </div>
+                        <div class="container" style="padding-bottom: 90px; margin-bottom: 30px;">
+                            <!-- 마크다운 에디터 추가 -->
+                            <div id="text-input" contenteditable="true" style="margin-top: 50px; border-radius: 10px; background: white; overflow: auto; height: 500px;">{{ portfolio.content|safe }}
+                            </div>
+
+
+                        </div>
+
                     </div>
-                </div>
-                <div class="container" style="padding-bottom: 90px; margin-bottom: 30px;">
-                    <!-- 마크다운 에디터 추가 -->
-                    <div id="text-input" contenteditable="true" style="margin-top: 50px; border-radius: 10px; background: white; overflow: auto; height: 500px;">{{ portfolio.content|safe }}</div>
-
 
                 </div>
-
-                </div>
-
-            </div>
-<div class="container" style="margin-bottom: 30px; "></div>
-            <!-- 수정 완료 및 취소 버튼 -->
+                <div class="container" style="margin-bottom: 30px; "></div>
+                <!-- 수정 완료 및 취소 버튼 -->
                 <div class="d-grid gap-2 d-md-flex" style="margin-left: 880px;">
                     <button type="button" class=" me-md-2 finish " onclick="submitPortfolioForm()" style=" font-family: Noto Sans; font-weight: 600; margin-right: 210px; width: 100px; height: 38px;background:#D9D9D999; border-radius: 10px;">수정 완료</button>
                     <button type="button" onclick="window.location.href='{% url 'portfolio:portfolio_detail' pk=portfolio.pk %}'" style="font-family: Noto Sans; font-weight: 600; width: 100px; height: 38px;background:#D9D9D999; border-radius: 10px;">취소</button>
                 </div>
-        </form>
+            </form>
 
+        </div>
     </div>
-</div>
 
 
-<script>
+    <script>
 const portfolioUpdateUrl = "{% url 'portfolio:portfolio_update' pk=portfolio.pk %}";
 
 
@@ -430,22 +377,22 @@ document.addEventListener('DOMContentLoaded', function () {
         majorDropdown.innerHTML = ''; // Clear existing options
 
         switch (college) {
-            case '과기':
+            case '과학기술대학':
                 {% for major in sm %}
                     majorDropdown.innerHTML += '<option value="{{ major.id }}" {% if major.id == selectedMajor %}selected{% endif %}>{{ major.name }}</option>';
                 {% endfor %}
                 break;
-            case '약학':
+            case '약학대학':
                 {% for major in pm %}
                     majorDropdown.innerHTML += '<option value="{{ major.id }}" {% if major.id == selectedMajor %}selected{% endif %}>{{ major.name }}</option>';
                 {% endfor %}
                 break;
-            case '아앤디':
+            case '아트앤디자인대학':
                 {% for major in am %}
                     majorDropdown.innerHTML += '<option value="{{ major.id }}" {% if major.id == selectedMajor %}selected{% endif %}>{{ major.name }}</option>';
                 {% endfor %}
                 break;
-            case '글융':
+            case '글로벌융합대학':
                 {% for major in gm %}
                     majorDropdown.innerHTML += '<option value="{{ major.id }}" {% if major.id == selectedMajor %}selected{% endif %}>{{ major.name }}</option>';
                 {% endfor %}
@@ -608,10 +555,15 @@ function submitPortfolioForm() {
 }
 }
 
-</script>
 
-<script src="{% static 'portfolio/load.js' %}"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    </script>
+
+    <script src="{% static 'portfolio/load.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+            crossorigin="anonymous"></script>
 </div>
+<br><br><br>
 </body>
+{% include 'single_page/footer.html' %}
 </html>

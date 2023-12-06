@@ -50,107 +50,109 @@
         color: #767676; /* 글자색 추가 */
         margin: 5px; /* 여백 추가 */
     }
+
     </style>
 </head>
 
 <body>
-    {% include 'portfolio/menubar.html' %}
+{% include 'portfolio/menubar.html' %}
+<br>
+<div class="container" style="padding-top: 20px;">
+    <h3><strong>포트폴리오</strong></h3>
+    <h7>우리 학교 재학생들의 갓생 포트폴리오를 구경할 수 있어요!</h7>
     <br>
-     <div class="container" style="padding-top: 20px;">
-        <h3><strong>포트폴리오</strong></h3>
-        <h7>우리 학교 재학생들의 갓생 포트폴리오를 구경할 수 있어요!</h7><br>
 
-    </div>
+</div>
 
-    <div class="container mt-5 " style="background-color: rgba(255, 234, 234, 55%); border-radius: 20px; padding:30px; border: 3px solid #FDD0D0; max-width: 1153px; max-height:250px">
-        <form method="get" action="{% url 'portfolio:filtersearch_view' %}">
-            <div class="row">
+<div class="container mt-5 " style="background-color: rgba(255, 234, 234, 55%); border-radius: 20px; padding:30px; border: 3px solid #FDD0D0; max-width: 1153px; max-height:250px">
+    <form method="get" action="{% url 'portfolio:filtersearch_view' %}">
+        <div class="row">
 
-                <!-- 상태 선택 -->
-                <div class="col-md-4">
-                    <h6 style="font-weight: bold;">학적상태</h6>
-                    {% for status in status %}
-                    <div class="form-check form-check-inline">
-                        <input type="radio" class="form-check-input" name="status" id="{{status.id}}" value="{{status.status}}" {% if status == '{{status.status}}' %}checked{% endif %}>
-                        <label class="form-check-label" for="{{status.id}}">{{status.status}}</label>
+            <!-- 상태 선택 -->
+            <div class="col-md-4">
+                <h6 style="font-weight: bold;">학적상태</h6>
+                {% for status in status %}
+                <div class="form-check form-check-inline">
+                    <input type="radio" class="form-check-input" name="status" id="{{status.id}}"
+                           value="{{status.status}}" {% if status == '{{status.status}}' %}checked{% endif %}>
+                    <label class="form-check-label" for="{{status.id}}">{{status.status}}</label>
+                </div>
+                {% endfor %}
+            </div>
+
+
+            <!-- 관심 직무 선택 -->
+            <div class="col-md-5">
+                <h6 style="font-weight: bold;">관심 직무</h6>
+                <div class="row">
+                    {% for interest in interests %}
+                    <div class="col-md-3"> <!-- 4개의 컬럼 중 1개 -->
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" class="form-check-input" name="interest" id="{{ interest.slug }}" value="{{ interest.interest }}" {% if interest.interest in interest_name %}checked{% endif %}>
+                            <label class="form-check-label" for="{{ interest.slug }}">{{ interest.interest }}</label>
+                        </div>
                     </div>
                     {% endfor %}
                 </div>
+            </div>
 
 
-
-                <!-- 관심 직무 선택 -->
-<div class="col-md-5" >
-    <h6 style="font-weight: bold;">관심 직무</h6>
-    <div class="row">
-        {% for interest in interests %}
-            <div class="col-md-3"> <!-- 4개의 컬럼 중 1개 -->
+            <!--공감, 최신순-->
+            <div class="col-md-3">
+                <h6 style="font-weight: bold;">정렬</h6>
                 <div class="form-check form-check-inline">
-                    <input type="checkbox" class="form-check-input" name="interest" id="{{ interest.slug }}" value="{{ interest.interest }}" {% if interest.interest in interest_name %}checked{% endif %}>
-                    <label class="form-check-label" for="{{ interest.slug }}">{{ interest.interest }}</label>
+                    <input type="radio" class="form-check-input" name="sorting" id="sorting_latest" value="latest" checked>
+                    <label class="form-check-label" for="sorting_latest">최신순</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input type="radio" class="form-check-input" name="sorting" id="sorting_likes" value="likes">
+                    <label class="form-check-label" for="sorting_likes">공감순</label>
                 </div>
             </div>
-        {% endfor %}
-    </div>
-</div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <h6 style="font-weight: bold;">단과대 및 전공</h6>
+                <label for="college">대학:</label>
+                <select id="college" name="college" style="background-color: white; color: #333; border: 1px solid #ccc; border-radius: 20px; margin: 5px;">
+                    <option value="default">대학 선택</option>
+                    {% for college in colleges %}
+                    <option value="{{ college.name }}" {% if college.name == college %}selected{% endif %}>{{ college.name }}
+                    </option>
+                    {% endfor %}
+                </select>
 
-
-
-                <!--공감, 최신순-->
-                <div class="col-md-3">
-                    <h6 style="font-weight: bold;">정렬</h6>
-                    <div class="form-check form-check-inline">
-                        <input type="radio" class="form-check-input" name="sorting" id="sorting_latest" value="latest" checked>
-                        <label class="form-check-label" for="sorting_latest">최신순</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input type="radio" class="form-check-input" name="sorting" id="sorting_likes" value="likes">
-                        <label class="form-check-label" for="sorting_likes">공감순</label>
-                    </div>
-                </div>
+                <!-- 단과대 및 전공 선택 -->
+                <!-- 전공 선택 드롭다운 -->
+                <label for="major">전공:</label>
+                <select style="background-color: white; color: #333; border: 1px solid #ccc; border-radius: 13px; margin: 0px;" id="major" name="major" {% if selected_college == 'default' %}disabled{% endif %}>
+                <!-- 이 부분은 JavaScript로 동적으로 업데이트됩니다 -->
+                </select>
             </div>
-<div class="row">
-    <div class="col-md-4">
-        <h6 style="font-weight: bold;">단과대 및 전공</h6>
-        <label for="college">대학:</label>
-        <select id="college" name="college" style="background-color: white; color: #333; border: 1px solid #ccc; border-radius: 20px; margin: 5px;">
-            <option value="default">대학 선택</option>
-            {% for college in colleges %}
-                <option value="{{ college.name }}" {% if college.name == college %}selected{% endif %}>{{ college.name }}</option>
-            {% endfor %}
-        </select>
 
-        <!-- 단과대 및 전공 선택 -->
-        <!-- 전공 선택 드롭다운 -->
-        <label for="major">전공:</label>
-        <select style="background-color: white; color: #333; border: 1px solid #ccc; border-radius: 13px; margin: 0px;" id="major" name="major" {% if selected_college == 'default' %}disabled{% endif %}>
-            <!-- 이 부분은 JavaScript로 동적으로 업데이트됩니다 -->
-        </select>
-    </div>
+            <div class="col-md-8 d-flex justify-content-end align-items-end">
+                <button type="submit" class="btn btn-success mt-3 d-inline">검색</button>
+            </div>
+        </div>
 
-    <div class="col-md-8 d-flex justify-content-end align-items-end">
-        <button type="submit" class="btn btn-success mt-3 d-inline">검색</button>
-    </div>
+
+        <!-- 검색 버튼 -->
+
+    </form>
 </div>
-
-
-            <!-- 검색 버튼 -->
-
-        </form>
-    </div>
 
 <br>
 
 <br>
 
-    <!-- 포트폴리오 리스트 -->
+<!-- 포트폴리오 리스트 -->
 
 <div class="container mx-auto" style="max-width: 1200px;">
     <div class="row justify-content-center">
         {% for p in portfolio_list %}
         <div class="col-sm-4 mb-4">
-                <div class="card d-flex" style="position: relative; border: 2px solid #FDD0D0; border-radius: 20px; height: 220px; width: 350px; margin:10px; padding:10px" onclick="redirectToDetailPage({{p.pk}}, 'portfolio')">
-                    <div class="card-body">
+            <div class="card d-flex" style="position: relative; border: 2px solid #FDD0D0; border-radius: 20px; height: 220px; width: 350px; margin:10px; padding:10px" onclick="redirectToDetailPage({{p.pk}}, 'portfolio')">
+                <div class="card-body">
                     <div class="d-flex">
                         {% if p.anonymous %}
                         <img src="{{ p.author.profile.image.url }}" class="card-img-rounded rounded-pill ml-2" alt="..." style="width:80px; height:80px">
@@ -164,8 +166,8 @@
                     </div>
                 </div>
                 <div class="hashtag" style="width: 350px; height: 220px;">
-                            <p class="card-text" id="hashtags-container_{{ p.id }}"></p>
-                            <script>
+                    <p class="card-text" id="hashtags-container_{{ p.id }}"></p>
+                    <script>
                              var hashtags = {{ p.hashtags|safe }};
                              var hashtagsContainer = document.getElementById('hashtags-container_{{ p.id }}');
                              console.log("hashtags:", hashtags);
@@ -187,16 +189,17 @@
                              var lineBreak = document.createElement('br');
                              hashtagsContainer.appendChild(lineBreak);
                              }
-                             });</script>
-                        </div>
+                             });
+                    </script>
+                </div>
             </div>
         </div>
         {% endfor %}
     </div>
 </div>
 
-    <!-- 페이지네이션 링크 표시 -->
-    <div class="pagination justify-content-center">
+<!-- 페이지네이션 링크 표시 -->
+<div class="pagination justify-content-center">
         <span class="step-links">
             {% if page_obj.has_previous %}
                 <a href="?page={{page_obj.previous_page_number}}" class="btn btn-primary text-light">Prev</a>
@@ -206,14 +209,25 @@
                 <a href="?page={{page_obj.next_page_number}}" class="btn btn-primary text-light">Next</a>
             {% endif %}
         </span>
-    </div><br/>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<br><br><br>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
 <!-- 부트스트랩 및 jQuery 스크립트 추가 -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js"
+        integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s"
+        crossorigin="anonymous"></script>
 <script>
 // 전역 스코프에 selectedMajor 변수 추가
 var selectedCollege = '{{ selected_college }}';
@@ -228,22 +242,22 @@ document.addEventListener('DOMContentLoaded', function () {
         majorDropdown.innerHTML = ''; // Clear existing options
 
         switch (college) {
-            case '과기':
+            case '과학기술대학':
                 {% for major in sm %}
                     majorDropdown.innerHTML += '<option value="{{ major.id }}" {% if major.id == selectedMajor %}selected{% endif %}>{{ major.name }}</option>';
                 {% endfor %}
                 break;
-            case '약학':
+            case '약학대학':
                 {% for major in pm %}
                     majorDropdown.innerHTML += '<option value="{{ major.id }}" {% if major.id == selectedMajor %}selected{% endif %}>{{ major.name }}</option>';
                 {% endfor %}
                 break;
-            case '아앤디':
+            case '아트앤디자인대학':
                 {% for major in am %}
                     majorDropdown.innerHTML += '<option value="{{ major.id }}" {% if major.id == selectedMajor %}selected{% endif %}>{{ major.name }}</option>';
                 {% endfor %}
                 break;
-            case '글융':
+            case '글로벌융합대학':
                 {% for major in gm %}
                     majorDropdown.innerHTML += '<option value="{{ major.id }}" {% if major.id == selectedMajor %}selected{% endif %}>{{ major.name }}</option>';
                 {% endfor %}
@@ -288,9 +302,10 @@ function redirectToDetailPage(pk, namespace) {
         window.location.href = detailPageUrl;
     }
 
+
 </script>
 </body>
-
+{% include 'single_page/footer.html' %}
 </html>
 
 

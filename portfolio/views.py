@@ -43,13 +43,13 @@ class PortfolioList(ListView):
         status = Status.objects.all()
 
         # 기존의 학과와 전공 정보
-        sc = College.objects.get(name='과기')
+        sc = College.objects.get(name='과학기술대학')
         sm = Major.objects.filter(college=sc)
-        pc = College.objects.get(name='약학')
+        pc = College.objects.get(name='약학대학')
         pm = Major.objects.filter(college=pc)
-        ac = College.objects.get(name='아앤디')
+        ac = College.objects.get(name='아트앤디자인대학')
         am = Major.objects.filter(college=ac)
-        gc = College.objects.get(name='글융')
+        gc = College.objects.get(name='글로벌융합대학')
         gm = Major.objects.filter(college=gc)
 
         context.update({
@@ -185,13 +185,13 @@ def your_combined_view(request):
     interests = Interest.objects.all()
     status = Status.objects.all()
     college = College.objects.all()
-    sc = College.objects.get(name='과기')  # 선택한 학과 객체 가져오기
+    sc = College.objects.get(name='과학기술대학')  # 선택한 학과 객체 가져오기
     sm = Major.objects.filter(college=sc)  # 해당 학과의 전공들 가져오기
-    pc = College.objects.get(name='약학')  # 선택한 학과 객체 가져오기
+    pc = College.objects.get(name='약학대학')  # 선택한 학과 객체 가져오기
     pm = Major.objects.filter(college=pc)  # 해당 학과의 전공들 가져오기
-    ac = College.objects.get(name='아앤디')  # 선택한 학과 객체 가져오기
+    ac = College.objects.get(name='아트앤디자인대학')  # 선택한 학과 객체 가져오기
     am = Major.objects.filter(college=ac)  # 해당 학과의 전공들 가져오기
-    gc = College.objects.get(name='글융')  # 선택한 학과 객체 가져오기
+    gc = College.objects.get(name='글로벌융합대학')  # 선택한 학과 객체 가져오기
     gm = Major.objects.filter(college=gc)  # 해당 학과의 전공들 가져오기
 
     context = {
@@ -265,10 +265,10 @@ class PortfolioUpdate(UpdateView):
         context['selected_major'] = self.object.department.id if self.object.department else ''
         context['colleges'] = College.objects.all()
         context['interests'] = Interest.objects.all()
-        context['sm'] = Major.objects.filter(college__name='과기')
-        context['pm'] = Major.objects.filter(college__name='약학')
-        context['am'] = Major.objects.filter(college__name='아앤디')
-        context['gm'] = Major.objects.filter(college__name='글융')
+        context['sm'] = Major.objects.filter(college__name='과학기술대학')
+        context['pm'] = Major.objects.filter(college__name='약학대학')
+        context['am'] = Major.objects.filter(college__name='아트앤디자인대학')
+        context['gm'] = Major.objects.filter(college__name='글로벌융합대학')
         return context
 
     def form_valid(self, form):

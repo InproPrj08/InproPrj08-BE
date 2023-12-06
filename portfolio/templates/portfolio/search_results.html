@@ -173,8 +173,7 @@
 <div style="position: relative; display: inline-block;">
     <img class="article-img" style="width: 500px; z-index: 1;" src="{% static 'portfolio/image/talk22.png' %}">
     {% if query %}
-        <p style="position: absolute; top: 10px; left: 50px;  padding: 10px; font-size: 18px; z-index: 2;">
-            {{request.user}}님이 찾으신 검색어: <b>{{ query }}</b></p>
+        <p style="position: absolute; top: 10px; left: 50px;  padding: 10px; font-size: 18px; z-index: 2;">{{request.user}}님이 찾으신 검색어: <b>{{ query }}</b></p>
     {% endif %}
 </div>
 
@@ -326,43 +325,48 @@
                     <div class="carousel-item {% if forloop.first %}active{% endif %}">
                         <div class="row">
                 {% endif %}
-                            <div class="col-sm-3">
+                            <div class="col-sm-4">
                                 <div class="card-form">
-            <div class="card d-flex" style="border: 2px solid #02343F; border-radius: 20px; height: 220px; width: 350px;" onclick="redirectToDetailPage({{r.pk}}, 'recruit')">
-                <div class="card-body">
-                    <div class="d-flex">
-                        <img src="{% static 'single_page/image/image1.jpg' %}" class="card-img-rounded rounded-pill ml-2" alt="...">
-                        <div class="user d-flex flex-column" style="margin-left: 30px; margin-top: 20px;">
-                            <a class="card-link-name" href="#">{{r.author}}님</a>
-                            <a class="card-link-major" href="#" style="color: #767676;">{{r.department}}</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="hi d-flex flex-column">
-                    <p class="intro">모집인원 | {{r.people}}명 </p>
-                    <p>{{r.title|truncatechars:60}} </p>
+                                    <div class="card d-flex" style="border: 2px solid #02343F; border-radius: 20px; height: 220px; width: 350px;" onclick="redirectToDetailPage({{r.pk}}, 'recruit')">
+                                        <div class="card-body">
+                                            <div class="d-flex">
+                                                <img src="{{ r.author.profile.image.url }}" class="card-img-rounded rounded-pill ml-2" alt="...">
+                                                <div class="user d-flex flex-column" style="margin-left: 30px; margin-top: 20px;">
+                                                    <a class="card-link-name" href="#">{{r.author}}님</a>
+                                                    <a class="card-link-major" href="#" style="color: #767676;">{{r.department}}</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <div class="hi d-flex flex-column">
+                                        <p class="intro">모집인원 | {{r.people}}명 </p>
+                                        <p>{{r.title|truncatechars:60}} </p>
 
-                            <p class="card-text position-absolute top-0 end-0 translate-middle-y" style="margin-right: 10px; margin-top:30px;">
-                            {% now "Y년 m월 d일 H시 i분 s초" as now %}
-                            {% with d_day=p.calculate_d_day|add:"1" %}
-                            {% if d_day >= 0 %}
-                            {% if d_day == 0 %}
-                            <button class="d-num btn btn-danger" id="d-day" style="background-color: #DC6E6E; border:0;">D-day!</button>
-                            {% else %}
-                            <button class="d-num btn btn-primary" id="d-num" style="background-color: #8A9AEB; border:0;"><b>D-{{ d_day }}</b></button>
-                            {% endif %}
-                            {% else %}
-                            <button class="d-num btn btn-secondary" id="d-end">모집종료</button>
-                            {% endif %}
-                            {% endwith %}
-                            </p>
-                </div>
+                                        <p class="card-text position-absolute top-0 end-0 translate-middle-y" style="margin-right: 10px; margin-top:30px;">
+                                        {% now "Y년 m월 d일 H시 i분 s초" as now %}
+                                        {% with d_day=r.calculate_d_day|add:"1" %}
+                                        {% if d_day >= 0 %}
+                                        {% if d_day == 0 %}
+                                            <button class="d-num btn btn-danger" id="d-day" style="background-color: #DC6E6E; border:0;">D-day!</button>
+                                        {% else %}
+                                            <button class="d-num btn btn-primary" id="d-num" style="background-color: #8A9AEB; border:0;"><b>D-{{ d_day }}</b></button>
+                                        {% endif %}
+                                        {% else %}
+                                            <button class="d-num btn btn-secondary" id="d-end">모집종료</button>
+                                        {% endif %}
+                                        {% endwith %}
+                                        </p>
+                                    </div>
+
+                                    </div>
             </div>
-            </a>
+
         </div>
                 {% if forloop.last or forloop.counter|divisibleby:3 %}
-                        </div>
-                    </div>
+                        </div></div>
+        </div>
+    </div>
+</div>
+
                 {% endif %}
             {% endfor %}
             {% else %}

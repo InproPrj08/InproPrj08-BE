@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 import requests
 from .models import Program
 
+
 def crawl_and_display(request):
     url = "https://delight.duksung.ac.kr/ko/program/all/list/all/2"
     response = requests.get(url)
@@ -104,6 +105,3 @@ def crawl_and_display(request):
         {'data_list': data_list, 'sorted_list': sorted_list, 'top_links1': top_links1, 'top_links2': top_links2,
          'top_links3': top_links3, 'page_kwarg': page_kwarg}
     )
-
-def index(request):
-    return render(request, 'delight/index.html')

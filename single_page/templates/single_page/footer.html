@@ -1,0 +1,56 @@
+{% load static %}
+<style>
+    body {
+            margin: 0;
+            padding: 0;
+        }
+
+        footer {
+            background-color: #D9D9D9;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .footer__navi {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer__navi li {
+            display: inline-block;
+            margin-right: 15px;
+        }
+
+        .footer__navi a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        .logo {
+            display: block;
+            margin: 20px auto;
+        }
+
+        .address {
+            background-color: #D9D9D9;
+            text-align: center;
+            padding: 10px;
+        }
+
+</style>
+
+<footer>
+    <ul class="footer__navi">
+        <li><a href="http://127.0.0.1:8000/portfolio/">포트폴리오</a></li>
+        <li><a href="http://127.0.0.1:8000/delight/crawl_and_display/">비교과</a></li>
+        <li><a href="http://127.0.0.1:8000/recruit/">모집게시판</a></li>
+        <li><a href="http://127.0.0.1:8000/pass_portfolio/">졸업생 합격 수기</a></li>
+        <li><a href="https://www.duksung.ac.kr/main.do">덕성여자대학교</a></li>
+        <li><a href="https://sso.duksung.ac.kr/svc/tk/Auth.do?ac=Y&ifa=N&id=portal&">덕성포탈</a></li>
+        <li><a href="https://delight.duksung.ac.kr/">De:light</a></li>
+    </ul>
+
+    <img class="logo" src="{% static 'portfolio/image/logo.png' %}" width="100" height="40" alt="Popodouk_Logo"/>
+
+    <p>01369 | 서울 도봉구 삼양로144길 33 (쌍문동, 덕성여자대학교) | 덕성여자대학교</p>
+</footer>

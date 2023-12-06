@@ -4,7 +4,7 @@ from django.urls import path
 from . import views
 from .views import PortfolioUpdate, PortfolioDeleteView, DeleteCommentView
 
-app_name='portfolio'
+app_name = 'portfolio'
 
 urlpatterns = [
     path('', views.PortfolioList.as_view(), name='portfolio_list'),
@@ -19,4 +19,3 @@ urlpatterns = [
     path('<int:pk>/toggle_comment_like/<int:comment_id>/', views.toggle_comment_like, name='toggle_comment_like'),
     path('filterpage/', views.filtersearch_view, name='filtersearch_view'),
 ]
-

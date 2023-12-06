@@ -16,12 +16,8 @@ from pass_portfolio.models import PassPortfolio
 from .forms import UserForm, CustomUserChangeForm
 from django.core.paginator import Paginator
 
+
 # Create your views here.
-
-# 회원 가입
-def main(request):
-    return render(request, 'mypage/base.html')
-
 
 def user_signup(request):
     if request.method == 'POST':
@@ -64,22 +60,24 @@ def user_signup(request):
             print("Password and confirm password do not match.")
     else:
         form = UserForm()
-    sc = College.objects.get(name='과기')  # 선택한 학과 객체 가져오기
-    pc = College.objects.get(name='약학')  # 선택한 학과 객체 가져오기
-    ac = College.objects.get(name='아앤디')  # 선택한 학과 객체 가져오기
-    gc = College.objects.get(name='글융')  # 선택한 학과 객체 가져오기
+
+    sc = College.objects.get(name='과학기술대학')  # 선택한 학과 객체 가져오기
+    pc = College.objects.get(name='약학대학')  # 선택한 학과 객체 가져오기
+    ac = College.objects.get(name='아트앤디자인대학')  # 선택한 학과 객체 가져오기
+    gc = College.objects.get(name='글로벌융합대학')  # 선택한 학과 객체 가져오기
 
     return render(request, 'mypage/signup.html', {
         'form': form,
         'colleges': College.objects.all(),
-        'sm':Major.objects.filter(college=sc),
-        'pm':Major.objects.filter(college=pc),
-        'am':Major.objects.filter(college=ac),
-        'gm':Major.objects.filter(college=gc),
+        'sm': Major.objects.filter(college=sc),
+        'pm': Major.objects.filter(college=pc),
+        'am': Major.objects.filter(college=ac),
+        'gm': Major.objects.filter(college=gc),
         'numbers': Number.objects.all().order_by('-number'),
         'interests': Interest.objects.all(),
         'status': Status.objects.all(),
     })
+
 
 @csrf_protect
 def user_login(request):
@@ -106,7 +104,7 @@ def user_login(request):
     return render(request, 'mypage/login.html', {'form': form})
 
 
-#로그아웃
+# 로그아웃
 def user_logout(request):
     logout(request)
     return redirect("user:login")
@@ -119,11 +117,11 @@ def user_detail(request, username):
     detail_url = reverse('user:detail', args=[username])
     user_recruit = Recruit.objects.filter(author__username=username)
 
+    return render(request, 'mypage/my_detail.html',
+                  {'user': user, 'detail_url': detail_url, 'user_recruit': user_recruit})
 
-    return render(request, 'mypage/my_detail.html', {'user': user, 'detail_url': detail_url, 'user_recruit': user_recruit})
 
-
-#내가 작성한 포트폴리오 글 보기
+# 내가 작성한 포트폴리오 글 보기
 def user_portfolios(request, username):
     context = {}  # Initialize the context dictionary
 
@@ -162,7 +160,7 @@ def user_portfolios(request, username):
 
 
 # 내가 작성한 합격 수기 글 보기
-#내가 작성한 글 보기
+# 내가 작성한 글 보기
 def user_pass_portfolios(request, username):
     context = {}  # Initialize the context dictionary
 
@@ -187,7 +185,7 @@ def user_pass_portfolios(request, username):
             'department': user_pass_portfolios[0].department.name if user_pass_portfolios[0].department else None,
             'status1': user_pass_portfolios[0].anonymous,
             'author': user_pass_portfolios[0].author,
-            'company_name':user_pass_portfolios[0].company_name,
+            'company_name': user_pass_portfolios[0].company_name,
             'created_at': user_pass_portfolios[0].created_at,
 
             'interests': Interest.objects.all(),  # 추가: 관심 직무 모델에서 모든 값 가져오기
@@ -265,10 +263,10 @@ def user_update(request, username):
             # 여기에 다른 필드 추가 가능
         })
 
-    sc = College.objects.get(name='과기')
-    pc = College.objects.get(name='약학')
-    ac = College.objects.get(name='아앤디')
-    gc = College.objects.get(name='글융')
+    sc = College.objects.get(name='과학기술대학')
+    pc = College.objects.get(name='약학대학')
+    ac = College.objects.get(name='아트앤디자인대학')
+    gc = College.objects.get(name='글로벌융합대학')
 
     return render(request, 'mypage/update.html', {
         'form': form,
@@ -281,6 +279,3 @@ def user_update(request, username):
         'interests': Interest.objects.all(),
         'status': Status.objects.all(),
     })
-
-
-

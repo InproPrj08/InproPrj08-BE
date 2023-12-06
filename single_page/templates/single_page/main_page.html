@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300&display=swap" rel="stylesheet">
     <title>메인 페이지</title>
-  <style>
+    <style>
       .nametag{
       width: 600px;
       height: 400px;
@@ -154,89 +154,24 @@
       margin-left:10px;
       }
 
-      .footer {
-  position: absolute;
-   background: #1d1e22;
-  bottom: 0;
-  height: 0; /* 高さをゼロに設定 */
-  padding: 2rem;
-  font-size: 15px;
-  flex: 1;
-    margin-top: auto; /* フッターをページの一番下に配置 */
-}
 
-: border-box;
-}
-
-
-.footer hr {
-    width: 100%;
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
-.footer__navi {
-    justify-content: center; /* 中央揃えにする */
-    margin-bottom: 2rem;
-}
-
-.footer__navi li {
-    display: inline-block;
-    margin-right: 16px;
-}
-.footer__navi li a {
-        text-decoration: none;
-        border-bottom: none; /* 下線を非表示にする */
-    }
-.footer__navi li:last-child {
-    margin-right: 0; /* 最後の要素に右のマージンを適用しない */
-}
-
-.footer__logo {
-    display: inline-block;
-    margin-bottom: 1rem;
-}
-
-@media (min-width: 768px) {
-    .md-flex {
-        display: flex;
-    }
-.md-flex {
-    display: flex;
-    flex-direction: column; /* 水平方向ではなく垂直方向に並べる */
-}
-
-.md-justify-between {
-    justify-content: flex-start; /* 左寄せに変更 */
-}
-    .md-justify-between {
-        justify-content: space-between;
-    }
-}
-      .bottom-background-color {
-    background-color: #D9D9D9; /* フッターナビと同じ色に設定 */
-    height: 100px;
-    margin-top: 70px;
-    position: relative;
-}
-
-
-  </style>
+    </style>
 </head>
 <body>
 {% include 'portfolio/menubar.html' %}
 
 <div class="top-slide d-flex">
-    <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel" style="max-height: 600px; max-width: 700px; object-fit: cover;">
+    <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel"
+         style="max-height: 600px; max-width: 700px; object-fit: cover;">
         <div class="carousel-inner">
             <div class="carousel-item active">
-                <img src="{% static 'single_page/image/035.png' %}" class="d-block w-100" alt="...">
-            </div>
-            <div class="carousel-item ">
                 <img src="{% static 'single_page/image/042.png' %}" class="d-block w-100" alt="...">
             </div>
             <div class="carousel-item ">
-                <img src="{% static 'single_page/image/c.jpg' %}" class="d-block w-100" alt="...">
+                <img src="{% static 'single_page/image/035.png' %}" class="d-block w-100" alt="...">
+            </div>
+            <div class="carousel-item ">
+                <img src="{% static 'single_page/image/019.png' %}" class="d-block w-100" alt="...">
             </div>
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
@@ -259,13 +194,25 @@
                         <p class="card-top-name">{{user.username}} 님</p>
                         <p class="card-top-major">{{ user.college }} | {{user.major}}</p>
                         <div class="move-p">
-                        {% if user.status.status == '재학생' %}
-                        <a href="{% url 'portfolio:portfolio_detail' pk=pk %}" class="base-title" style="text-decoration: none;">나의 포트폴리오</a>
-                        {% elif user.status.status == '휴학생' %}
+                            {% if user.status.status == '재학생' %}
+                            {% if pk %}
                             <a href="{% url 'portfolio:portfolio_detail' pk=pk %}" class="base-title" style="text-decoration: none;">나의 포트폴리오</a>
-                        {% elif user.status.status == '졸업생' %}
+                            {% else %}
+                            <a href="{% url 'portfolio:your_combined_view' %}" class="base-title" style="text-decoration: none;">포트폴리오 작성</a>
+                            {% endif %}
+                            {% elif user.status.status == '휴학생' %}
+                            {% if pk %}
+                            <a href="{% url 'portfolio:portfolio_detail' pk=pk %}" class="base-title" style="text-decoration: none;">나의 포트폴리오</a>
+                            {% else %}
+                            <a href="{% url 'portfolio:your_combined_view' %}" class="base-title" style="text-decoration: none;">포트폴리오 작성</a>
+                            {% endif %}
+                            {% elif user.status.status == '졸업생' %}
+                            {% if pk1 %}
                             <a href="{% url 'pass_portfolio:pass_portfolio_detail' pk=pk1 %}" class="base-title" style="text-decoration: none;">나의 합격 수기</a>
-                        {% endif %}
+                            {% else %}
+                            <a href="{% url 'pass_portfolio:your_combined_view' %}" class="base-title" style="text-decoration: none;">합격 수기 작성</a>
+                            {% endif %}
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -273,10 +220,10 @@
         </div>
     </div>
 </div>
-<div class="back-color pt-1" >
-    <div class="container1 " >
+<div class="back-color pt-1">
+    <div class="container1 ">
         <div class="row-title mt-4 ml-2">
-            <div class="semi-title" >
+            <div class="semi-title">
                 <p> 포트폴리오</p>
             </div>
             <div class="move-page d-flex">
@@ -285,17 +232,20 @@
             </div>
         </div>
         <div class="row justify-content-center">
-        <!-- 첫 번째 카드 -->
+            <!-- 첫 번째 카드 -->
             {% for p in portfolios %}
             <div class="card-form col-sm-3">
                 <a href="{% url 'portfolio:portfolio_detail' pk=p.pk %}" class="card-link"></a>
-                <div class="card d-flex"style="border: 2px solid #02343F; border-radius: 20px; height: 220px; width: 350px;" onclick="redirectToDetailPage({{p.pk}}, 'portfolio')">
+                <div class="card d-flex" style="border: 2px solid #FDD0D0; border-radius: 20px; height: 220px; width: 350px;" onclick="redirectToDetailPage({{p.pk}}, 'portfolio')">
                     <div class="card-body ">
                         <div class="d-flex">
-                            <img src="{{ p.author.profile.image.url }}" class="card-img-rounded rounded-pill ml-2" alt="...">
+                            {% if p.anonymous %}
+                            <img src="{{ p.author.profile.image.url }}" class="card-img-rounded rounded-pill ml-2" alt="..." style="width:80px; height:80px">
+                            {% else %}
+                            <img src="{% static 'portfolio/image/duksaeheart.png' %}" class="card-img-rounded rounded-pill ml-2" alt="..." style="width:80px; height:80px">
+                            {% endif %}
                             <div class="user d-flex flex-column" style="margin-left: 30px; margin-top: 20px;">
-                                <a class="card-link-name" href="#">{% if p.anonymous %}
-                                    {{p.author}}님 {% else %} 익명의 덕우 {% endif %}</a>
+                                <a class="card-link-name" href="#">{% if p.anonymous %} {{p.author}}님 {% else %} 익명의 덕우 {% endif %}</a>
                                 <a class="card-link-major" href="#" style="color: #767676;">{{ p.department }}</a>
                             </div>
                         </div>
@@ -322,107 +272,120 @@
             </div>
             <div class="row justify-content-center">
                 {% for p in pass_portfolios %}
-        <div class="col-sm-3">
-            <a href="{% url 'pass_portfolio:pass_portfolio_detail' pk=p.pk %}" class="card-link"></a>
-            <div class="card d-flex" style="border: 2px solid #02343F; border-radius: 20px; height: 220px; width: 350px;" onclick="redirectToDetailPage({{p.pk}}, 'pass_portfolio')">
-                <div class="card-body">
-                    <div class="d-flex">
-                        <img src="{{ p.author.profile.image.url }}" class="card-img-rounded rounded-pill ml-2" alt="...">
-                        <div class="user d-flex flex-column" style="margin-left: 30px; margin-bottom: 10px;">
-                            <div class="job-hashtag p-2 rounded-pill" style="margin-left: 100px;">{{p.company_name}}</div>
-                            <a class="card-link-name1" href="#" >{% if p.anonymous %}
-                                    {{p.author}}님 {% else %} 익명의 덕우 {% endif %}</a>
-                            <a class="card-link-major" href="#" style="color: #767676;">{{p.department}}</a>
+                <div class="col-sm-3">
+                    <a href="{% url 'pass_portfolio:pass_portfolio_detail' pk=p.pk %}" class="card-link"></a>
+                    <div class="card d-flex"
+                         style="border: 2px solid #C0D7BD; border-radius: 20px; height: 220px; width: 350px;"
+                         onclick="redirectToDetailPage({{p.pk}}, 'pass_portfolio')">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                {% if p.anonymous %}
+                                <img src="{{ p.author.profile.image.url }}" class="card-img-rounded rounded-pill ml-2" alt="..." style="width:80px; height:80px">
+                                {% else %}
+                                <img src="{% static 'portfolio/image/duksaeheart.png' %}" class="card-img-rounded rounded-pill ml-2" alt="..." style="width:80px; height:80px">
+                                {% endif %}
+                                <div class="user d-flex flex-column" style="margin-left: 30px; margin-bottom: 10px;">
+                                    <div class="job-hashtag p-2 rounded-pill" style="margin-left: 60px; width: 150px;">
+                                        <b>{{p.company_name}}</b></div>
+                                    <a class="card-link-name1" href="#">{% if p.anonymous %} {{p.author}}님 {% else %} 익명의 덕우 {% endif %}</a>
+                                    <a class="card-link-major" href="#" style="color: #767676;">{{p.department}}</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hashtag {% if p.hashtags|length == 2 %}two-hashtags{% endif %}">
+                            {% for hashtag in p.hashtags %}
+                            <a class="card-link-hashtag p-1" href="#">#{{ hashtag }}</a>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
-                <div class="hashtag {% if p.hashtags|length == 2 %}two-hashtags{% endif %}">
-                        {% for hashtag in p.hashtags %}
-                        <a class="card-link-hashtag p-1" href="#">#{{ hashtag }}</a>
-                        {% endfor %}
-                    </div>
+                {% endfor %}
             </div>
         </div>
-            {% endfor %}
     </div>
-    </div>
-</div>
-     <div class="container3" style="margin-top: 140px;">
-    <div class="row-title mt-5 ml-2">
-        <div class="semi-title">
-            <p>모집 게시판</p>
-        </div>
-        <div class="move-page d-flex">
+    <div class="container3" style="margin-top: 140px;">
+        <div class="row-title mt-5 ml-2">
+            <div class="semi-title">
+                <p>모집 게시판</p>
+            </div>
+            <div class="move-page d-flex">
                 <p class="semi-title-help">갓생 포트폴리오를 채우기 위한 활동을 함께 할 덕우를 찾아보세요!</p>
                 <a class="go" href="{% url 'recruit:recruit_list' %}"> > </a>
             </div>
-    </div>
-    <div class="row justify-content-center">
-        {% for r in recruits %}
-        <div class="col-sm-3">
-            <a href="{% url 'recruit:recruit_detail' pk=r.pk %}" class="card-link"></a>
-            <div class="card d-flex" style="border: 2px solid #02343F; border-radius: 20px; height: 220px; width: 350px;" onclick="redirectToDetailPage({{r.pk}}, 'recruit')">
-                <div class="card-body">
-                    <div class="d-flex">
-                        <img src="{{ r.author.profile.image.url }}" class="card-img-rounded rounded-pill ml-2" alt="...">
-                        <div class="user d-flex flex-column" style="margin-left: 30px; margin-top: 20px;">
-                            <a class="card-link-name" href="#">{{r.author}}님</a>
-                            <a class="card-link-major" href="#" style="color: #767676;">{{r.department}}</a>
+        </div>
+        <div class="row justify-content-center">
+            {% for r in recruits %}
+            <div class="col-sm-3">
+                <a href="{% url 'recruit:recruit_detail' pk=r.pk %}" class="card-link"></a>
+                <div class="card d-flex"
+                     style="border: 2px solid #C4DCFF; border-radius: 20px; height: 220px; width: 350px;"
+                     onclick="redirectToDetailPage({{r.pk}}, 'recruit')">
+                    <div class="card-body">
+                        <div class="d-flex">
+                            <img src="{{ r.author.profile.image.url }}" class="card-img-rounded rounded-pill ml-2"
+                                 alt="...">
+                            <div class="user d-flex flex-column" style="margin-left: 30px; margin-top: 20px;">
+                                <a class="card-link-name" href="#">{{r.author}}님</a>
+                                <a class="card-link-major" href="#" style="color: #767676;">{{r.department}}</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="hi d-flex flex-column">
-                    <p class="intro">모집인원 | {{r.people}}명 </p>
-                    <p>{{r.title|truncatechars:60}} </p>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-</div>
-<div class="container4 mx-auto">
-    <div class="row-title mt-5 ml-2">
-        <div class="semi-title">
-            <p>비교과 안내</p>
-        </div>
-        <p class="semi-title-help">우리 학교에서 진행하고 있는 비교과 프로그램은?</p>
-    </div>
-    <div class="row justify-content-center" >
-        <!-- 네 번째 카드 -->
-        <div class="col-sm-3">
-            <div class="card d-flex" style="border: 0px ; border-radius: 20px; height: 220px; width: 350px;">
-                <div class="d-flex">
-                    <img src="{% static 'image1.jpg' %}" class="card-img" alt="..." style="border-radius: 20px; max-height: 300px; max-width: 350px; object-fit: cover;">
+                    <div class="hi d-flex flex-column">
+                        <p class="intro">모집인원 | {{r.people}}명 </p>
+                        <p>{{r.title|truncatechars:60}} </p>
+                    </div>
                 </div>
             </div>
-            <p class="help d-flex justify-content-center mt-3">이공계 학술제</p>
-        </div>
-
-        <!-- 다섯 번째 카드 -->
-        <div class="col-sm-3">
-            <div class="card d-flex" style="border: 0px ; border-radius: 20px;">
-                <div class="d-flex">
-                    <img src="{% static 'image1.jpg' %}" class="card-img" alt="..." style="border-radius: 20px; max-height: 300px; max-width: 350px; object-fit: cover;">
-                </div>
-            </div>
-            <p class="help d-flex justify-content-center mt-3">생명존중교육</p>
-        </div>
-
-        <!-- 여섯 번째 카드 -->
-        <div class="col-sm-3">
-            <div class="card d-flex" style="border: 0px ; border-radius: 20px;">
-                <div class="d-flex">
-                    <img src="{% static 'image1.jpg' %}" class="card-img" alt="..." style="border-radius: 20px; max-height: 300px; max-width: 350px; object-fit: cover;">
-                </div>
-            </div>
-            <p class="help d-flex justify-content-center mt-3">창업경진대회</p>
+            {% endfor %}
         </div>
     </div>
-</div>
-    <div class="bottom-background-color mt-5"></div>
-</div>
+    <div class="container4 mx-auto">
+        <div class="row-title mt-5 ml-2">
+            <div class="semi-title">
+                <p>비교과 안내</p>
+            </div>
+            <p class="semi-title-help">우리 학교에서 진행하고 있는 비교과 프로그램은?</p>
+        </div>
+        <br>
+        <div class="row justify-content-center">
+            <!-- 네 번째 카드 -->
+            <div class="col-sm-3">
+                <div class="card d-flex" style="border: 0px ; border-radius: 20px; height: 220px; width: 350px;">
+                    <div class="d-flex">
+                        <a href="https://delight.duksung.ac.kr//ko/program/all/view/1129">
+                            <img src="{% static 'delight/image/gc.png' %}" class="card-img" alt="..." style="border-radius: 20px; max-height: 300px; max-width: 350px; object-fit: cover;">
+                        </a>
+                    </div>
+                </div>
+                <p class="help d-flex justify-content-center mt-3">2023학년도 동계 글로벌챌린저</p>
+            </div>
 
-<script>
+            <!-- 다섯 번째 카드 -->
+            <div class="col-sm-3">
+                <div class="card d-flex" style="border: 0px ; border-radius: 20px;">
+                    <div class="d-flex">
+                        <a href="https://delight.duksung.ac.kr//ko/program/all/view/892">
+                            <img src="{% static 'delight/image/smart.png' %}" class="card-img" alt="..." style="border-radius: 20px; max-height: 300px; max-width: 350px; object-fit: cover;">
+                        </a>
+                    </div>
+                </div>
+                <p class="help d-flex justify-content-center mt-3">스마트폰 과의존 예방 교육</p>
+            </div>
+
+            <!-- 여섯 번째 카드 -->
+            <div class="col-sm-3">
+                <div class="card d-flex" style="border: 0px ; border-radius: 20px;">
+                    <div class="d-flex">
+                        <a href="https://delight.duksung.ac.kr//ko/program/all/view/1098">
+                            <img src="{% static 'delight/image/coun.png' %}" class="card-img" alt="..." style="border-radius: 20px; max-height: 300px; max-width: 350px; object-fit: cover;">
+                        </a>
+                    </div>
+                </div>
+                <p class="help d-flex justify-content-center mt-3">심리상담 프로그램</p>
+            </div>
+        </div>
+        <br><br><br>
+        <script>
     function redirectToDetailPage(pk, namespace) {
         // Django URL 패턴에 맞게 URL을 구성합니다.
         var urlPattern = "";
@@ -439,6 +402,8 @@
         var detailPageUrl = urlPattern.replace("0", pk);
         window.location.href = detailPageUrl;
     }
-</script>
+
+        </script>
 </body>
+{% include 'single_page/footer.html' %}
 </html>

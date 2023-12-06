@@ -5,7 +5,7 @@ from portfolio.models import CUser, Major, Interest
 
 
 # Create your models here.
-#합격수기 포트폴리오
+# 합격수기 포트폴리오
 class PassPortfolio(models.Model):
     image = models.ImageField(upload_to='pass_portfolio/images/%Y/%m/%d/', blank=True)
     title = models.CharField(max_length=30)
@@ -40,7 +40,7 @@ class PassPortfolio(models.Model):
         super().delete(*args, **kwargs)
 
 
-#합격 수기 댓글
+# 합격 수기 댓글
 class PassComment(models.Model):
     pass_portfolio = models.ForeignKey(PassPortfolio, on_delete=models.CASCADE, related_name='pass_portfolio_comments')
     user = models.ForeignKey(CUser, on_delete=models.CASCADE)
@@ -48,4 +48,3 @@ class PassComment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     is_anonymous = models.BooleanField(default=False)
     likes = models.ManyToManyField(CUser, related_name='pass_comment_likes', blank=True)
-
