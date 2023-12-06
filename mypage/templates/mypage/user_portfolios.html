@@ -1,33 +1,263 @@
 <!DOCTYPE html>
-<html lang="en">
+
+{% load static %}
+<html lang="ko">
 <head>
-    <title>내가 작성한 글</title>
+
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Racing+Sans+One&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <title>{% block title %}Portfolio{% endblock %}</title>
+
+    <style>
+        .rounded-basebox {
+
+            width: 210px;
+            height: 400px;
+            border-radius: 20px;
+            border: 2px solid #02343F;
+            background: #F8F8FA;
+            padding: 20px;
+            margin-left: 170px;
+            margin-top: 100px;
+
+
+        }
+
+        .base-title {
+            display: inline-block;
+            width: 210px;
+            margin: 5px;
+            color: #767676;
+            text-align:center;
+            font-size: 15px;
+            font-weight: bold;
+            padding: 20px;
+            font-style: normal;
+            text-decoration: none;
+            font-family: Noto Sans;
+            margin-left: auto;
+            margin-right: auto;
+
+        }
+
+
+
+        .rounded-circle.article-img {
+            width: 150px; /* 최대 너비 */
+            height: 150px; /* 최대 높이 */
+            padding-bottom: 10px;
+            padding-top: 5px;
+            margin-left: 8px;
+            margin-right: auto;
+
+        }
+
+
+
+     .body-back-color{
+    background:  rgba(253, 208, 208, 0.5);
+    height: auto; /* 높이를 자동으로 조절합니다. */
+    max-height: 200vh;
+    width: 844px;
+    margin-left: 300px;
+    margin-right: 300px;
+    border-radius: 20px;
+    }
+    .top{
+    margin-right: 560px;
+    }
+    .fw-back-color1{
+    background-color: #FFFFFF;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 30px;
+    border-radius: 20px;
+    height: 100px;
+    width: 784px;
+    }
+
+    .fw-back-color2{
+    background-color: #FFFFFF;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 30px;
+    border-radius: 20px;
+    width: 784px;
+    }
+
+    #hashtag-style{
+    background-color: #FFFFFF;
+    border: 0;
+    margin-left: 5px;
+    padding: 0;
+    color: #767676;
+    }
+
+    .flex-container{
+    display: flex;
+    }
+
+     .name{
+         position: absolute;
+        top: 380px; /* Adjust the top position as needed */
+        left: 430px;
+        color: #191919;
+         font-size: 30px;
+         font-family: Noto Sans;
+         font-weight: 600;
+         word-wrap: break-word
+     }
+     .button{
+        width: 150px;
+        height: 40px;
+        background-color:  rgba(253, 208, 208);
+        border-radius: 10px;
+        font-family: 'Noto Sans';
+        font-weight: 600;
+        margin-left: 1103px;
+        text-decoration: none;
+        position: absolute;
+        top: 380px;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+
+     }
+
+    </style>
 </head>
-<body>
-{% include 'portfolio/menubar.html' %}
-<br/>
-<h2><b>  내가 작성한 글</b></h2>
-<br/>
-<div class="container">
-        <div class="row">
-            {% for p in user_portfolios %}
-                <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
-                    <div class="card" style="width: 18rem;">
-                        {% if p.head_image %}
-                        <img src="{{ p.head_image.url }}" class="card-img-top" alt="...">
-                        {% else %}
-                        <img src="https://picsum.photos/seed/{{p.id}}/800/200" class="card-img-top" alt="...">
-                        {% endif %}
-                        <div class="card-body">
-                            <h5 class="card-title">{{ p.title }}</h5>
-                            <p class="card-text">{{ p.content | truncatewords:10 }}</p>
-                            <a href="{{ p.get_absolute_url }}" class="btn btn-primary text-light">더보기</a>
-                        </div>
+<body style="background-color: #F1F1F5">
+
+    {% include 'portfolio/menubar.html' %}<br>
+
+
+        <div style="width: 100%; height: 100%; color: #191919; font-size: 28px; font-family: Noto Sans; font-weight: 600; margin-left: 166px;margin-bottom: -62px; margin-top: 50px ">마이페이지</div>
+
+
+        <div class="rounded-basebox">
+                  <div class="row">
+                    <div class="content-section">
+                      <div class="media">
+                        <img class="rounded-circle article-img" src="{{ user.profile.image.url }}">
+                      </div>
+                      <!-- FORM HERE -->
+
                     </div>
+                <br>
+                <a href="{% url 'user:update' username=user.username %}" class="base-title">내 프로필 수정</a>
+                <br>
+                <a href="{% url 'user:detail' username=user.username %}" class="base-title">홈</a>
+                <br>
+                      <a href="{% url 'user:user_portfolios' username=user.username %}" class="base-title">나의 포트폴리오</a>
+        </div><br>
+
+    </div>
+
+
+<br/>
+
+<div class="name">나의 포트폴리오</div>
+    {% if text_data %}
+        <a href="{% url 'portfolio:portfolio_update' pk=text_data.pk %}" class="button" style="border-radius: 10px; margin-left: 1103px; text-decoration: none; display: flex; justify-content: center; align-items: center;">수정하기</a>
+    {% else %}
+        <a href="{% url 'portfolio:your_combined_view' %}" class="button" style="border-radius: 10px; margin-left: 1103px; text-decoration: none; display: flex; justify-content: center; align-items: center;">작성하기</a>
+    {% endif %}
+
+<!-- 필터링 박스 -->
+<div class="container mb-4" style="border-radius: 20px;height: 200px; margin-left:420px; margin-top: -320px; width: 55%;  background: white; border-radius: 20px; border: 4px solid rgba(253, 208, 208);">
+
+
+        <div class="col-lg-8">
+            <div class="row">
+                {% if text_data %}
+                <!-- 상태 선택 -->
+
+              <!-- 학적 상태 선택 라디오 버튼 -->
+                <div class="status-radio-buttons" style="padding: 20px;">
+                    <label class="form-label" for="public-status" style="font-family: Noto Sans; font-weight: 600;">학적 상태</label>
+                    <br>
+                    {% for status1 in text_data.statuss %}
+                        <div class="form-check form-check-inline mb-6" style="margin-left: -20px;">
+                            <input type="radio" id="{{ status1.status.id }}" name="status" value="{{ status1.status }}" {% if status1.status == text_data.author.status.status %}checked{% endif %} disabled>
+                            <label class="form-check-label" for="{{ status1.status.id }}">{{ status1.status }}</label>
+                        </div>
+                    {% endfor %}
+                    <br><br>
                 </div>
-            {% endfor %}
+
+
+
+
+                    <!-- 관심 직무 선택 체크 박스 -->
+                <div class="interest" style="padding: 20px; margin-top: -50px;">
+                    <label for="interest-field" style="font-family: Noto Sans; font-weight: 600;margin-bottom: 10px;">관심 직무:</label><br>
+
+                    {% for interest1 in text_data.interests %}
+                        <div class="form-check form-check-inline" style="margin-right: 10px; margin-bottom: 10px;">
+                            <input type="checkbox" class="form-check-input" name="interest1" id="{{ interest1.slug }}"
+                                value="{{ interest1.interest }}" {% if interest1.interest in text_data.interest_field %}checked{% endif %} disabled>
+                            <label class="form-check-label" for="{{ interest1.slug }}">{{ interest1.interest }}</label>
+                        </div>
+
+                        {% if forloop.counter|divisibleby:4 and not forloop.last %}
+                            <br> <!-- 매 4번째 체크 박스마다 줄 바꿈 -->
+                        {% endif %}
+
+                    {% endfor %}
+
+                    <br><br>
+                </div>
+
+
+                <!-- 전공, 학번 -->
+                <div class="num" style="margin-left: 400px; margin-top: -220px">
+                     <label style="margin-bottom: 10px; font-family: Noto Sans; font-weight: 600;">전공 | 학번</label><br>
+                     <h6>{{ text_data.department }} | {{user.number}}</h6>
+                </div>
+            </div>
         </div>
 </div>
+
+
+
+<article class="flex-column align-items-center d-flex" style="margin-left: 420px; width: 55%;">
+    <div class="body-back-color">
+        <div class="fw-back-color1">
+            <p class="fw-bolder" style="margin-left: 20px; font-size: 30px;">{{ text_data.title | safe }}</p>
+            <!-- Post meta content-->
+            <div style="display: flex; justify-content: space-between;">
+                <!-- 해시태그-->
+                <div style="margin-left: 15px;">
+                    <p>
+                        {% for hashtag in text_data.hashtags %}
+                        <button onclick="handleHashtagClick('{{ hashtag }}')" id="hashtag-style">#{{ hashtag }}</button>
+                        {% endfor %}
+                    </p>
+                </div>
+                <!-- 게시한 시간-->
+                <div class="text-muted fst-italic" style="margin-right: 20px;">{{text_data.created_at}}에 게시됨</div>
+            </div>
+        </div>
+        <!-- 작성 내용-->
+        <div class="fw-back-color2" style="height: 500px;">
+            <section class="mb-5 p-5" style="overflow: auto; height: 500px; ">
+                <p class="fs-5 mb-4" style="{{ text_data.styles }}">{{ text_data.content | safe }}</p>
+            </section>
+            {% else %}
+            <section class="mb-5 p-5">
+                <p>작성하신 포트폴리오가 없습니다.</p>
+            </section>
+            {% endif %}
+        </div>
+    </div>
+</article>
+
+
+
+
 <br/><br/>
+<br>
 </body>
 </html>

@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
+from django.urls import reverse
 from django.utils import timezone
 from portfolio.models import Interest, Major, CUser
 from model_utils.fields import MonitorField
@@ -23,12 +24,13 @@ class Recruit(models.Model):
     deadline = models.DateTimeField()
     d_day = models.IntegerField(default=0)
     deadline_changed = MonitorField(monitor='deadline')
+    like_users = models.ManyToManyField(CUser, blank=True, related_name='like_recruit')
 
     def __str__(self):
         return f'☆{self.pk}☆{self.title} :: {self.author}'
 
     def get_absolute_url(self):
-            return f'/recruit/{self.pk}/'
+        return reverse('recruit:recruit_detail', kwargs={'pk': self.pk})
 
     def update(self, new_title, new_content):
         self.title = new_title

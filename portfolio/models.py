@@ -52,7 +52,6 @@ class College(models.Model):
 
 #전공
 class Major(models.Model):
-    objects = None
     name = models.CharField(max_length=30)
     slug = models.SlugField(max_length=50, unique=False, allow_unicode=True)
     college = models.ForeignKey(College, on_delete=models.CASCADE)
@@ -75,13 +74,14 @@ class CUser(AbstractUser):
 
     groups = models.ManyToManyField(Group, related_name='cuser_groups', blank=True)
     user_permissions = models.ManyToManyField(Permission, related_name='cuser_user_permissions', blank=True)
-    profile_image = models.ImageField(upload_to='profile_images/', default='profile_images/default.jpg')
 
     def get_absolute_url(self):
         return reverse('user:user_detail', args=[self.username])
 
     def __str__(self):
         return self.username
+
+
 #포트폴리오
 class Portfolio(models.Model):
     image = models.ImageField(upload_to='portfolio/images/%Y/%m/%d/', blank=True)
@@ -99,11 +99,13 @@ class Portfolio(models.Model):
     author = models.ForeignKey('portfolio.CUser', on_delete=models.CASCADE, related_name='portfolio_entries')
     like_users = models.ManyToManyField(CUser, blank=True, related_name='like_portfolio')
 
+    def get_absolute_url(self):
+        return reverse('portfolio:portfolio_detail', kwargs={'pk': self.pk})
     def __str__(self):
         return f'☆{self.pk}☆{self.title} :: {self.author}'
 
-    def get_absolute_url(self):
-            return f'/portfolio/{self.pk}/'
+    # def get_absolute_url(self):
+    #         return f'/portfolio/{self.pk}/'
 
     def update(self, new_title, new_content):
         self.title = new_title
@@ -124,3 +126,10 @@ class Comment(models.Model):
     is_anonymous = models.BooleanField(default=False)
     likes = models.ManyToManyField(CUser, related_name='comment_likes', blank=True)
 
+#프로필 사진
+class Profile(models.Model):
+    user = models.OneToOneField(CUser, on_delete=models.CASCADE)
+    image = models.ImageField(default='default.jpg', upload_to='profile_pics')
+
+    def __str__(self):
+        return f'{self.user.username} Profile'

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -6,38 +7,153 @@
     <title>Search Results</title>
     <!-- Bootstrap CSS link (Add Bootstrap if not already added) -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+    .card-img-rounded{
+    margin-top: 10px;
+    width: 80px;
+    height: 80px;
+    }
+    .row{
+    width: 1200px;
+    }
+    button.hashtag {
+        box-sizing: border-box;
+        height: 30px;
+        border: 2px solid #02343F;
+        border-radius: 20px;
+        text-decoration: none;
+        margin-bottom: 10px;
+        background-color: #FFFFFF;
+        color: #767676; /* 글자색 추가 */
+        margin: 5px; /* 여백 추가 */
+    }
+    .hashtag{
+    margin-left: 90px;
+    }
+    #back{
+    background-color: #D9D9D9;
+    color: #666666;
+    border-color:#969696;
+    font-weight: bold;
+    border-radius: 10px;
+    padding:10px;
+    height: 40px;
+    margin-left: 730px;
+    margin-top:50px;
+    }
+    #none-back{
+    background-color: #D9D9D9;
+    color: #666666;
+    border-color:#969696;
+    font-weight: bold;
+    font-size: 30px;
+    border-radius: 10px;
+    padding-left:16px;
+    margin-left: 700px;
+    margin-top:20px;
+    }
+</style>
 </head>
 <body>
-
+<div>
     {% include 'portfolio/menubar.html' %}
     {% if results %}
-    <p>Number of results: {{ results.count }}</p>
-    <div class="row">
-        {% for portfolio in results %}
-            <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
-                <div class="card" style="width: 18rem;">
-                    {% if portfolio.head_image %}
-                        <img src="{{ portfolio.head_image.url }}" class="card-img-top" alt="...">
-                    {% else %}
-                        <img src="https://picsum.photos/seed/{{portfolio.id}}/800/200" class="card-img-top" alt="...">
-                    {% endif %}
-                    <div class="card-body">
-                        <h5 class="card-title">{{ portfolio.title }}</h5>
-                        <p class="card-text">{{ portfolio.content | truncatewords:10 }}</p>
-                        <a href="{{ portfolio.get_absolute_url }}" class="btn btn-primary text-light">더보기</a>
+    <div class="container justify-content-center">
+        <div class="d-flex">
+            <p style="margin-top:50px; margin-bottom:40px; margin-left: 75px; font-size:25px; font-weight: bold; font-family: 'Noto Sans';">검색된 포트폴리오 입니다!  {{ results.count }}</p>
+            <a href="{% url 'portfolio:portfolio_list' %}" class="btn btn-primary" id="back">뒤로가기</a>
+        </div>
+        <div class="container" style="width:1200px;">
+            <div class="row">
+                {% for portfolio in results %}
+                <div class="col-sm-12 col-md-4 col-sm-4 mb-5" >
+                    <div class="card " style="border: 2px solid #02343F; border-radius: 20px; height: 220px; width: 350px; padding:10px; " onclick="redirectToDetailPage({{portfolio.pk}}, 'portfolio')">
+                        <div class="d-flex" style="margin-left: 20px; margin-top: 10px;">
+                            {% if portfolio.anonymous %}
+                            <img src="{{ portfolio.author.profile.image.url }}" class="card-img-rounded rounded-pill ml-2" alt="..." style="width:80px; height:80px">
+                            {% else %}
+                            <img src="{% static 'portfolio/image/duksaeheart.png' %}" class="card-img-rounded rounded-pill ml-2" alt="..." style="width:80px; height:80px">
+                            {% endif %}
+                            <div class="user d-flex flex-column" style="margin-left: 30px; margin-top: 20px;">
+                                <h5 class="card-title">{% if portfolio.anonymous %} {{portfolio.author}}님 {% else %} 익명의 덕우님{% endif %}</h5>
+                                <div style="color: #767676;">{{ portfolio.department }}</div>
+                            </div>
+                        </div>
+                        <div class="hashtag" style="">
+                            <p class="card-text" id="hashtags-container_{{ portfolio.id }}"></p>
+                            <script>
+                             var hashtags = {{ portfolio.hashtags|safe }};
+                             var hashtagsContainer = document.getElementById('hashtags-container_{{ portfolio.id }}');
+                             console.log("hashtags:", hashtags);
+                             console.log("hashtagsContainer:", hashtagsContainer);
+
+                             hashtags.forEach(function(hashtag, index) {
+                             var button = document.createElement('button');
+                             button.textContent = '#' + hashtag;
+                             button.onclick = function() {
+                             handleHashtagClick(hashtag);
+                             };
+
+                             button.classList.add('hashtag');
+
+                             hashtagsContainer.appendChild(button);
+
+                             // 한 줄에 두 개의 버튼만 나오도록 줄 바꿈을 추가합니다.
+                             if ((index + 1) % 2 === 0) {
+                             var lineBreak = document.createElement('br');
+                             hashtagsContainer.appendChild(lineBreak);
+                             }
+                             });</script>
+                        </div>
                     </div>
                 </div>
+                {% endfor %}
             </div>
-        {% endfor %}
+            {% else %}
+            <p class="d-flex justify-content-center" style="margin-top:200px; font-size: 30px; font-weight: bold; font-family: 'Noto Sans';">선택하신 조건에 맞는 포트폴리오가 없습니다!</p>
+            <a href="{% url 'portfolio:portfolio_list' %}" class="btn btn-primary" id="none-back">뒤로가기</a>
+            {% endif %}
+        </div>
     </div>
-    {% else %}
-    <p>No results found.</p>
-    {% endif %}
+</div>
+<!--페이지네이션-->
+{% if results.has_other_pages %}
+<div class="pagination justify-content-center mt-3 mb-5">
+    <li class="page-item d-flex">
+        {% if results.has_previous %}
+        <a class="page-link" href="?page={{results.previous_page_number}}" style="border:0; margin-bottom: 20px;" aria-label="Previous">&laquo;</a>
+        {% endif %}
+        <ul class="pagination justify-content-center ">
+            {% for page_num in results.paginator.page_range %}
+            <li class="page-item {% if results.number == page_num %}active{% endif %}">
+                <a class="page-link" style="border: 0;" href="?page={{ page_num }}">{{ page_num }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+        {% if results.has_next %}
+        <a class="page-link" href="?page={{results.next_page_number}}" style="border:0; margin-bottom: 20px;" aria-label="Next">&raquo;</a>
+        {% endif %}
+    </li>
+</div>
+{% endif %}
 
     <!-- Bootstrap JS and Popper.js (Add Bootstrap JS and Popper.js if needed) -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UoIkCzo04E7L3eA/v/Dpz6nzBDg2P6Q06NJYPYw/EAgA0GYYoZVpFVZX81Mz9FE" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script>
 
+function redirectToDetailPage(pk, namespace) {
+        // Django URL 패턴에 맞게 URL을 구성합니다.
+        var urlPattern = "";
+
+        if (namespace === 'portfolio') {
+            urlPattern = "{% url 'portfolio:portfolio_detail' pk=0 %}";
+        }
+
+        var detailPageUrl = urlPattern.replace("0", pk);
+        window.location.href = detailPageUrl;
+    }
+</script>
 </body>
 </html>

@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="{% static 'recruit/writec.css' %}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-
         4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap">
+
     <title>recruit</title>
      <style>
          #image-preview-placeholder {
@@ -22,66 +24,131 @@
             overflow: hidden;
         }
 
-        #image-preview {
-            width: 150px;
-            height: 200px;
-            display: none;
-            object-fit: cover;
-        }
+        #people {
+
+        width: 270px;
+        height: 33px;
+        border-radius: 10px;
+        border: 2px #02343F solid;
+
+}
     </style>
 </head>
 <body>
  {% include 'portfolio/menubar.html' %}
 
-<div class="row">
-    <div class="container">
+ <div class="container">
+        <div class="row" style="margin-top: 40px; font-family: 'Noto Sans KR', sans-serif;">
+             <div style="width: 100%; height: 100%; color: #191919; font-size: 28px; font-family: Noto Sans; font-weight: 600; margin-left: 100px; margin-bottom: 10px;word-wrap: break-word">모집글 작성</div>
+                <div style="color: #767676; font-size: 20px; font-family: Noto Sans; font-weight: 500; margin-left: 100px;">내가 참여하고 싶은 활동의 모집글을 작성할 수 있어요!</div>
         <form action="{% url 'recruit:save_text' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
 
-<!-- 학적 상태 선택 라디오 버튼 -->
-<label for="public-status">학적 상태:</label><br>
-<input type="radio" id="public-status" name="status" value="public"> 공개
-<input type="radio" id="private-status" name="status" value="private"> 비공개
-<br><br>
 
-<!-- 관심 직무 선택 체크 박스 -->
-<label for="interest-field">모집 분야:</label><br>
-{% for interest in interests.all %}
-    <input type="checkbox" id="interest-field-{{ interest.id }}" name="interestField" value="{{ interest.id }}"> {{ interest.interest }}
-{% endfor %}
-<br><br>
 
-<label for="people">모집인원:</label>
-    <input type="number" id="people" name="people" placeholder="Enter the number of people" required>
-    <br><br>
 
-<label for="deadline">마감기한: </label>
-    <input type="date" id="deadline" name="deadline" placeholder="Enter the deadline" required>
-    <br><br>
 
-<label for="college">대학:</label>
-<select id="college" name="college">
-    <option value="default">대학 선택</option>
-    {% for college in college %}
-    <option value="{{college.name}}">{{college.name}}</option>
-    {% endfor %}
-</select>
+ <div class="container mb-4 rounded p-2" style=" margin-top: 130px; height: 200px; width: 70%; background-color:#DEE8F76B">
 
-<label for="major">전공:</label>
-<select id="major" name="major" disabled>
-    <!-- 이 부분은 JavaScript로 동적으로 업데이트됩니다 -->
-</select>
-<br><br>
-    </form>
-            <!-- 제목 입력란 추가 -->
-            <input type="text" id="title-input" name="title" placeholder="제목" style="margin-top: 10px;">
-<br><br>
 
-    <div class="col-3">
-
+        <!-- 학적 상태 선택 라디오 버튼 -->
+         <div class="status-radio-buttons" style="padding:10px;">
+        <label for="public-status" class="form-label">학적 상태</label>
+        <br>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" id="public-status" name="status" value="public">
+            <label class="form-check-label" for="public-status">공개</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" id="private-status" name="status" value="private">
+            <label class="form-check-label" for="private-status">비공개</label>
+        </div>
+        <br><br>
     </div>
-    <div class="col-6" style="background-color: grey;">
-        <div class="container">
+
+<!-- 대학과 전공 -->
+    <div class="container mt-4" style="margin-left: 195px;">
+        <div class="row mt-4">
+            <div class="col-md-6" style="margin-top: -123px;">
+                <div class="dropdown">
+                    <label class="form-label" for="college">대학</label>
+                    <select class="form-select form-select-sm" id="college" name="college" style="width: 100px;border-radius: 10px; border: 2px #02343F solid;">
+                        <option value="default">대학 선택</option>
+                        {% for college in college %}
+                        <option value="{{college.name}}">{{college.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="dropdown" style="margin-left: -289px; margin-top: -123px;">
+                    <label class="form-label" for="major">전공</label>
+                    <select class="form-select form-select-sm" id="major" name="major" style="width: 160px;border-radius: 10px; border: 2px #02343F solid;">
+                        <option>전공 선택</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 관심 직무 선택 체크 박스 -->
+    <div class="interest" style="padding-left:10px; margin-top: -10px;">
+        <label for="interest-field" style="font-family: Noto Sans; font-weight: 400; margin-bottom: 10px;">해당 분야</label><br>
+        {% for interest in interests.all %}
+        <input type="checkbox" id="interest-field-{{ interest.id }}" name="interestField" value="{{ interest.id }}"> {{ interest.interest }}
+        {% endfor %}
+        <br><br>
+    </div>
+
+  <!-- 모집인원과 마감기한 -->
+<div class="container" >
+    <div class="row">
+
+
+    <div class="row justify-content-end mt-4">
+    <div class="col" style="margin-left: 584px; margin-top: -220px;">
+        <label for="people" style="margin-bottom: 9px;">모집인원</label>
+        <input type="number" id="people" name="people" class="form-control" placeholder="인원을 입력하세요." required>
+    </div>
+</div>
+        <div class="col-md-4" style="margin-left: 573px; margin-top: -112px;">
+    <label for="deadline"style=" margin-bottom:5px;">마감기한</label>
+    <div class="input-group date">
+        <input type="date" style="height: 37px;border-radius: 10px; border: 2px #02343F solid;" class="form-control" id="deadline" name="deadline" placeholder="YYYY-MM-DD" required>
+    </div>
+    </div>
+
+</div>
+    <br><br>
+
+
+
+</div>
+
+
+ </div>
+            <!-- 제목 입력란 추가 -->
+<div class="container mb-4 rounded p-3" style="width: 70%; background-color: #DEE8F76B">
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+
+                <input type="text" class="form-control" id="title-input" name="title" placeholder="제목을 입력하세요!" style="border-radius: 10px; border: 2px #02343F solid;">
+
+        </div>
+    </div>
+</div>
+</form>
+</div>
+</div>
+
+
+
+    <div class="col-3"></div>
+       <!--텍스트 입력 전체-->
+    <div class="col-6 mx-auto"  style="width: 60%; height: 100%;"  >
+        <div class="container" style="background-color: #F8F8FA; border-radius: 20px; border: 6px rgba(222, 232, 247, 0.42) solid">
+            <div class="card me-auto" style="padding: 15px; border-radius: 10px; width: 97%; height: 60%; margin-left: 15px; margin-top: 40px;">
             <div class="options">
                 <button id="bold" class="option-button format">
                 <i class="fa-solid fa-bold"></i>
@@ -155,20 +222,22 @@
                 IMG
             </button>
             <input id="img-selector" type="file" accept="image/*"/>
-                <label for="file">파일 업로드:</label>
-                <input type="file" id="file" name="file" accept=".pdf, .doc, .docx, .txt, .hwp">
-            <br><br>
+            <label for="file">파일 업로드:</label>
+            <input type="file" id="file" name="file" accept=".pdf, .doc, .docx, .txt, .hwp">
             </div>
-            <div class="container">
-    <div id="text-input" contenteditable="true" style = "overflow-y: auto; max-height: 400px;"></div>
-                <!-- 이미지를 선택하는 파일 입력란 추가 <input type="file" id="image-input" accept="image/*">-->
-    <button onclick="saveText()">text</button>
-</div>
-</div>
-</div>
-</div>
+            </div>
 
-</div>
+            <div class="container" style="padding-bottom: 90px; margin-bottom: 30px;">
+                <!--텍스트 입력창-->
+                <div id="text-input" contenteditable="true" style = " overflow: auto; height: 500px; margin-top: 50px; border-radius: 10px;  background: white"></div>
+                <!-- 이미지를 선택하는 파일 입력란 추가 <input type="file" id="image-input" accept="image/*">-->
+
+            </div>
+    </div>
+    </div>
+
+        <button onclick="saveText()" style="width: 100px;  height: 38px;background:#D9D9D999; border-radius: 10px; font-family: Noto Sans; font-weight: 600;margin-top: 40px; margin-left: 1108px; word-wrap: break-word;">등록하기</button>
+
 <script>
 // 전역 스코프에 selectedMajor 변수 추가
 var selectedMajor;
@@ -227,9 +296,9 @@ function saveText() {
 
     var selectedDeadline = document.getElementById('deadline').value;
     console.log('selected Deadline:', selectedDeadline);
-
     var selectedFile = document.getElementById('file').files[0];
     console.log('Selected File:', selectedFile);
+
 
     var statusElements = document.getElementsByName('status');
     var selectedStatus = "";
@@ -269,6 +338,10 @@ function saveText() {
         backgroundColor: styles.backgroundColor,
         fontSize: styles.fontSize,
     }));
+    // Check if a file is selected before appending it to formData
+    if (selectedFile) {
+        formData.append('file', selectedFile);
+    }
     formData.append('status', selectedStatus);
     // selectedFields 배열의 각 값을 개별적으로 추가
     selectedFields.forEach(field => {
@@ -279,9 +352,6 @@ function saveText() {
     formData.append('deadline', selectedDeadline);
 
     // Check if a file is selected before appending it to formData
-    if (selectedFile) {
-        formData.append('file', selectedFile);
-    }
 
     formData.append('department', selectedMajor);
 
@@ -301,7 +371,6 @@ function saveText() {
         console.log('Server Response:', data);  // 서버 응답을 콘솔에 출력
         if (data && data.status === 'success' && data.pk) {
             console.log('Text saved successfully!');
-            alert('Text saved successfully!');
             console.log('Redirecting to recruit detail page');
             window.location.href = '/recruit/' + data.pk + '/';
         } else {

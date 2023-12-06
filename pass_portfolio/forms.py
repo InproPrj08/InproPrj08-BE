@@ -6,13 +6,14 @@ from portfolio.models import Interest
 
 class PassCommentForm(forms.ModelForm):
     text = forms.CharField(
-        widget=forms.Textarea(attrs={'rows': 1, 'class': 'form-control', 'placeholder': '댓글을 입력하세요!'}),
+        widget=forms.TextInput(
+            attrs={'class': 'form-control', 'placeholder': '댓글을 입력해주세요!', 'aria-label': 'default input example',
+                   'id': 'my-text-input'}),
     )
     is_anonymous = forms.BooleanField(required=False)
     class Meta:
         model = PassComment
         fields = ['text', 'is_anonymous']
-
 
 class PassPortfolioForm(forms.ModelForm):
     interest_field = forms.ModelMultipleChoiceField(
@@ -22,4 +23,4 @@ class PassPortfolioForm(forms.ModelForm):
     )
     class Meta:
         model = PassPortfolio
-        fields = ['title', 'styles', 'hashtags','image','content','interest_field','department','company_name', 'company_info']
+        fields = ['title', 'styles', 'hashtags','image','content','interest_field','department','company_name', 'anonymous']

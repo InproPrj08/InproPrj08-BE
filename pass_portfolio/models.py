@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 from portfolio.models import CUser, Major, Interest
 
@@ -17,6 +18,7 @@ class PassPortfolio(models.Model):
     department = models.ForeignKey(Major, on_delete=models.SET_NULL, null=True, blank=True)
     company_name = models.CharField(max_length=50)
     company_info = models.TextField()
+    anonymous = models.BooleanField(default=False)
 
     author = models.ForeignKey('portfolio.CUser', on_delete=models.CASCADE, related_name='pass_portfolio_entries')
     like_users = models.ManyToManyField(CUser, blank=True, related_name='pass_like_portfolio')
@@ -25,7 +27,7 @@ class PassPortfolio(models.Model):
         return f'☆{self.pk}☆{self.title} :: {self.author}'
 
     def get_absolute_url(self):
-            return f'/pass_portfolio/{self.pk}/'
+        return reverse('pass_portfolio:pass_portfolio_detail', kwargs={'pk': self.pk})
 
     def update(self, new_title, new_content):
         self.title = new_title
@@ -46,3 +48,4 @@ class PassComment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     is_anonymous = models.BooleanField(default=False)
     likes = models.ManyToManyField(CUser, related_name='pass_comment_likes', blank=True)
+

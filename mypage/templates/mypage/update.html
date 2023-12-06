@@ -1,23 +1,129 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <title>회원정보 수정</title>
-    <!-- 여기에 필요한 스타일 시트 등을 추가하세요 -->
-</head>
-<body>
+<!-- update.html -->
 
-
-    {% include 'portfolio/menubar.html' %}
-    <div class="container">
-        <h1>회원정보 수정</h1>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">수정</button>
-        </form>
-
+{% extends 'mypage/base.html' %}
+{% block content %}
+  <div class="container mt-5">
+    <h2 class="mb-4">회원 정보 수정</h2>
+    <form method="POST" action="{% url 'user:update' username=user.username %}">
+      {% csrf_token %}
+      <div class="form-group row">
+        <label for="username" class="col-sm-2 col-form-label">User Name</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="password" class="col-sm-2 col-form-label">새로운 비밀번호</label>
+        <div class="col-sm-10">
+          <input type="password" class="form-control" id="password" name="password" placeholder="새로운 비밀번호를 입력하세요">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="confirm" class="col-sm-2 col-form-label">비밀번호 확인</label>
+        <div class="col-sm-10">
+          <input type="password" class="form-control" id="confirm" name="confirm" placeholder="비밀번호를 다시 입력하세요">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="number" class="col-sm-2 col-form-label">학번</label>
+        <div class="col-sm-10">
+          <select name="number" id="number" required>
+            <option value="" disabled selected>학번 선택</option>
+            {% for n in numbers %}
+              <option value="{{ n.number }}">{{ n.number }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="college" class="col-sm-2 col-form-label">대학</label>
+        <div class="col-sm-10">
+          <select id="college" name="college">
+            <option value="" disabled selected>대학 선택</option>
+            {% for college in colleges %}
+              <option value="{{ college.name }}">{{ college.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="major" class="col-sm-2 col-form-label">전공</label>
+        <div class="col-sm-10">
+          <select id="major" name="major" disabled>
+            <!-- 이 부분은 JavaScript로 동적으로 업데이트됩니다 -->
+          </select>
+        </div>
+      </div>
+    <div class="form-group row">
+  <label for="interests" class="col-sm-2 col-form-label">관심 직무</label>
+  <div class="col-sm-10">
+    <div class="row">
+      {% for interest in interests %}
+        <div class="col-md-1">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="interests-{{ interest.name }}-{{ interest.id }}" name="interests" value="{{ interest.id }}">
+            <label class="form-check-label" for="interests-{{ interest.name }}-{{ interest.id }}">{{ interest.interest }}</label>
+          </div>
+        </div>
+      {% endfor %}
     </div>
+  </div>
+</div>
 
-</body>
-</html>
+      <div class="form-group row">
+        <label for="status" class="col-sm-2 col-form-label">학적 상태</label>
+        <div class="col-sm-10">
+          {% for status in status %}
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" id="status-{{ status.status }}" name="status" value="{{ status.status }}">
+              <label class="form-check-label" for="status-{{ status.status }}">{{ status.status }}</label>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-sm-10 offset-sm-2">
+          <button type="submit" class="btn btn-primary">수정 완료</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('college').addEventListener('change', function () {
+      var selectedCollege = this.value;
+      var majorDropdown = document.getElementById('major');
+
+      // 전체 전공 옵션을 비활성화
+      majorDropdown.innerHTML = '<option value="" selected disabled hidden>전공을 선택하세요</option>';
+
+      // 대학에 따른 전공 옵션을 추가
+      switch (selectedCollege) {
+        case '과기':
+          {% for major in sm %}
+            majorDropdown.innerHTML += '<option value="{{ major.name }}">{{ major.name }}</option>';
+          {% endfor %}
+          break;
+        case '약학':
+          {% for major in pm %}
+            majorDropdown.innerHTML += '<option value="{{ major.name }}">{{ major.name }}</option>';
+          {% endfor %}
+          break;
+        case '아앤디':
+          {% for major in am %}
+            majorDropdown.innerHTML += '<option value="{{ major.name }}">{{ major.name }}</option>';
+          {% endfor %}
+          break;
+        case '글융':
+          {% for major in gm %}
+            majorDropdown.innerHTML += '<option value="{{ major.name }}">{{ major.name }}</option>';
+          {% endfor %}
+          break;
+      }
+
+      // 선택된 대학에 따라 전공 드롭다운 활성화
+      majorDropdown.disabled = false;
+    });
+  </script>
+{% endblock %}

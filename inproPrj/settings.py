@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-s#idk09lqgji14puo4qj*=p999p8qas+inptq^cudunewe)g2k
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,13 +37,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'portfolio',
     'recruit',
-    'filter',
     'mypage',
     'widget_tweaks',
     'pass_portfolio',
-
+    'single_page',
+    'delight',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -51,10 +53,18 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.sites.middleware.CurrentSiteMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+GRAPH_MODELS = {
+    'all_applications' : True,
+    'group_models' : True,
+}
+
+SITE_ID = 1
 
 ROOT_URLCONF = 'inproPrj.urls'
 
@@ -126,6 +136,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, '_media')
 

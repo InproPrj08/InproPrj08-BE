@@ -5,7 +5,9 @@ from .models import Comment, Portfolio, Interest
 
 class CommentForm(forms.ModelForm):
     text = forms.CharField(
-        widget=forms.Textarea(attrs={'rows': 1, 'class': 'form-control', 'placeholder': '댓글을 입력하세요!'}),
+        widget=forms.TextInput(
+            attrs={'class': 'form-control', 'placeholder': '댓글을 입력해주세요!', 'aria-label': 'default input example',
+                   'id': 'my-text-input'}),
     )
     is_anonymous = forms.BooleanField(required=False)
     class Meta:
