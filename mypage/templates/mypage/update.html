@@ -10,7 +10,6 @@
     <title>{% block title %}Portfolio{% endblock %}</title>
     <style>
         .rounded-basebox {
-
             width: 210px;
             height: 450px;
             border-radius: 20px;
@@ -19,8 +18,6 @@
             padding: 45px;
             margin-left: 170px;
             margin-top: 100px;
-
-
         }
 
         .base-title {
@@ -28,7 +25,7 @@
             width: 210px;
             margin: 5px;
             color: #767676;
-            text-align:center;
+            text-align: center;
             font-size: 15px;
             font-weight: bold;
             padding: 20px;
@@ -37,7 +34,6 @@
             font-family: Noto Sans;
             margin-left: auto;
             margin-right: auto;
-
         }
 
         .rounded-circle.article-img {
@@ -47,7 +43,6 @@
             padding-top: 5px;
             margin-left: -18px;
             margin-right: auto;
-
         }
     </style>
 </head>
@@ -57,9 +52,13 @@
 
 
 <div style="width: 100%; height: 100%; color: #191919; font-size: 28px; font-family: Noto Sans; font-weight: 600; margin-left: 150px;margin-bottom: -67px; margin-top: 50px ">
-    {{ request.user.username }}님의 마이페이지
+    {{ request.user.username }}님의 수정페이지
 </div>
-<div class="rounded-basebox">
+
+<div class="container-fluid d-flex align-items-center">
+    <div class="row col-md-4">
+        <div class="col-md-6">
+            <div class="rounded-basebox">
     <div class="row">
         <div class="content-section">
             <div class="media">
@@ -91,12 +90,14 @@
     <br>
 
 </div>
-<div class="container mt-5">
-    <h2 class="mb-4">회원 정보 수정</h2>
+            </div>
+        </div>
+    <div class="col-md-6">
+<div class="container mt-5 pt-5">
     <form method="POST" action="{% url 'user:update' username=user.username %}">
         {% csrf_token %}
         <div class="form-group row">
-            <label for="username" class="col-sm-2 col-form-label">User Name</label>
+            <label for="username" class="col-sm-2 col-form-label">ID</label>
             <div class="col-sm-10">
                 <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}">
             </div>
@@ -114,74 +115,79 @@
             </div>
         </div>
         <div class="form-group row">
-            <label for="number" class="col-sm-2 col-form-label">학번</label>
-            <div class="col-sm-10">
-                <select name="number" id="number" required>
-                    <option value="" disabled selected>학번 선택</option>
-                    {% for n in numbers %}
-                    <option value="{{ n.number }}">{{ n.number }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-        </div>
-        <div class="form-group row">
-            <label for="college" class="col-sm-2 col-form-label">대학</label>
-            <div class="col-sm-10">
-                <select id="college" name="college">
-                    <option value="" disabled selected>대학 선택</option>
-                    {% for college in colleges %}
-                    <option value="{{ college.name }}">{{ college.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-        </div>
-        <div class="form-group row">
-            <label for="major" class="col-sm-2 col-form-label">전공</label>
-            <div class="col-sm-10">
-                <select id="major" name="major" disabled>
-                    <!-- 이 부분은 JavaScript로 동적으로 업데이트됩니다 -->
-                </select>
-            </div>
-        </div>
-        <div class="form-group row">
-            <label for="interests" class="col-sm-2 col-form-label">관심 직무</label>
-            <div class="col-sm-10">
-                <div class="row">
-                    {% for interest in interests %}
-                    <div class="col-md-1">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox"
-                                   id="interests-{{ interest.name }}-{{ interest.id }}" name="interests"
-                                   value="{{ interest.id }}">
-                            <label class="form-check-label" for="interests-{{ interest.name }}-{{ interest.id }}">{{ interest.interest }}</label>
-                        </div>
-                    </div>
-                    {% endfor %}
+    <label for="number" class="col-sm-2 col-form-label">학번</label>
+    <div class="col-sm-10">
+        <select name="number" id="number" required>
+            <option value="" disabled selected>학번 선택</option>
+            {% for n in numbers %}
+            <option value="{{ n.number }}" {% if n.number == user.number.number %}selected{% endif %}>{{ n.number }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+<div class="form-group row">
+    <label for="college" class="col-sm-2 col-form-label">대학</label>
+    <div class="col-sm-10">
+        <select id="college" name="college">
+            <option value="" disabled selected>대학 선택</option>
+            {% for college in colleges %}
+            <option value="{{ college.name }}" {% if college.name == user.college.name %}selected{% endif %}>{{ college.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+<div class="form-group row">
+    <label for="major" class="col-sm-2 col-form-label">전공</label>
+    <div class="col-sm-10">
+        <select id="major" name="major">
+            <option value="" disabled selected>전공 선택</option>
+            {% for major in user.college.major_set.all %}
+                <option value="{{ major.name }}" {% if major == user.major %}selected{% endif %}>{{ major.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+<div class="form-group row">
+    <label for="interests" class="col-sm-2 col-form-label">관심 직무</label>
+    <div class="col-sm-10">
+        <div class="d-flex gap-3">
+            {% for interest in interests %}
+            <div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox"
+                           id="interests-{{ interest.name }}-{{ interest.id }}" name="interests"
+                           value="{{ interest.id }}" {% if interest in user.interests.all %}checked{% endif %}>
+                    <label class="form-check-label" for="interests-{{ interest.name }}-{{ interest.id }}">{{ interest.interest }}</label>
                 </div>
             </div>
+            {% endfor %}
         </div>
+    </div>
+</div>
+<div class="form-group row">
+    <label for="status" class="col-sm-2 col-form-label">학적 상태</label>
+    <div class="col-sm-10">
+        {% for stat in status %}
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" id="status-{{ stat.status }}" name="status"
+                   value="{{ stat.status }}" {% if stat.status == user.status.status %}checked{% endif %}>
+            <label class="form-check-label" for="status-{{ stat.status }}">{{ stat.status }}</label>
+        </div>
+        {% endfor %}
+    </div>
+</div>
 
         <div class="form-group row">
-            <label for="status" class="col-sm-2 col-form-label">학적 상태</label>
-            <div class="col-sm-10">
-                {% for status in status %}
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="status-{{ status.status }}" name="status"
-                           value="{{ status.status }}">
-                    <label class="form-check-label" for="status-{{ status.status }}">{{ status.status }}</label>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <div class="col-sm-10 offset-sm-2">
+            <div class="col-sm-10 offset-sm-2 d-flex justify-content-end">
                 <button type="submit" class="btn btn-primary">수정 완료</button>
             </div>
         </div>
     </form>
+    <br><br>
 </div>
-
+    </div>
+</div>
+<br><br><br><br><br><br><br><br><br>
 <script>
     document.getElementById('college').addEventListener('change', function () {
       var selectedCollege = this.value;

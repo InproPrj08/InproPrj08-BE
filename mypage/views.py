@@ -13,7 +13,7 @@ from portfolio.models import College, Major, Number, Portfolio, Interest, Status
 from portfolio.models import CUser as User
 from recruit.models import Recruit
 from pass_portfolio.models import PassPortfolio
-from .forms import UserForm, CustomUserChangeForm
+from .forms import UserForm
 from django.core.paginator import Paginator
 
 
@@ -113,7 +113,6 @@ def user_logout(request):
 def user_detail(request, username):
     user = User.objects.get(username=username)
 
-    # Reverse 사용 예시
     detail_url = reverse('user:detail', args=[username])
     user_recruit = Recruit.objects.filter(author__username=username)
 
@@ -245,11 +244,13 @@ def user_update(request, username):
                 major = request.POST.get('major')
                 user.major = Major.objects.get(name=major)
 
-            # user 객체를 최종적으로 저장합니다.
+            # 유저 이름 업데이트
+            new_username = request.POST.get('username')
+            user.username = new_username
             user.save()
 
             login(request, user)
-            return redirect("user:main")
+            return redirect("user:detail", username=user.username)
         else:
             print("Form is not valid:", form.errors)
     else:
@@ -270,6 +271,7 @@ def user_update(request, username):
 
     return render(request, 'mypage/update.html', {
         'form': form,
+        'user': user,  # 추가: 유저 정보를 템플릿으로 전달
         'colleges': College.objects.all(),
         'sm': Major.objects.filter(college=sc),
         'pm': Major.objects.filter(college=pc),

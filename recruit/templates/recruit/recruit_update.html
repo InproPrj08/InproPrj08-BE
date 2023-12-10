@@ -39,9 +39,7 @@
 
 <div class="container">
     <div class="row" style="margin-top: 40px; font-family: 'Noto Sans KR', sans-serif;">
-        <div style="width: 100%; height: 100%; color: #191919; font-size: 28px; font-family: Noto Sans; font-weight: 600; margin-left: 100px; margin-bottom: 10px;word-wrap: break-word">모집글 작성
-        </div>
-        <div style="color: #767676; font-size: 20px; font-family: Noto Sans; font-weight: 500; margin-left: 100px;">내가 참여하고 싶은 활동의 모집글을 작성할 수 있어요!
+        <div style="width: 100%; height: 100%; color: #191919; font-size: 28px; font-family: Noto Sans; font-weight: 600; margin-left: 100px; margin-bottom: 10px;word-wrap: break-word">모집글 수정하기
         </div>
         <form action="{% url 'recruit:save_text' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}

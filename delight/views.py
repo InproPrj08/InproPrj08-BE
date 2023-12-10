@@ -15,7 +15,6 @@ def crawl_and_display(request):
     content_divs = soup.find_all('div', class_='hit')
     link_data_list = []
 
-    # 수정된 부분
     ul_tag = soup.find('ul', class_='columns-4')
     li_tags = ul_tag.find_all('li') if ul_tag else []
 
