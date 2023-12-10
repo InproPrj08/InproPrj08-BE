@@ -118,10 +118,10 @@ class PortfolioDetail(DetailView):
             comment.portfolio = portfolio
             if request.user.is_authenticated:
                 comment.user = request.user
-                if comment.user == portfolio.author:  # 포트폴리오 작성자와 댓글 작성자가 동일한 경우
-                    comment.is_portfolio_author = True  # Comment 모델에 is_portfolio_author 필드를 추가하여 구현
+                if comment.user == portfolio.author:
+                    comment.is_portfolio_author = True
             else:
-                comment.is_anonymous = True  # 예시 코드, 실제로 사용하려면 Comment 모델에 is_anonymous 필드를 추가해야 함
+                comment.is_anonymous = True
 
             comment.save()
             # 댓글을 작성한 후에 PortfolioDetail 페이지로 리디렉션
@@ -139,20 +139,16 @@ def search_view(request):
         pass_portfolio_results = PassPortfolio.objects.filter(Q(title__icontains=query) | Q(content__icontains=query))
         recruit_results = Recruit.objects.filter(Q(title__icontains=query) | Q(content__icontains=query))
 
-        # Process hashtags and convert them to a list
+
         for pass_portfolio in pass_portfolio_results:
             pass_portfolio.hashtags = json.loads(pass_portfolio.hashtags)
-            pass_portfolio.hashtags = [tag.strip('"') for tag in pass_portfolio.hashtags]  # Remove quotes
+            pass_portfolio.hashtags = [tag.strip('"') for tag in pass_portfolio.hashtags]
 
-        # Process hashtags and convert them to a list
+
         for portfolio in portfolio_results:
             portfolio.hashtags = json.loads(portfolio.hashtags)
-            portfolio.hashtags = [tag.strip('"') for tag in portfolio.hashtags]  # Remove quotes
+            portfolio.hashtags = [tag.strip('"') for tag in portfolio.hashtags]
 
-
-
-
-        # 결과를 각 모델별로 따로 전달합니다.
         context = {
             'portfolio_results': portfolio_results,
             'pass_portfolio_results': pass_portfolio_results,
@@ -161,7 +157,6 @@ def search_view(request):
             'query': query,
         }
     else:
-        # 검색어가 없는 경우 각 모델의 모든 객체를 가져옵니다.
         context = {
             'portfolio_results': Portfolio.objects.all(),
             'pass_portfolio_results': PassPortfolio.objects.all(),
@@ -369,6 +364,7 @@ def filtersearch_view(request):
     college_slug = request.GET.get('college')
     major_id = request.GET.get('major')
     sorting_option = request.GET.get('sorting', 'latest')  # 기본값은 최신순
+
     paginate_by = 6  # 페이지당 보여질 아이템 수
     page_kwarg = "page"
 
