@@ -255,7 +255,11 @@
                                     {% endwith %}
                                 </div>
                                 <div class="top2 d-flex col-md-3" style="margin-top:20px;">
-                                    <img src="{{ text_data.author.profile.image.url }}" alt="Image" style="width: 50px; height: 50px; margin-right: 20px;  border-radius: 20px;">
+                                    {% if text_data.author.profile %}
+                                    <img src="{{ text_data.author.profile.image.url }}"  alt="Image" style="width: 50px; height: 50px; margin-right: 20px;  border-radius: 20px;">
+                                    {% else %}
+                                    <img src="{% static 'portfolio/image/duksaeheart.png' %}"  alt="Image" style="width: 50px; height: 50px; margin-right: 20px;  border-radius: 20px;">
+                                    {% endif %}
                                     <div>
                                         <b style="font-size:22px;">{{text_data.author}}님</b>
                                     </div>
