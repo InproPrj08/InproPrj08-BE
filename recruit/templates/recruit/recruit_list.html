@@ -269,7 +269,11 @@
 
                 <div class="card-body">
                     <div class="d-flex">
-                        <img src="{{ p.author.profile.image.url }}" class="card-img-rounded rounded-pill ml-2" alt="...">
+                        {% if p.author.profile %}
+                        <img src="{{ p.author.profile.image.url }}" class="card-img-rounded rounded-pill ml-2" alt="..." style="width:80px; height:80px">
+                        {% else %}
+                        <img src="{% static 'portfolio/image/duksaeheart.png' %}" class="card-img-rounded rounded-pill ml-2" alt="..." style="width:80px; height:80px">
+                        {% endif %}
                         <div class="user d-flex flex-column" style="margin-left: 30px; margin-top: 20px;">
                             <p class="card-link-name">{{p.author}}님</p>
                             <p class="card-link-major" style="color: #767676;">{{p.department}}</p>

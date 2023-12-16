@@ -330,7 +330,12 @@
                                     <div class="card d-flex" style="border: 2px solid #02343F; border-radius: 20px; height: 220px; width: 350px;" onclick="redirectToDetailPage({{r.pk}}, 'recruit')">
                                         <div class="card-body">
                                             <div class="d-flex">
-                                                <img src="{{ r.author.profile.image.url }}" class="card-img-rounded rounded-pill ml-2" alt="...">
+                                                {% if r.author.profile %}
+                        <img src="{{ r.author.profile.image.url }}" class="card-img-rounded rounded-pill ml-2" alt="..." style="width:80px; height:80px">
+                        {% else %}
+                        <img src="{% static 'portfolio/image/duksaeheart.png' %}" class="card-img-rounded rounded-pill ml-2" alt="..." style="width:80px; height:80px">
+                        {% endif %}
+                                               
                                                 <div class="user d-flex flex-column" style="margin-left: 30px; margin-top: 20px;">
                                                     <a class="card-link-name" href="#">{{r.author}}님</a>
                                                     <a class="card-link-major" href="#" style="color: #767676;">{{r.department}}</a>

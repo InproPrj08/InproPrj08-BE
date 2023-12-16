@@ -7,7 +7,7 @@ from .models import Program
 
 
 def crawl_and_display(request):
-    url = "https://delight.duksung.ac.kr/ko/program/all/list/all/2"
+    url = "https://delight.duksung.ac.kr/ko/program/all/list/all/1"
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
 
